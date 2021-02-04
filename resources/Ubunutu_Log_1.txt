@@ -1,0 +1,189 @@
+#Useful Protocol from 04/02
+
+build$ SLiMgui
+qt.qpa.xcb: could not connect to display Dorian:0.0
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+
+build$ DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0 SLiMgui &
+[1] 3776
+build$ QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-sknief'
+libGL error: No matching fbConfigs or visuals found
+libGL error: failed to load driver: swrast
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:33 : QOpenGLWidget: Failed to make context current
+23:04:34 : QOpenGLWidget: Failed to make context current
+23:04:34 : QOpenGLWidget: Failed to make context current
+23:04:34 : QOpenGLWidget: Failed to make context current
+23:04:34 : QOpenGLWidget: Failed to make context current
+23:04:35 : QOpenGLWidget: Failed to make context current
+23:04:35 : QOpenGLWidget: Failed to make context current
+23:04:36 : QOpenGLWidget: Failed to make context current
+23:04:36 : QOpenGLWidget: Failed to make context current
+23:04:36 : QOpenGLWidget: Failed to make context current
+23:04:36 : QOpenGLWidget: Failed to make context current
+23:04:36 : composeAndFlush: makeCurrent() failed
+23:04:36 : composeAndFlush: makeCurrent() failed
+23:04:36 : composeAndFlush: makeCurrent() failed
+23:04:36 : composeAndFlush: makeCurrent() failed
+23:04:36 : composeAndFlush: makeCurrent() failed
+23:04:37 : composeAndFlush: makeCurrent() failed
+23:04:38 : composeAndFlush: makeCurrent() failed
+23:04:38 : composeAndFlush: makeCurrent() failed
+23:04:39 : composeAndFlush: makeCurrent() failed
+23:04:39 : composeAndFlush: makeCurrent() failed
+23:04:40 : composeAndFlush: makeCurrent() failed
+23:04:40 : composeAndFlush: makeCurrent() failed
+23:04:41 : composeAndFlush: makeCurrent() failed
+23:04:41 : composeAndFlush: makeCurrent() failed
+23:04:42 : composeAndFlush: makeCurrent() failed
+23:04:42 : composeAndFlush: makeCurrent() failed
+23:04:43 : composeAndFlush: makeCurrent() failed
+23:04:43 : composeAndFlush: makeCurrent() failed
+23:04:44 : composeAndFlush: makeCurrent() failed
+23:04:44 : composeAndFlush: makeCurrent() failed
+23:04:45 : composeAndFlush: makeCurrent() failed
+23:04:45 : composeAndFlush: makeCurrent() failed
+23:04:46 : composeAndFlush: makeCurrent() failed
+23:04:46 : composeAndFlush: makeCurrent() failed
+23:04:47 : composeAndFlush: makeCurrent() failed
+23:04:47 : composeAndFlush: makeCurrent() failed
+23:04:48 : composeAndFlush: makeCurrent() failed
+23:04:48 : composeAndFlush: makeCurrent() failed
+23:04:49 : composeAndFlush: makeCurrent() failed
+23:04:49 : composeAndFlush: makeCurrent() failed
+23:04:50 : composeAndFlush: makeCurrent() failed
+23:04:50 : composeAndFlush: makeCurrent() failed
+23:04:51 : composeAndFlush: makeCurrent() failed
+23:04:51 : composeAndFlush: makeCurrent() failed
+23:04:52 : composeAndFlush: makeCurrent() failed
+23:04:52 : composeAndFlush: makeCurrent() failed
+23:04:53 : composeAndFlush: makeCurrent() failed
+23:04:53 : composeAndFlush: makeCurrent() failed
+23:04:54 : composeAndFlush: makeCurrent() failed
+23:04:54 : composeAndFlush: makeCurrent() failed
+23:04:55 : composeAndFlush: makeCurrent() failed
+23:04:55 : composeAndFlush: makeCurrent() failed
+23:04:56 : composeAndFlush: makeCurrent() failed
+23:04:56 : composeAndFlush: makeCurrent() failed
+23:04:57 : composeAndFlush: makeCurrent() failed
+23:04:57 : composeAndFlush: makeCurrent() failed
+23:04:58 : composeAndFlush: makeCurrent() failed
+23:04:58 : composeAndFlush: makeCurrent() failed
+23:04:59 : composeAndFlush: makeCurrent() failed
+23:04:59 : composeAndFlush: makeCurrent() failed
+23:05:00 : composeAndFlush: makeCurrent() failed
+23:05:00 : composeAndFlush: makeCurrent() failed
+23:05:01 : composeAndFlush: makeCurrent() failed
+23:05:01 : composeAndFlush: makeCurrent() failed
+23:05:02 : composeAndFlush: makeCurrent() failed
+23:05:02 : composeAndFlush: makeCurrent() failed
+23:05:03 : composeAndFlush: makeCurrent() failed
+23:05:03 : composeAndFlush: makeCurrent() failed
+23:05:04 : composeAndFlush: makeCurrent() failed
+23:05:04 : composeAndFlush: makeCurrent() failed
+23:05:04 : composeAndFlush: makeCurrent() failed
+23:05:05 : composeAndFlush: makeCurrent() failed
+23:05:05 : composeAndFlush: makeCurrent() failed
+23:05:05 : composeAndFlush: makeCurrent() failed
+23:05:05 : composeAndFlush: makeCurrent() failed
+23:05:05 : composeAndFlush: makeCurrent() failed
+23:05:06 : composeAndFlush: makeCurrent() failed
+23:05:06 : composeAndFlush: makeCurrent() failed
+23:05:06 : composeAndFlush: makeCurrent() failed
+23:05:07 : composeAndFlush: makeCurrent() failed
+23:05:07 : composeAndFlush: makeCurrent() failed
+23:05:08 : composeAndFlush: makeCurrent() failed
+23:05:08 : composeAndFlush: makeCurrent() failed
+23:05:09 : composeAndFlush: makeCurrent() failed
+23:05:09 : composeAndFlush: makeCurrent() failed
+23:05:10 : composeAndFlush: makeCurrent() failed
+23:05:10 : composeAndFlush: makeCurrent() failed
+23:05:11 : composeAndFlush: makeCurrent() failed
+23:05:11 : composeAndFlush: makeCurrent() failed
+23:05:12 : composeAndFlush: makeCurrent() failed
+23:05:12 : composeAndFlush: makeCurrent() failed
+23:05:13 : composeAndFlush: makeCurrent() failed
+23:05:13 : composeAndFlush: makeCurrent() failed
+23:05:14 : composeAndFlush: makeCurrent() failed
+23:05:14 : composeAndFlush: makeCurrent() failed
+23:05:15 : composeAndFlush: makeCurrent() failed
+23:05:15 : composeAndFlush: makeCurrent() failed
+23:05:16 : composeAndFlush: makeCurrent() failed
+23:05:16 : composeAndFlush: makeCurrent() failed
+23:05:17 : composeAndFlush: makeCurrent() failed
+23:05:17 : composeAndFlush: makeCurrent() failed
+23:05:18 : composeAndFlush: makeCurrent() failed
+23:05:18 : composeAndFlush: makeCurrent() failed
+23:05:19 : composeAndFlush: makeCurrent() failed
+23:05:19 : composeAndFlush: makeCurrent() failed
+23:05:20 : composeAndFlush: makeCurrent() failed
+23:05:20 : composeAndFlush: makeCurrent() failed
+23:05:21 : composeAndFlush: makeCurrent() failed
+23:05:21 : composeAndFlush: makeCurrent() failed
+23:05:22 : composeAndFlush: makeCurrent() failed
+23:05:22 : composeAndFlush: makeCurrent() failed
+23:05:23 : composeAndFlush: makeCurrent() failed
+23:05:23 : composeAndFlush: makeCurrent() failed
+23:05:24 : composeAndFlush: makeCurrent() failed
+23:05:24 : composeAndFlush: makeCurrent() failed
+23:05:25 : composeAndFlush: makeCurrent() failed
+23:05:25 : composeAndFlush: makeCurrent() failed
+23:05:26 : composeAndFlush: makeCurrent() failed
+23:05:26 : composeAndFlush: makeCurrent() failed
+23:05:27 : composeAndFlush: makeCurrent() failed
+23:05:27 : composeAndFlush: makeCurrent() failed
+23:05:28 : composeAndFlush: makeCurrent() failed
+23:05:28 : composeAndFlush: makeCurrent() failed
+23:05:29 : composeAndFlush: makeCurrent() failed
+23:05:29 : composeAndFlush: makeCurrent() failed
+23:05:30 : composeAndFlush: makeCurrent() failed
+23:05:30 : composeAndFlush: makeCurrent() failed
+23:05:31 : composeAndFlush: makeCurrent() failed
+23:05:31 : composeAndFlush: makeCurrent() failed
+23:05:32 : composeAndFlush: makeCurrent() failed
+23:05:32 : composeAndFlush: makeCurrent() failed
+23:05:33 : composeAndFlush: makeCurrent() failed
+23:05:33 : composeAndFlush: makeCurrent() failed
+23:05:34 : composeAndFlush: makeCurrent() failed
+23:05:34 : composeAndFlush: makeCurrent() failed
+23:05:35 : composeAndFlush: makeCurrent() failed
+23:05:35 : composeAndFlush: makeCurrent() failed
+23:05:36 : composeAndFlush: makeCurrent() failed
+23:05:36 : composeAndFlush: makeCurrent() failed
+23:05:37 : composeAndFlush: makeCurrent() failed
+23:05:37 : composeAndFlush: makeCurrent() failed
+23:05:38 : composeAndFlush: makeCurrent() failed
+23:05:38 : composeAndFlush: makeCurrent() failed
+23:05:38 : composeAndFlush: makeCurrent() failed
+23:05:38 : composeAndFlush: makeCurrent() failed
+23:05:38 : composeAndFlush: makeCurrent() failed
+23:05:39 : composeAndFlush: makeCurrent() failed
+23:05:39 : composeAndFlush: makeCurrent() failed
+23:05:56 : composeAndFlush: makeCurrent() failed
+23:05:56 : composeAndFlush: makeCurrent() failed
+23:05:58 : composeAndFlush: makeCurrent() failed
+23:05:58 : composeAndFlush: makeCurrent() failed
+23:05:59 : composeAndFlush: makeCurrent() failed
+23:05:59 : composeAndFlush: makeCurrent() failed
+23:05:59 : composeAndFlush: makeCurrent() failed
+23:05:59 : composeAndFlush: makeCurrent() failed
+23:05:59 : composeAndFlush: makeCurrent() failed
+
+[1]+  Done                    DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0 SLiMgui
+build$
+
+#Able to connect, just the application itself whack
