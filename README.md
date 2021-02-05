@@ -1,2 +1,2 @@
-# honours
-Repository for my honours code and contributing materials to my thesis. Commenced: 01/02/2021
+# Untitled Goose Honours Project
+Welcome to the nine month long journey of an ambitious project in evolutionary systems biology.
