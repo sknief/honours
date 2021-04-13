@@ -1,0 +1,107 @@
+Windows PowerShell
+Copyright (C) Microsoft Corporation. Alle Rechte vorbehalten.
+
+Lernen Sie das neue plattformübergreifende PowerShell kennen – https://aka.ms/pscore6
+
+PS C:\Users\sknie> wsl
+sknie$ export DISPLAY=172.21.80.1
+sknie$ help SLiMgui
+-bash: help: no help topics match `SLiMgui'.  Try `help help' or `man -k SLiMgui' or `info SLiMgui'.
+sknie$ info SLiMgui
+info: No menu item 'SLiMgui' in node '(dir)Top'
+sknie$ SLiMgui
+qt.qpa.xcb: could not connect to display 172.21.80.1
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+sknie$ export LIBGL_ALWAYS_INDIRECT=1
+sknie$ SLiMgui
+qt.qpa.xcb: could not connect to display 172.21.80.1
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+sknie$ SLiMgui
+qt.qpa.xcb: could not connect to display 172.21.80.1
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+sknie$ SLiMgui
+qt.qpa.xcb: could not connect to display 172.21.80.1
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+sknie$ export LIBGL_ALWAYS_INDIRECT=1
+sknie$ SLiMgui
+qt.qpa.xcb: could not connect to display 172.21.80.1
+qt.qpa.plugin: Could not load the Qt platform plugin "xcb" in "" even though it was found.
+This application failed to start because no Qt platform plugin could be initialized. Reinstalling the application may fix this problem.
+
+Available platform plugins are: eglfs, linuxfb, minimal, minimalegl, offscreen, vnc, xcb.
+
+Aborted
+sknie$ export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0 # in WSL 2
+sknie$ SLiMgui
+QStandardPaths: XDG_RUNTIME_DIR not set, defaulting to '/tmp/runtime-sknief'
+14:05:50 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:50 : QOpenGLShaderProgram: could not create shader program
+14:05:50 : Vertex shader for simpleShaderProg (MainVertexShader & PositionOnlyVertexShader) failed to compile
+14:05:50 : QOpenGLShader: could not create shader
+14:05:50 : Fragment shader for simpleShaderProg (MainFragmentShader & ShockingPinkSrcFragmentShader) failed to compile
+14:05:50 : Errors linking simple shader:
+14:05:50 : QOpenGLShaderProgram: could not create shader program
+14:05:50 : Vertex shader for blitShaderProg (MainWithTexCoordsVertexShader & UntransformedPositionVertexShader) failed to compile
+14:05:50 : QOpenGLShader: could not create shader
+14:05:50 : Fragment shader for blitShaderProg (MainFragmentShader & ImageSrcFragmentShader) failed to compile
+14:05:50 : Errors linking blit shader:
+14:05:50 : QOpenGLShaderProgram: could not create shader program
+14:05:50 : Warning: "" failed to compile!
+14:05:50 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:50 : QOpenGLShaderProgram: could not create shader program
+14:05:50 : Warning: "" failed to compile!
+14:05:51 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:51 : QOpenGLShaderProgram: could not create shader program
+14:05:51 : Warning: "" failed to compile!
+14:05:51 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:51 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:52 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:52 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:52 : QOpenGLShaderProgram: could not create shader program
+14:05:52 : Warning: "" failed to compile!
+14:05:52 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:52 : QOpenGLShaderProgram: could not create shader program
+14:05:52 : Warning: "" failed to compile!
+14:05:52 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:52 : QOpenGLShaderProgram: could not create shader program
+14:05:52 : Warning: "" failed to compile!
+14:05:54 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:54 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:54 : QOpenGLFramebufferObject: Unsupported framebuffer format.
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:54 : QOpenGLShaderProgram: could not create shader program
+14:05:54 : Warning: "" failed to compile!
+14:05:55 : QOpenGLShaderProgram: could not create shader program
+14:05:55 : QOpenGLShader: could not create shader
+14:05:55 : Could not link shader program:
+ ""
+Segmentation fault

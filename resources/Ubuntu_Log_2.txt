@@ -1,4 +1,4 @@
-#Useful Error Protocol from 04/02
+#Useful Protocol from 04/02
 
 build$ SLiMgui
 qt.qpa.xcb: could not connect to display Dorian:0.0
