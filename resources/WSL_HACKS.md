@@ -1,7 +1,7 @@
-# Collection of handy WSL Commandline hacks
+#WSL Commandline hacks
 
-## Starting out with WSL
-Type `wsl` in powershell to enter the correct terminal
+## Starting out
+Type `wsl` in powershell to enter the WSL terminal
 
 By typing `cd` followed by nothing you return to the root.
 
@@ -44,6 +44,8 @@ Okay, first and foremost you are going to need to install a gui tool such as VcX
 You should just be able to type in the program name if you are at `~$`in the terminal.
 
 ### Issues with running SLiMgui
+
+This snippet usually fixes it
 
 ```
 export DISPLAY=$(awk '/nameserver / {print $2; exit}' /etc/resolv.conf 2>/dev/null):0 # in WSL 2
