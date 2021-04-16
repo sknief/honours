@@ -4,6 +4,17 @@
 # Last changed: 8/3/2021
 #############################################################################
 
+#SK MODIIFICATION: added install code just for ease
+install.packages("deSolve")
+install.packages("tidyverse")
+install.packages("ggraph")
+install.packages("igraph")
+install.packages("cowplot")
+install.packages("shiny")
+install.packages("RColorBrewer")
+
+
+
 # attaching libraries, can all be installed from CRAN:
 library(deSolve)
 library(tidyverse)
