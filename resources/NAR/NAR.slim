@@ -10,62 +10,69 @@
 //START COMMANDS
 initialize() {
 
-//section A: constants
-  //defineConstant("K", value); //comment
-  defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
-  defineConstant("BenRatio", 0.15); //proportion of beneficial mutations
-  defineConstant("NeuRatio", 0.6); //proportion of neutral mutations
+	//section A: constants
+	//defineConstant("K", value); //comment
+	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
+	defineConstant("BenRatio", 0.15); //proportion of beneficial mutations
+	defineConstant("NeuRatio", 0.6); //proportion of neutral mutations
 
-//section B: mutation types
-  //neutral
-  initializeMutationType("m1", 0.5, f, 0.0);
-  m1.color = "yellow"
-  m1.convertToSubstitution = T;
-  //deleterious
-  initializeMutationType("m2", 0.5, "e", 0.4);
-  m2.color = "red"
-  //beneficial
-  initializeMutationType("m3", 0.5, "g", 0.5, 1.0);
+	//things I've forgotten
+	initializeMutationRate(1e-7);
+	initializeRecombinationRate(1e-8);
 
-//section C: genomic elements
-  initializeGenomicElementType("g1", m1, 1.0); //non-coding
-  initializeGenomicElementType("g2", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Abeta
-  initializeGenomicElementType("g3", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Aalpha
-  initializeGenomicElementType("g4", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Ahillcoeff
-  initializeGenomicElementType("g5", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Bbeta
-  initializeGenomicElementType("g6", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Balpha
+	//section B: mutation types
+	//neutral
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	m1.color = "yellow";
+	m1.convertToSubstitution = T;
+	//deleterious
+	initializeMutationType("m2", 0.5, "e", 0.4);
+	m2.convertToSubstitution = T;
+	m2.color = "red";
+	//beneficial
+	initializeMutationType("m3", 0.5, "g", 0.5, 1.0);
+	m3.convertToSubstitution = T;
+	m3.color = "green";
 
-//section D: chromosome structure
-  initializeGenomicElement(g1, 0, 1999);
-  initializeGenomicElement(g2, 2000, 2999); //Abeta
-  initializeGenomicElement(g1, 3000, 3499); //spacer
-  initializeGenomicElement(g3, 3500, 4499); //Aalpha
-  initializeGenomicElement(g1, 4500, 4999); //spacer
-  initializeGenomicElement(g4, 5000, 5999); //Ahillcoeff
-  initializeGenomicElement(g1, 6000, 6499); //spacer
-  initializeGenomicElement(g5, 6500, 7499); //Bbeta
-  initializeGenomicElement(g1, 7500, 7999); //spacer
-  initializeGenomicElement(g6, 8000, 8999); //Balpha
-  initializeGenomicElement(g1, 9000, 10999); //end spacer
+	//section C: genomic elements
+	initializeGenomicElementType("g1", m1, 1.0); //non-coding
+	initializeGenomicElementType("g2", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Abeta
+	initializeGenomicElementType("g3", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Aalpha
+	initializeGenomicElementType("g4", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Ahillcoeff
+	initializeGenomicElementType("g5", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Bbeta
+	initializeGenomicElementType("g6", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Balpha
 
-//section DD: colorcoding
-  g1.color = "darkgrey";
-  g2.color = "firebrick";
-  g3.color = "firebrick";
-  g4.color = "firebrick";
-  g5.colour = "tan3";
-  g6.colour = "tan3";
+	//section D: chromosome structure
+	initializeGenomicElement(g1, 0, 1999);
+	initializeGenomicElement(g2, 2000, 2999); //Abeta
+	initializeGenomicElement(g1, 3000, 3499); //spacer
+	initializeGenomicElement(g3, 3500, 4499); //Aalpha
+	initializeGenomicElement(g1, 4500, 4999); //spacer
+	initializeGenomicElement(g4, 5000, 5999); //Ahillcoeff
+	initializeGenomicElement(g1, 6000, 6499); //spacer
+	initializeGenomicElement(g5, 6500, 7499); //Bbeta
+	initializeGenomicElement(g1, 7500, 7999); //spacer
+	initializeGenomicElement(g6, 8000, 8999); //Balpha
+	initializeGenomicElement(g1, 9000, 10999); //end spacer
 
-//section E: advanced behaviour / mechanics
+	//section DD: colorcoding
+	g1.color = "darkgrey";
+	g2.color = "firebrick";
+	g3.color = "firebrick";
+	g4.color = "firebrick";
+	g5.color = "tan3";
+	g6.color = "tan3";
+
+	//section E: advanced behaviour / mechanics
 
 }
 //initialize command bracket ends here
 
 //POPULATION CODE
 1 early() {
-  sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 100);
 }
 
-2000 late() {
-  sim.outputFull();
+200000 late() {
+	sim.outputFull();
 }
