@@ -1,8 +1,11 @@
-### Using rdinnager's SLiMr, as taken from GitHub; trial run
+## Using rdinnager's SLiMr, as taken from GitHub; trial run
 ## script taken from the README.md of the main GitHub package
-## not tested yet
+## Tested: 23/04/21 // out_dat not working clearly, but else impressive
 
-# install.packages("devtools")
+install.packages("devtools")
+library(devtools)
+
+devtools::install_github("hadley/devtools")
 devtools::install_github("rdinnager/slimr")
 
 library(slimr)
@@ -26,9 +29,10 @@ slim_script(
              {
                sim.addSubpop("p1", 500);
              }),
-  slim_block(10000,
+  slim_block(10000, late(),
              {
                sim.simulationFinished();
+               sim.outputFull();
              })
 ) -> script_1
 
@@ -50,3 +54,18 @@ script_1
 #> block_3:10000 early() {
 #>     sim.simulationFinished();
 #> }
+
+
+
+script_txt <- as_slim_text(script_1)
+
+cat(script_txt)
+
+out <- slim_run(script_txt, simple_run = TRUE, capture_output = TRUE)
+head(out$output, n = 50L)
+
+out$output
+
+
+out_dat <- slim_extract_output_data(out$output)
+print(out_dat)
