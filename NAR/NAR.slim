@@ -9,7 +9,7 @@
 
 //START COMMANDS
 initialize() {
-	
+
 	//section A: constants
 	//defineConstant("K", value); //comment
 	//for the mutations
@@ -95,8 +95,38 @@ early() {
 		AAT = (Aalpha - AAD + AAB);
 		ind.setValue("aat", AAT);
 
-		//Node A,
+		//Node A, beta value
+		ABD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("abd", ABD);
+		ABB = ind.sumOfMutationsOfType(m3);
+		ind.setValue("abb", ABB);
+		ABT = (Abeta - ABD + ABB);
+		ind.setValue("abt", ABT);
 
+		//Node A, hill coeff
+		AHD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("ahd", AHD);
+		AHB = ind.sumOfMutationsOfType(m3);
+		ind.setValue("ahb", AHB);
+		AHT = (Ahillcoeff - AHD + AHB);
+		ind.setValue("aht", AHT);
+
+		//Node B, alpha value
+		BAD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("bad", BAD);
+		BAB = ind.sumOfMutationsOfType(m3);
+		ind.setValue("bab", BAB);
+		BAT = (Balpha - BAD + BAB);
+		ind.setValue("bat", BAT);
+
+
+		//Node B, beta value
+		BBD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("bbd", BBD);
+		BBB = ind.sumOfMutationsOfType(m3);
+		ind.setValue("bbb", BBB);
+		BBT = (Bbeta - BBD + BBB);
+		ind.setValue("bbt", BBT);
 
 	}
 }
@@ -107,18 +137,59 @@ early() {
 	if (sim.generation % 100 != 0) return;
 
 	inds = sim.subpopulations.individuals;
+	//Node A, alpha values
 	test1 = mean(inds.getValue("aad"));
 	test2 = mean(inds.getValue("aab"));
 	test3 = mean(inds.getValue("aat"));
 
+	//Node A, beta values
+	test4 = mean(inds.getValue("abd"));
+	test5 = mean(inds.getValue("abb"));
+	test6 = mean(inds.getValue("abt"));
+
+	//Node A, hill coeff values
+	test7 = mean(inds.getValue("ahd"));
+	test8 = mean(inds.getValue("ahb"));
+	test9 = mean(inds.getValue("aht"));
+
+	//Node B, alpha values
+	test10 = mean(inds.getValue("bad"));
+	test11 = mean(inds.getValue("bab"));
+	test12 = mean(inds.getValue("bat"));
+
+	//Node B, beta values
+	test13 = mean(inds.getValue("bbd"));
+	test14 = mean(inds.getValue("bbb"));
+	test15 = mean(inds.getValue("bbt"));
+
+	catn();
+	catn("Node A, Alpha:");
 	catn("Mean AAD equals" + test1);
-	catn();
 	catn("Mean AAB equals" + test2);
-	catn();
 	catn("Mean AAT equals" + test3);
 	catn();
-	catn("100 GENERATIONs HAVE PASSED!!");
+	catn("Node A, Beta:");
+	catn("Mean ABD equals" + test4);
+	catn("Mean ABB equals" + test5);
+	catn("Mean ABT equals" + test6);
 	catn();
+	catn("Node A, Hill Coeff:");
+	catn("Mean AHD equals" + test7);
+	catn("Mean AHB equals" + test8);
+	catn("Mean AHT equals" + test9);
+	catn();
+	catn("Node B, Alpha:");
+	catn("Mean BAD equals" + test10);
+	catn("Mean BAB equals" + test11);
+	catn("Mean BAT equals" + test12);
+	catn();
+	catn("Node B, Beta:");
+	catn("Mean BBD equals" + test13);
+	catn("Mean BBB equals" + test14);
+	catn("Mean BBT equals" + test15);
+	catn();
+	catn("100 GENERATIONs HAVE PASSED!!");
+	catn("SO MUCH OUTPUT AAAAAAAAAAAA");
 	catn();
 	catn();
 }
