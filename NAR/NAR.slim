@@ -12,25 +12,35 @@ initialize() {
 
 	//section A: constants
 	//defineConstant("K", value); //comment
+	//for the mutations
 	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
 	defineConstant("BenRatio", 0.15); //proportion of beneficial mutations
 	defineConstant("NeuRatio", 0.6); //proportion of neutral mutations
+	//for the initial parameter values
+	defineConstant("Abeta", 0.5); //values from Jans model
+	defineConstant("Aalpha", 1); //see above
+	defineConstant("Ahillcoeff", 1000); //see above
+	defineConstant("Bbeta", 0.5); //see above
+	defineConstant("Balpha", 1); //see above
 
-	//things I've forgotten
+	//Section AA: Recombination
+	// do i need any recombination? i got the code in here just in case but hmm, up for discussion
+	ends = c(6250, 6251, 10999);
+	rates = c(1e-8, 0.5, 1e-8);
+	initializeRecombinationRate(rates, ends);
+
+	//section B: mutations
 	initializeMutationRate(1e-7);
-	initializeRecombinationRate(1e-8);
-
-	//section B: mutation types
 	//neutral
 	initializeMutationType("m1", 0.5, "f", 0.0);
 	m1.color = "yellow";
 	m1.convertToSubstitution = T;
 	//deleterious
-	initializeMutationType("m2", 0.5, "e", 0.4);
+	initializeMutationType("m2", 0.5, "g", -0.03, 0.2); //updated according to manual
 	m2.convertToSubstitution = T;
 	m2.color = "red";
 	//beneficial
-	initializeMutationType("m3", 0.5, "g", 0.5, 1.0);
+	initializeMutationType("m3", 0.5, "e", 0.1); //see page 137
 	m3.convertToSubstitution = T;
 	m3.color = "green";
 
@@ -71,6 +81,24 @@ initialize() {
 //POPULATION CODE
 1 early() {
 	sim.addSubpop("p1", 100);
+}
+
+//okay, heres the money maker:
+early() {
+ for (ind in sim.subpopulations.individuals) {
+		AAD = ind.sumOfMutationsOfType(m2);
+		AAB = ind.sumOfMutationsOfType(m3);
+		AAT = (Aalpha + AAD + AAT);
+	}
+}
+
+//output / testing block
+late() {
+	test1 = sample(AAD, 10, T);
+	test2 = sample(AAB, 10, T);
+	test1 = sample(AAT, 10, T);
+
+	cat("\n" + test1 + test2 + test3 + "\n")
 }
 
 200000 late() {
