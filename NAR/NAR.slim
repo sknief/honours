@@ -9,13 +9,13 @@
 
 //START COMMANDS
 initialize() {
-
+	
 	//section A: constants
 	//defineConstant("K", value); //comment
 	//for the mutations
-	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
-	defineConstant("BenRatio", 0.15); //proportion of beneficial mutations
-	defineConstant("NeuRatio", 0.6); //proportion of neutral mutations
+	defineConstant("DelRatio", 0.40); //proportion of deleterious mutations
+	defineConstant("BenRatio", 0.10); //proportion of beneficial mutations
+	defineConstant("NeuRatio", 0.5); //proportion of neutral mutations
 	//for the initial parameter values
 	defineConstant("Abeta", 0.5); //values from Jans model
 	defineConstant("Aalpha", 1); //see above
@@ -36,11 +36,11 @@ initialize() {
 	m1.color = "yellow";
 	m1.convertToSubstitution = T;
 	//deleterious
-	initializeMutationType("m2", 0.5, "g", -0.03, 0.2); //updated according to manual
+	initializeMutationType("m2", 0.5, "g", -0.2, 0.2); //updated according to manual
 	m2.convertToSubstitution = T;
 	m2.color = "red";
 	//beneficial
-	initializeMutationType("m3", 0.5, "e", 0.1); //see page 137
+	initializeMutationType("m3", 0.5, "e", 0.2); //see page 137
 	m3.convertToSubstitution = T;
 	m3.color = "green";
 
@@ -80,27 +80,49 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 2000);
 }
 
 //okay, heres the money maker:
 early() {
- for (ind in sim.subpopulations.individuals) {
+	for (ind in sim.subpopulations.individuals) {
+
+		//Node A, alpha value
 		AAD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("aad", AAD);
 		AAB = ind.sumOfMutationsOfType(m3);
-		AAT = (Aalpha + AAD + AAT);
+		ind.setValue("aab", AAB);
+		AAT = (Aalpha - AAD + AAB);
+		ind.setValue("aat", AAT);
+
+		//Node A,
+
+
 	}
 }
 
 //output / testing block
-late() {
-	test1 = sample(AAD, 10, T);
-	test2 = sample(AAB, 10, T);
-	test1 = sample(AAT, 10, T);
+1:20000 late() {
 
-	cat("\n" + test1 + test2 + test3 + "\n")
+	if (sim.generation % 100 != 0) return;
+
+	inds = sim.subpopulations.individuals;
+	test1 = mean(inds.getValue("aad"));
+	test2 = mean(inds.getValue("aab"));
+	test3 = mean(inds.getValue("aat"));
+
+	catn("Mean AAD equals" + test1);
+	catn();
+	catn("Mean AAB equals" + test2);
+	catn();
+	catn("Mean AAT equals" + test3);
+	catn();
+	catn("100 GENERATIONs HAVE PASSED!!");
+	catn();
+	catn();
+	catn();
 }
 
-200000 late() {
+20000 late() {
 	sim.outputFull();
 }
