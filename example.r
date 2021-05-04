@@ -1,3 +1,3 @@
 library(ggplot)
 
-x = ym + b
+Y = xm + b
