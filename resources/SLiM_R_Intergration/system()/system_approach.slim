@@ -1,0 +1,173 @@
+/////////System() appraoch to R-SliM integration, as suggested by Bem /////////
+
+//this follows the liveplotting recipe from the slim manual, shown below in the commented out region////
+
+//initialize() {
+ //initializeMutationRate(1e-7);
+ //initializeMutationType("m1", 0.5, "f", 0.0);
+// //initializeGenomicElement(g1, 0, 99999);
+ ////initializeRecombinationRate(1e-8//);////////
+
+//if (fileExists("/usr/bin/Rscript")//)
+ //defineConstant("RSCRIPT", "/usr/b//in/Rscript");
+//else if (fileExists("/usr/local/bi//n/Rscript"))
+ //defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
+//els//e
+ //stop("Couldn't find R//script.");
+//}// ////
+
+////1 {
+////sim.addSubpop("p1", 5000);
+////sim.setValue("fixed", NULL)//////
+
+ //defineConstant("pngPath", writeT//empFile("plot_", ".png", ""))//;
+
+// If we're running in SLiMgui, open a plot wind//ow
+//if (exists("slimgui"))
+ //slimgui.openDocu//ment(pngPath);
+////}
+////50000 late() { sim.outputFixedMutations(); //////////////////}
+
+//1:// {
+//if// (sim.generation % 10 == 0)
+ ////{
+ ////count = sim.substitutions.size();
+ //sim.setValue("fixed", c(sim.getValue("fixed"), count));
+//}
+
+//if (sim.generation % 1000 != 0)
+// return;
+
+// y = sim.getValue("fixed");
+
+// rstr = paste('{',
+// 'x <- (1:' + size(y) + ') * 10',
+// 'y <- c(' + paste(y, sep=", ") + ')',
+// 'png(width=4, height=4, units="in", res=72, file="' + pngPath + '")',
+// 'par(mar=c(4.0, 4.0, 1.5, 1.5))',
+// 'plot(x=x, y=y, xlim=c(0, 50000), ylim=c(0, 500), type="l",',
+// 'xlab="Generation", ylab="Fixed mutations", cex.axis=0.95,',
+// 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,',
+// 'xaxp=c(0, 50000, 2))',
+// 'box()',
+// 'dev.off()',
+// '}', sep="\n");
+
+// scriptPath = writeTempFile("plot_", ".R", rstr);
+//system(RSCRIPT, args=scriptPath);
+//deleteFile(scriptPath);
+//}
+
+
+/////////////////////////////////////////////////////////////////////////////////
+//okay, the code above is for control purposes, cause I can always uncomment that block in SLiMgui
+//now for the legit stuff
+////////////////////////////////////////////////////////////////////////////////
+
+//reading in table functions (from pg 380 of manual)
+function (i)readIntTable(s$ path)
+{
+if (!fileExists(path))
+ stop("readIntTable(): File not found at path " + path);
+ l = readFile(path);
+ m = sapply(l, "asInteger(strsplit(applyValue));", simplify="matrix");
+return t(m);
+}
+
+
+//initialize segment
+initialize() {
+////////////////// STRUCTURE STUFF ////////////////////
+   initializeMutationRate(1e-7);
+
+//Mutation Types
+   //neutral
+   initializeMutationType("m1", 0.5, "f", 0.0);
+   //deleterious
+   initializeMutationType("m2", 0.5, "g", -0.2, 0.2); //updated according to manual
+   m2.convertToSubstitution = T;
+   m2.color = "red";
+
+//Genomic Element Types
+   initializeGenomicElementType("g1", m1, 1.0);
+   initializeGenomicElementType("g2", c(m1,m2), c(0.5, 0.5)); //Abeta
+
+//Genomic Structures
+   initializeGenomicElement(g1, 0, 49999);
+   initializeGenomicElement(g2, 50000, 99999);
+
+//Recombination Rate
+   initializeRecombinationRate(1e-8);
+/////////////////////////////////////////////////////
+
+//////// RSCRIPT STUFF ////////////////////
+  //check that rscript utility is installed
+  if (fileExists("/usr/bin/Rscript"))
+   defineConstant("RSCRIPT", "/usr/bin/Rscript");
+  else if (fileExists("/usr/local/bin/Rscript"))
+   defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
+  elseh
+   stop("Couldn't find Rscript.");
+////////////////////////////////////////////
+}
+
+//define population
+1 {      //this is an event that happens once only at generation 1
+  sim.addSubpop("p1", 5000);
+  //set standard name for the output files
+  defineConstant("calcPath", writeTempFile("calc_", ".txt, ""));
+}
+
+
+early() {
+	for (ind in sim.subpopulations.individuals) {
+  	//Node A, alpha value
+  	AAD = ind.sumOfMutationsOfType(m2);
+  	ind.setValue("aad", AAD);
+
+  }
+}
+
+
+1:20000 late() {
+	if (sim.generation % 100 != 0) return;
+
+  inds = sim.subpopulations.individuals;
+  //Node A, alpha values
+  test1 = mean(inds.getValue("aad"));
+
+  catn();
+	catn("Node A, Alpha:");
+	catn("Mean AAD equals" + test1);
+}
+
+
+//r integration / calc code
+1: {
+  if (sim.generation % 1000 != 0)
+    return;
+
+  //inds = sim.subpopulations.individuals;
+  y = inds.getValue("aad");
+
+  rstr = paste('{',
+    'y <- as.data.frame(' + y + ')',
+    'y$ID <- (1:' + size(y) + ')',
+    'y$value <- (y$y) + 0.5',
+    'z <- y$value',
+    'write.table(y, file = "' calcPath '", sep = "\t", dec = ".",
+              row.names = FALSE, col.names = TRUE)',
+  '}', sep="\n");
+
+  scriptPath = writeTempFile("calc_", ".R", rstr);
+  system(RSCRIPT, args=scriptPath);
+  //deleteFile(scriptPath);
+
+  defineConstant("test", readIntTable(calcPath));
+  defineConstant("pheno", drop(test[,3]));
+
+  catn(pheno);
+}
+
+//end code
+50000 late() { sim.outputFixedMutations(); }
