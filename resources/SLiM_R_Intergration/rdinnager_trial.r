@@ -1,4 +1,4 @@
-#########################DOCCO#############################
+##########################DOCCO#############################
 
 ## Using rdinnager's SLiMr, as taken from GitHub; trial run
 ## script taken from the README.md of the main GitHub package
