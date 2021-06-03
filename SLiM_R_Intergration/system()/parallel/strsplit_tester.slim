@@ -1,14 +1,11 @@
 /*
-System approach Vol. 2 // Dated: 27/05/21
-I'm trying to work in a pre-made R file and follow Jan's approach
-The bulk comments are to exclude NAR code while i try basic things
-Two main things I want to try: the sylvia code and matrix making, and reading
-the text file
+System approach Vol. 3 // Dated: 04/06/21
+Attempting strplit usage after Nick pointed me towards it
 */
 
 ////////////////////////////////////////////////////////////////////////////////
 
-/* BULK OUT NAR STUFF
+/* alternative for larger file sets
 //reading in table functions (from pg 380 of manual)
 function (i)readIntTable(s$ path)
 {
@@ -48,23 +45,13 @@ initialize() {
 	initializeRecombinationRate(1e-8);
 	/////////////////////////////////////////////////////
 
-//////// RSCRIPT STUFF ////////////////////
-	//check that rscript utility is installed
-	if (fileExists("/usr/bin/Rscript"))
-		defineConstant("RSCRIPT", "/usr/bin/Rscript");
-	else if (fileExists("/usr/local/bin/Rscript"))
-		defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
-	else
-		stop("Couldn't find Rscript.");
-	////////////////////////////////////////////
-}
 
 //define population
-1 {      //this is an event that happens once only at generation 1
-	sim.addSubpop("p1", 50);
+1 {
+	sim.addSubpop("p1", 5);
 }
 
-
+/* commented out for the sake of trying strplit stuff
 early() {
 	for (ind in sim.subpopulations.individuals) {
 		//Node A, alpha value
@@ -85,20 +72,7 @@ early() {
 	*/
 
 }
-
-1:100 late() {
-	if (sim.generation % 100 != 0) return;
-
-	inds = sim.subpopulations.individuals;
-	//Node A, alpha values
-	test1 = mean(inds.getValue("aad"));
-
-	catn();
-	catn("Node A, Alpha:");
-	catn("Mean AAD equals" + test1);
-}
-
-
+*/
 ///////// File manipulation /////////
 
 2 early() {
@@ -106,11 +80,24 @@ getwd();
 }
 
 5 early(){
-	test = readFile("~/Desktop/test.txt");
-	test = asFloat(strsplit(test));
-	print(test);
-	val = asFloat(test);
-	print(val);
+	IDS = readFile("~/Desktop/test.txt");
+	IDS = asFloat(strsplit(IDS));
+	print("These are your individuals here:");
+	print(IDS);
+	val = isFloat(IDS);
+	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
+
+	Selection = readFile("~/Desktop/test2.txt");
+	Selection = asFloat(strsplit(Selection));
+	print("These are your selection coeffs here:");
+	print(Selection);
+	luna = isFloat(IDS);
+	print("TRUE OR FALSE that we ALSO FLOAT down here?:" + luna);
+
+	freya = cbind(IDS, Selection);
+	print(freya);
+
+	//the only thing missing: cbinding these to individuals and object related params
 }
 
 //end code
