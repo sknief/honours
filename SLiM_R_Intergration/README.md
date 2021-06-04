@@ -46,18 +46,23 @@ There are some basic ground rules, but essentially, as long as you can create a 
 "1: 1 2 3 4 5, 2: 6 7 8 9 10"). Similarly, these text files have to be space-separated and must not contain whitespace after the last number, otherwise SLiM will throw an error message.
 
 The basic code to use this approach is:
-`x = readFile("~/Desktop/file.txt");
-x = asFloat(strsplit(x));`
+```
+x = readFile("~/Desktop/file.txt");
+x = asFloat(strsplit(x));
+```
 
 It is **imperial** that you use the `strsplit()` function, as SLiM will otherwise not recognize that there are multiple data entries within your text file.
 
 If you would like to check that everything worked the way it should, here is some test code taken from my own project:
-`	IDS = readFile("~/Desktop/test.txt");
+
+```
+	IDS = readFile("~/Desktop/test.txt");
 	IDS = asFloat(strsplit(IDS));
 	print("These are your individuals here:");
 	print(IDS);
 	val = isFloat(IDS);
-	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);`
+	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
+  ```
 
 This should print your file content and the `isFloat()` should return T.
 
