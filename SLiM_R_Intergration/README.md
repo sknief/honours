@@ -28,11 +28,11 @@ While most of these six approaches are not viable for my project, there are thre
 
 [SLiMr](https://github.com/rdinnager/slimr) is a package for R developed by RDinnager, which essentially allows the user to write and run SLiM scripts from R or RStudio. The true power of SLiMr lies in it's slim_inline() function, which allows the user to define a vector of values that should be used in subsequent runs of the slim model, without having to go in and change the code each time. It also allows the user to create output that is formatted so that R can immediately use it without the need to tidy or reformat slim output.
 
-[x] slim_inline() is very useful for creating replicates easily
-[x] slim_outline() allows for quick tidy data
-[x] superb choice if you need base SLiM functionality and would like to conduct R analysis
-[] cannot run R code within your simulations* so there is no true Integration
-[] documentation and debugging is still in the works
+- [x] slim_inline() is very useful for creating replicates easily
+- [x] slim_outline() allows for quick tidy data
+- [x] superb choice if you need base SLiM functionality and would like to conduct R analysis
+- [ ] cannot run R code within your simulations* so there is no true Integration
+- [ ] documentation and debugging is still in the works
 
 *SLiMr is still being developed, so its functionality may have expanded by the time I have finished uploading this readme, so take the fact that it has been rejected for this project as a product of the time I have worked on it.
 
