@@ -1,4 +1,16 @@
-##A whole bunch of approaches about integrating SLiM and R
-The current ones are lsited here, folders fill as I try the different methods.
+# Getting SLiM and R to speak to each other #
+~~really is not as easy as I thought it would be~~
 
-#Currently working on: SYSTEM()
+At the heart of this project lie the differential equations that describe the interaction strength between nodes in our simulated genetic networks. These differential equations consist of three key parameters (alpha, beta and the hill coefficient), each of which are acted upon by mutations to change the value of these parameters. This in turn then changes the ODE and thus regulates the amount of subsequent protein produced through a change in interaction strength. My model needs to not only solve these ODE's, but I am also relying on the integral of each function (in other words: the area underneath the curve that these ODE's produce) as to have selection act upon a singular factor rather than act on all three parameters separately (for the sake of computing and my own sanity).
+
+SLiM, while brilliant in its own right, is not capable of solving ODEs, which means I turned towards R, hoping to use the deSolve package. The idea was that SLiM could produce the needed parameter values that had been changed by mutations and these are then fed into R, plugged into the ODEs and the output of those calculations is then fed back into SLiM in order for selection to act upon the individuals. Here in the NAR model, the trait that is selected upon is the concentration of final output produced, which is able to be proxied using the AUC of the interaction between node A and B.
+
+While this sounds simple in principle, it has been a journey trying to get this workflow to work. In total, I have worked through 6 different methods in order to obtain my ODE results:
+
+Method | Description | Outcome
+------------- | ------------- | -------------
+ODEs in SLiM | Using SLiM to solve ODEs natively | **FAILED**, as SLiM has no native ODE function, as tested and confirmed by Ben Haller
+Writing an ODE function | Writing my own eidos function | **FAILED**, as SLiM lacks the framework to solve ODEs in its current state, as tested and confirmed by Ben Haller
+SLiMr by RDinnager | Running SLiM from RStudio | **FAILED**, as these simulations cannot be interrupted by R code, thus lacking the vertical integration I was chasing
+System() Approach | Nesting an R script in SLiM using the system() function | **REJECTED** as the output produced was finnicky and feeding the output back into SLiM failed repeatedly due to the constraints of having to use .txt files. Probably could have been able to get this to work, but it seemed not worth the trouble
+Lateral Integration | 
