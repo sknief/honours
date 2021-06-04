@@ -9,8 +9,12 @@ While this sounds simple in principle, it has been a journey trying to get this 
 
 Method | Description | Outcome
 ------------- | ------------- | -------------
-ODEs in SLiM | Using SLiM to solve ODEs natively | **FAILED**, as SLiM has no native ODE function, as tested and confirmed by Ben Haller
+ODEs in SLiM | Using SLiM to solve ODEs natively | **FAILED**, as SLiM has no native ODE function
 Writing an ODE function | Writing my own eidos function | **FAILED**, as SLiM lacks the framework to solve ODEs in its current state, as tested and confirmed by Ben Haller
 SLiMr by RDinnager | Running SLiM from RStudio | **FAILED**, as these simulations cannot be interrupted by R code, thus lacking the vertical integration I was chasing
 System() Approach | Nesting an R script in SLiM using the system() function | **REJECTED** as the output produced was finnicky and feeding the output back into SLiM failed repeatedly due to the constraints of having to use .txt files. Probably could have been able to get this to work, but it seemed not worth the trouble
-Lateral Integration | 
+Lateral Integration | Running SLiM and R in parallel in a tight circuit | **VIABLE** after extensive testing, originally thought to be **FAILED** as well. Relies on the export and import of singleton text files that end up producing float vectors in SLiM. May be computational inefficient for larger models.  
+Matrix Approach | Developing matrices of individual barcodes, mutation vectors and pre-calculated ODE solutions which are then all fed into SLiM. R is used to generate these matrices but is not active during the simulation run | **POTENTIALLY VIABLE**, I have yet to test if SLiM can match and call values from different matrices as the matrix support within SLiM is essentially a worser version of the R matrix support, as all matrices remain vectors within the SLiM scope. I have been working on the code to create these matrices, as this may prove to be computationally more efficient especially for larger models.
+
+
+ 
