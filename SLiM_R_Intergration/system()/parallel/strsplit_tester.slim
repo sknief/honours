@@ -1,0 +1,117 @@
+/*
+System approach Vol. 2 // Dated: 27/05/21
+I'm trying to work in a pre-made R file and follow Jan's approach
+The bulk comments are to exclude NAR code while i try basic things
+Two main things I want to try: the sylvia code and matrix making, and reading
+the text file
+*/
+
+////////////////////////////////////////////////////////////////////////////////
+
+/* BULK OUT NAR STUFF
+//reading in table functions (from pg 380 of manual)
+function (i)readIntTable(s$ path)
+{
+	if (!fileExists(path))
+		stop("readIntTable(): File not found at path " + path);
+	l = readFile(path);
+	m = sapply(l, "asInteger(strsplit(applyValue));", simplify="matrix");
+	return t(m);
+}
+*/
+
+//initialize segment
+initialize() {
+	////////////////// STRUCTURE STUFF ////////////////////
+	initializeSLiMOptions(keepPedigrees=T);
+	initializeMutationRate(1e-7);
+
+
+	//Mutation Types
+	//neutral
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	//deleterious
+	initializeMutationType("m2", 0.5, "g", -0.2, 0.2); //updated according to manual
+	m2.convertToSubstitution = T;
+	m2.color = "red";
+
+
+	//Genomic Element Types
+	initializeGenomicElementType("g1", m1, 1.0);
+	initializeGenomicElementType("g2", c(m1,m2), c(0.5, 0.5)); //Abeta
+
+	//Genomic Structures
+	initializeGenomicElement(g1, 0, 49999);
+	initializeGenomicElement(g2, 50000, 99999);
+
+	//Recombination Rate
+	initializeRecombinationRate(1e-8);
+	/////////////////////////////////////////////////////
+
+//////// RSCRIPT STUFF ////////////////////
+	//check that rscript utility is installed
+	if (fileExists("/usr/bin/Rscript"))
+		defineConstant("RSCRIPT", "/usr/bin/Rscript");
+	else if (fileExists("/usr/local/bin/Rscript"))
+		defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
+	else
+		stop("Couldn't find Rscript.");
+	////////////////////////////////////////////
+}
+
+//define population
+1 {      //this is an event that happens once only at generation 1
+	sim.addSubpop("p1", 50);
+}
+
+
+early() {
+	for (ind in sim.subpopulations.individuals) {
+		//Node A, alpha value
+		AAD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("aad", AAD);
+	}
+
+	inds = sim.subpopulations.individuals;
+	luna = c(inds.getValue("aad"));
+	freya = inds.genomes.mutationsOfType(m2);
+	print(freya);
+	sylvia = matrix(luna, ncol = 1);
+	print(sylvia); //lets check what this puts output
+
+	/*if the above works
+	bygate = cbind(freya, sylvia);
+	print(bygate);
+	*/
+
+}
+
+1:100 late() {
+	if (sim.generation % 100 != 0) return;
+
+	inds = sim.subpopulations.individuals;
+	//Node A, alpha values
+	test1 = mean(inds.getValue("aad"));
+
+	catn();
+	catn("Node A, Alpha:");
+	catn("Mean AAD equals" + test1);
+}
+
+
+///////// File manipulation /////////
+
+2 early() {
+getwd();
+}
+
+5 early(){
+	test = readFile("~/Desktop/test.txt");
+	test = asFloat(strsplit(test));
+	print(test);
+	val = asFloat(test);
+	print(val);
+}
+
+//end code
+100 late() { sim.outputFixedMutations(); }
