@@ -66,7 +66,7 @@ If you would like to check that everything worked the way it should, here is som
 
 This should print your file content and the `isFloat()` should return T.
 
-With lateral integration, you can then manipulate your data like any other float vector within SLiM (for example, cbind() it to another imported text file if you need to make a matrix or a data frame within SLiM!).
+With lateral integration, you can then manipulate your data like any other float vector within SLiM (for example, `cbind()` it to another imported text file if you need to make a matrix or a data frame within SLiM!).
 
 This approach is my preferred approach to creating the NAR model, and is the one I am currently (04/06) working on.
 
