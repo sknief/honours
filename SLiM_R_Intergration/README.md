@@ -3,13 +3,11 @@
 
 At the heart of this project lie the differential equations that describe the interaction strength between nodes in our simulated genetic networks. These differential equations consist of three key parameters (alpha, beta and the hill coefficient), each of which are acted upon by mutations to change the value of these parameters. This in turn then changes the ODE and thus regulates the amount of subsequent protein produced through a change in interaction strength. My model needs to not only solve these ODE's, but I am also relying on the integral of each function (in other words: the area underneath the curve that these ODE's produce) as to have selection act upon a singular factor rather than act on all three parameters separately (for the sake of computing and my own sanity).
 
-*workflow diagram to be added?*
-
 SLiM, while brilliant in its own right, is not capable of solving ODEs, which means I turned towards R, hoping to use the deSolve package. The idea was that SLiM could produce the needed parameter values that had been changed by mutations and these are then fed into R, plugged into the ODEs and the output of those calculations is then fed back into SLiM in order for selection to act upon the individuals. Here in the NAR model, the trait that is selected upon is the concentration of final output produced, which is able to be proxied using the AUC of the interaction between node A and B.
 
 While this sounds simple in principle, it has been a journey trying to get this workflow to work. In total, I have worked through 6 different methods in order to obtain my ODE results:
 
-*Add a diagram of these six options lateron*
+![Flowchart of the six options](https://github.com/sknief/honours/blob/master/SLiM_R_Intergration/sixoptions.png)
 
 Method | Description | Outcome
 ------------- | ------------- | -------------
@@ -40,7 +38,7 @@ While most of these six approaches are not viable for my project, there are thre
 
 Lateral integration, in my books at least, refers to the fact that SLiM and R are running in parallel for the entirety of these SLiM simulation. Each generation, SLiM writes to a file which is read by R, R then writes to another file and this file is read in by SLiM and acted upon by SLiM. ***This is an incredibly powerful approach to working with SLiM and can be extended to any software that can write to .txt, not just R.***
 
-*Add a diagram of that workflow lateron*
+![lateral integration workflow](https://github.com/sknief/honours/blob/master/SLiM_R_Intergration/WOrkflow%201.png)
 
 There are some basic ground rules, but essentially, as long as you can create a text file with the numeric output that you need, you can use lateral integration to work with any other supplementary programme. It is important to note that only singleton files may be read in (ie a file that contains one row of "1 2 3 4 5" and not a file with two rows in the format of
 "1: 1 2 3 4 5, 2: 6 7 8 9 10"). Similarly, these text files have to be space-separated and must not contain whitespace after the last number, otherwise SLiM will throw an error message.
@@ -77,8 +75,6 @@ With lateral integration, you can then manipulate your data like any other float
 This approach is my preferred approach to creating the NAR model, and is the one I am currently (04/06) working on.
 
 ## The Matrix Approach ##
-
-*add a diagram of the different matrices created*
 
 The Matrix approach essentially eliminates the need to use R within the simulations, and instead relies on the complete availability of all possible outcomes before the simulation even begins. This process relies on three matrices:
 
