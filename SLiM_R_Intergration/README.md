@@ -68,10 +68,38 @@ This should print your file content and the `isFloat()` should return T.
 
 With lateral integration, you can then manipulate your data like any other float vector within SLiM (for example, `cbind()` it to another imported text file if you need to make a matrix or a data frame within SLiM!).
 
+- [x] allows input from ANY programme that can export text files
+- [x] output can be generated and used within each generation
+- [x] huge potential to expand SLiMs functionality (especially mathematically)
+- [ ] may be computationally expensive as it requires continues writing to file
+- [ ] only supports singleton text output, so full dataframes are time intensive to recreate
+
 This approach is my preferred approach to creating the NAR model, and is the one I am currently (04/06) working on.
 
 ## The Matrix Approach ##
 
 *add a diagram of the different matrices created*
 
-The Matrix approach essentially eliminates the need to use R within the simulations, and instead relies on the complete availability of all possible outcomes before the simulation even begins.
+The Matrix approach essentially eliminates the need to use R within the simulations, and instead relies on the complete availability of all possible outcomes before the simulation even begins. This process relies on three matrices:
+
+* The *Barcode* Matrix, abbreviated *B*, which takes the number of basepairs of each focal gene and creates all possible binary combinations, i.e. 00000 or 00100 or 01010, etc.
+* The *Mutations* Matrix, abbreviated *M*, which is a 1:1 copy of *B* except that it replaces all incidences of 1 in the barcode matrix with a random mutational effect size. This may be drawn from a normal distribution, a gaussian distribution or any other distribution that best fits your model.
+* The *Parameter* Matrix, abbreviated *P*, where all the effect sizes that represent a parameter of interest are summed with the initial parameter value for that model run. This matrix exists just for the user's convenience, as it allows you to take all mutations that pertain to one parameter and see the overall net effect on this parameter. This step assumes additivity of mutational effects WITHIN a gene (whereas the model assumes non-additivity across genes).
+* The *ODE* Matrix, which is a matrix that contains all ODE solutions that correspond to each barcode. These solutions are calculated using *M* and *P*.
+
+Note that *M*, *P*, and *ODE* matrices are all unique for each model run. Each model run in turn consists of multiple simulation seeds; i.e. the seeds are the replicates for each runs.
+
+These matrices are all fed into SLiM at the start of each simulation and SLiM refers and cross-references these matrices to obtain mutational effect sizes and have selection act upon the final ODE values - **in theory**. This has not been tested yet, so this methodology remains only **POTENTIALLY VIABLE**.
+
+- [x] computationally efficient and inexpensive
+- [x] Matrices can be easily generated using R
+- [x] Full control over input in simulation
+- [ ] Untested, SLiM may still struggle with cross-referencing
+- [ ] Need to create barcode matrices and all data upfront may limit the size of genes modelled (ie 10 basepairs rather than 1000)
+
+
+## Moving forward ##
+
+I will be working with my lateral integration approach, and potentially further research and develop the matrix approach. I hope this guide serves as a useful tool for other researchers that would like to use/manipulate/expand SLiM in a similar fashion.
+
+Credit is highly appreciated. Stella Knief, 05/06/2021
