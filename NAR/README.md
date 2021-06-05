@@ -1,4 +1,4 @@
-#The Negative Autoregulation Motif #
+# The Negative Autoregulation Motif #
 
 ## Overview ###
 
