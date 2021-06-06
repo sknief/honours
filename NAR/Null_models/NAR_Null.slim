@@ -1,7 +1,8 @@
 ///////////////////////////////////////////////////////////////////////
-// Negative Autoregulation Motif code
+// [NULL MODEL] Negative Autoregulation Motif code
+// Version: Null distributions
 // Author: Stella M. S. Knief
-// Work in Progress as of 23/04/2021
+// Work in Progress as of 06/06/2021
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 
@@ -12,14 +13,18 @@ initialize() {
 
 	//section A: constants
 	//defineConstant("K", value); //comment
+
+/*	Code knocked out for null model
 	//for the mutations
-	defineConstant("DelRatio", 0.40); //proportion of deleterious mutations
-	defineConstant("BenRatio", 0.10); //proportion of beneficial mutations
+	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
+	defineConstant("BenRatio", 0.25); //proportion of beneficial mutations
 	defineConstant("NeuRatio", 0.5); //proportion of neutral mutations
+*/
+
 	//for the initial parameter values
 	defineConstant("Abeta", 0.5); //values from Jans model
 	defineConstant("Aalpha", 1); //see above
-	defineConstant("Ahillcoeff", 1000); //see above
+	defineConstant("Ahillcoeff", 10); //see above
 	defineConstant("Bbeta", 0.5); //see above
 	defineConstant("Balpha", 1); //see above
 
@@ -30,27 +35,43 @@ initialize() {
 	initializeRecombinationRate(rates, ends);
 
 	//section B: mutations
-	initializeMutationRate(1e-7);
-	//neutral
-	initializeMutationType("m1", 0.5, "f", 0.0);
-	m1.color = "yellow";
+	initializeMutationRate(1e-8);
+
+	//null model mutations all based on neutral distributions
+	//each region has their own mutationtype
+
+	//Abeta
+	initializeMutationType("m1", 0.5, "n", 0.0, 1);
+	m1.color = "lightblue";
 	m1.convertToSubstitution = T;
-	//deleterious
-	initializeMutationType("m2", 0.5, "g", -0.2, 0.2); //updated according to manual
+	//Aalpha
+	initializeMutationType("m2", 0.5, "n", 0.0, 1);
 	m2.convertToSubstitution = T;
-	m2.color = "red";
-	//beneficial
-	initializeMutationType("m3", 0.5, "e", 0.2); //see page 137
-	m3.convertToSubstitution = T;
-	m3.color = "green";
+	m2.color = "pink";
+	//Ahillcoeff
+	initializeMutationType("m3", 0.5, "n", 0.0, 1);
+	m3.color = "white";
+	//Bbeta
+	initializeMutationType("m4", 0.5, "n", 0.0, 1);
+	m4.convertToSubstitution = T;
+	m4.color = "pink";
+	//Balpha
+	initializeMutationType("m5", 0.5, "n", 0.0, 1);
+	m5.convertToSubstitution = T;
+	m5.color = "lightblue";
+	//non-coding
+	initializeMutationType("m6", 0.5, "f", 0.5);
+	m6.convertToSubstitution = T;
+	m6.color = "grey";
+
 
 	//section C: genomic elements
-	initializeGenomicElementType("g1", m1, 1.0); //non-coding
-	initializeGenomicElementType("g2", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Abeta
-	initializeGenomicElementType("g3", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Aalpha
-	initializeGenomicElementType("g4", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Ahillcoeff
-	initializeGenomicElementType("g5", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Bbeta
-	initializeGenomicElementType("g6", c(m1,m2,m3), c(NeuRatio, DelRatio, BenRatio)); //Balpha
+	initializeGenomicElementType("g1", m6, 1.0); //non-coding
+	initializeGenomicElementType("g2", m1, 1.0); //Abeta
+	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
+	initializeGenomicElementType("g4", m3, 1.0); //Ahillcoeff
+	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
+	initializeGenomicElementType("g6", m5, 1.0); //Balpha
 
 	//section D: chromosome structure
 	initializeGenomicElement(g1, 0, 1999);
@@ -88,44 +109,29 @@ early() {
 	for (ind in sim.subpopulations.individuals) {
 
 		//Node A, alpha value
-		AAD = ind.sumOfMutationsOfType(m2);
-		ind.setValue("aad", AAD);
-		AAB = ind.sumOfMutationsOfType(m3);
-		ind.setValue("aab", AAB);
-		AAT = (Aalpha - AAD + AAB);
+		AAM = ind.sumOfMutationsOfType(m2);
+		AAT = (Aalpha + AAM);
 		ind.setValue("aat", AAT);
 
 		//Node A, beta value
-		ABD = ind.sumOfMutationsOfType(m2);
-		ind.setValue("abd", ABD);
-		ABB = ind.sumOfMutationsOfType(m3);
-		ind.setValue("abb", ABB);
-		ABT = (Abeta - ABD + ABB);
+		ABM = ind.sumOfMutationsOfType(m1);
+		ABT = (Abeta + ABM);
 		ind.setValue("abt", ABT);
 
 		//Node A, hill coeff
-		AHD = ind.sumOfMutationsOfType(m2);
-		ind.setValue("ahd", AHD);
-		AHB = ind.sumOfMutationsOfType(m3);
-		ind.setValue("ahb", AHB);
-		AHT = (Ahillcoeff - AHD + AHB);
+		AHM = ind.sumOfMutationsOfType(m3);
+		AHT = (Ahillcoeff + AHM);
 		ind.setValue("aht", AHT);
 
 		//Node B, alpha value
-		BAD = ind.sumOfMutationsOfType(m2);
-		ind.setValue("bad", BAD);
-		BAB = ind.sumOfMutationsOfType(m3);
-		ind.setValue("bab", BAB);
-		BAT = (Balpha - BAD + BAB);
+		BAM = ind.sumOfMutationsOfType(m5);
+		BAT = (Balpha + BAM);
 		ind.setValue("bat", BAT);
 
 
 		//Node B, beta value
-		BBD = ind.sumOfMutationsOfType(m2);
-		ind.setValue("bbd", BBD);
-		BBB = ind.sumOfMutationsOfType(m3);
-		ind.setValue("bbb", BBB);
-		BBT = (Bbeta - BBD + BBB);
+		BBM = ind.sumOfMutationsOfType(m4);
+		BBT = (Bbeta + BBM);
 		ind.setValue("bbt", BBT);
 
 	}
@@ -138,54 +144,34 @@ early() {
 
 	inds = sim.subpopulations.individuals;
 	//Node A, alpha values
-	test1 = mean(inds.getValue("aad"));
-	test2 = mean(inds.getValue("aab"));
 	test3 = mean(inds.getValue("aat"));
 
 	//Node A, beta values
-	test4 = mean(inds.getValue("abd"));
-	test5 = mean(inds.getValue("abb"));
 	test6 = mean(inds.getValue("abt"));
 
 	//Node A, hill coeff values
-	test7 = mean(inds.getValue("ahd"));
-	test8 = mean(inds.getValue("ahb"));
 	test9 = mean(inds.getValue("aht"));
 
 	//Node B, alpha values
-	test10 = mean(inds.getValue("bad"));
-	test11 = mean(inds.getValue("bab"));
 	test12 = mean(inds.getValue("bat"));
 
 	//Node B, beta values
-	test13 = mean(inds.getValue("bbd"));
-	test14 = mean(inds.getValue("bbb"));
 	test15 = mean(inds.getValue("bbt"));
 
 	catn();
 	catn("Node A, Alpha:");
-	catn("Mean AAD equals" + test1);
-	catn("Mean AAB equals" + test2);
 	catn("Mean AAT equals" + test3);
 	catn();
 	catn("Node A, Beta:");
-	catn("Mean ABD equals" + test4);
-	catn("Mean ABB equals" + test5);
 	catn("Mean ABT equals" + test6);
 	catn();
 	catn("Node A, Hill Coeff:");
-	catn("Mean AHD equals" + test7);
-	catn("Mean AHB equals" + test8);
 	catn("Mean AHT equals" + test9);
 	catn();
 	catn("Node B, Alpha:");
-	catn("Mean BAD equals" + test10);
-	catn("Mean BAB equals" + test11);
 	catn("Mean BAT equals" + test12);
 	catn();
 	catn("Node B, Beta:");
-	catn("Mean BBD equals" + test13);
-	catn("Mean BBB equals" + test14);
 	catn("Mean BBT equals" + test15);
 	catn();
 	catn("100 GENERATIONs HAVE PASSED!!");

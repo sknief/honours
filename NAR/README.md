@@ -27,3 +27,10 @@ Within each generation, eight processes occur:
 This cycle then begins anew.
 
 Ultimately, I will create two versions of this model, one with the NAR motif ODE functions and one that operates on a purely additive genetic architecture, which then serves as the null model (i.e. control model). The null model is also an ideal way to test that all underlying genetic principles operate as they should. For the ODE models, I will rely on lateral integration with R (see my [SLiM/R Integration works](https://github.com/sknief/honours/tree/master/SLiM_R_Intergration)).
+
+## Version Log ##
+### Null Models ###
+
+**Version 1**
+Distribution Type: Null Distributions (mean: 0, st. dev: 1)
+Ratio of Beneficial-Deleterious-Neutral: 0.25/0.25/0.5
