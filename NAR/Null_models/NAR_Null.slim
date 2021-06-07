@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////
 // [NULL MODEL] Negative Autoregulation Motif code
-// Version: Null distributions
+// Version: 1 (WF Null distributions)
 // Author: Stella M. S. Knief
 // Work in Progress as of 06/06/2021
 // Created for Honours 2021
@@ -14,7 +14,7 @@ initialize() {
 	//section A: constants
 	//defineConstant("K", value); //comment
 
-/*	Code knocked out for null model
+	/*	Code knocked out for null model
 	//for the mutations
 	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
 	defineConstant("BenRatio", 0.25); //proportion of beneficial mutations
@@ -41,22 +41,23 @@ initialize() {
 	//each region has their own mutationtype
 
 	//Abeta
-	initializeMutationType("m1", 0.5, "n", 0.0, 1);
+	initializeMutationType("m1", 0.5, "n", 0.0, 0.5);
 	m1.color = "lightblue";
 	m1.convertToSubstitution = T;
 	//Aalpha
-	initializeMutationType("m2", 0.5, "n", 0.0, 1);
+	initializeMutationType("m2", 0.5, "n", 0.0, 0.5);
 	m2.convertToSubstitution = T;
 	m2.color = "pink";
 	//Ahillcoeff
-	initializeMutationType("m3", 0.5, "n", 0.0, 1);
+	initializeMutationType("m3", 0.5, "n", 0.0, 0.5);
+	m3.convertToSubstitution = T;
 	m3.color = "white";
 	//Bbeta
-	initializeMutationType("m4", 0.5, "n", 0.0, 1);
+	initializeMutationType("m4", 0.5, "n", 0.0, 0.5);
 	m4.convertToSubstitution = T;
 	m4.color = "pink";
 	//Balpha
-	initializeMutationType("m5", 0.5, "n", 0.0, 1);
+	initializeMutationType("m5", 0.5, "n", 0.0, 0.5);
 	m5.convertToSubstitution = T;
 	m5.color = "lightblue";
 	//non-coding
@@ -137,6 +138,35 @@ early() {
 	}
 }
 
+1: late() {
+	inds = sim.subpopulations.individuals;
+
+	//preparing fitness values
+	FAbeta = inds.sumOfMutationsOfType(m1);
+	scalem1 = dnorm(FAbeta, 1.0, 2.0);
+	FAalpha = inds.sumOfMutationsOfType(m2);
+	scalem2 = dnorm(FAalpha, 1.0, 2.0);
+	FAhillcoeff = inds.sumOfMutationsOfType(m3);
+	scalem3 = dnorm(FAhillcoeff, 1.0, 2.0);
+	FBbeta = inds.sumOfMutationsOfType(m4);
+	scalem4 = dnorm(FBbeta, 1.0, 2.0);
+	FBalpha = inds.sumOfMutationsOfType(m5);
+	scalem5 = dnorm(FBalpha, 1.0, 2.0);
+
+	//ADDITIVE fitness function, the entire network is added to the fitnessScaling [NULL MODEL]
+	inds.fitnessScaling = 1.0 + (dnorm(FAbeta, 1.0, 2.0) / scalem1) + (dnorm(FAalpha, 1.0, 2.0) / scalem2) + (dnorm(FAhillcoeff, 1.0, 2.0) / scalem3) + (dnorm(FBbeta, 1.0, 2.0) / scalem4) + (dnorm(FBalpha, 1.0, 2.0) / scalem5);
+
+	if (sim.generation % 10 == 0) {
+		catn("Here's your mean params:");
+		catn("Abeta" + mean(FAbeta));
+		catn("Aalpha" + mean(FAalpha));
+		catn("Ahillcoeff" + mean(FAhillcoeff));
+		catn("Bbeta" + mean(FBbeta));
+		catn("Balpha" + mean(FBalpha));
+		catn();
+	}
+}
+
 //output / testing block
 1:20000 late() {
 
@@ -176,7 +206,7 @@ early() {
 	catn();
 	catn("100 GENERATIONs HAVE PASSED!!");
 	catn("SO MUCH OUTPUT AAAAAAAAAAAA");
-	catn();
+	catn("REMEMBER THIS IS ONLY THE TOTAL GETVALUES (ADDED TO INITIAL PARAMS");
 	catn();
 }
 

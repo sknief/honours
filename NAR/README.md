@@ -33,4 +33,6 @@ Ultimately, I will create two versions of this model, one with the NAR motif ODE
 
 **Version 1**
 Distribution Type: Null Distributions (mean: 0, st. dev: 1)
+WF or nonWF: WF Model
+Fitness Model: Mating-based
 Ratio of Beneficial-Deleterious-Neutral: 0.25/0.25/0.5
