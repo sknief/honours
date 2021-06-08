@@ -6,94 +6,87 @@
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 
-//Going to base this off my digital yeast code for the start
+/*Important Model Notes:
+	Trait under selection is BConc, the concentration of B
+	This version of the code simulates stabilising selection, with an
+	optimum value of BOpt
+
+*/
+
 
 //START COMMANDS
 initialize() {
 
 	//section A: constants
-	//defineConstant("K", value); //comment
-
-	/*	Code knocked out for null model
-	//for the mutations
-	defineConstant("DelRatio", 0.25); //proportion of deleterious mutations
-	defineConstant("BenRatio", 0.25); //proportion of beneficial mutations
-	defineConstant("NeuRatio", 0.5); //proportion of neutral mutations
-*/
-
-	//for the initial parameter values
-	defineConstant("Abeta", 0.5); //values from Jans model
-	defineConstant("Aalpha", 1); //see above
-	defineConstant("Ahillcoeff", 10); //see above
-	defineConstant("Bbeta", 0.5); //see above
-	defineConstant("Balpha", 1); //see above
+	defineConstant("BOpt", 10); //check this value later
+	defineConstant("AbetaINI", 2); //values from Jans model
+	defineConstant("AalphaINI", 1); //see above
+	defineConstant("AhillcoeffINI", 10); //see above
+	defineConstant("BbetaINI", 0.5); //see above
+	defineConstant("BalphaINI", 1); //see above
 
 	//Section AA: Recombination
-	// do i need any recombination? i got the code in here just in case but hmm, up for discussion
-	ends = c(6250, 6251, 10999);
-	rates = c(1e-8, 0.5, 1e-8);
-	initializeRecombinationRate(rates, ends);
+		ends = c(6250, 6251, 10999);
+		rates = c(1e-8, 0.5, 1e-8);
+		initializeRecombinationRate(rates, ends);
 
 	//section B: mutations
-	initializeMutationRate(1e-8);
-
-	//null model mutations all based on neutral distributions
-	//each region has their own mutationtype
-
-	//Abeta
-	initializeMutationType("m1", 0.5, "n", 0.0, 0.5);
-	m1.color = "lightblue";
-	m1.convertToSubstitution = T;
-	//Aalpha
-	initializeMutationType("m2", 0.5, "n", 0.0, 0.5);
-	m2.convertToSubstitution = T;
-	m2.color = "pink";
-	//Ahillcoeff
-	initializeMutationType("m3", 0.5, "n", 0.0, 0.5);
-	m3.convertToSubstitution = T;
-	m3.color = "white";
-	//Bbeta
-	initializeMutationType("m4", 0.5, "n", 0.0, 0.5);
-	m4.convertToSubstitution = T;
-	m4.color = "pink";
-	//Balpha
-	initializeMutationType("m5", 0.5, "n", 0.0, 0.5);
-	m5.convertToSubstitution = T;
-	m5.color = "lightblue";
-	//non-coding
-	initializeMutationType("m6", 0.5, "f", 0.5);
-	m6.convertToSubstitution = T;
-	m6.color = "grey";
-
+		initializeMutationRate(1e-8);
+		//null model mutations all based on neutral distributions
+		//each region has their own mutationtype
+		//Abeta
+		initializeMutationType("m1", 0.5, "n", 0.0, 0.5);
+		m1.color = "lightblue";
+		m1.convertToSubstitution = T;
+		//Aalpha
+		initializeMutationType("m2", 0.5, "n", 0.0, 0.5);
+		m2.convertToSubstitution = T;
+		m2.color = "pink";
+		//Ahillcoeff
+		initializeMutationType("m3", 0.5, "n", 0.0, 0.5);
+		m3.convertToSubstitution = T;
+		m3.color = "white";
+		//Bbeta
+		initializeMutationType("m4", 0.5, "n", 0.0, 0.5);
+		m4.convertToSubstitution = T;
+		m4.color = "pink";
+		//Balpha
+		initializeMutationType("m5", 0.5, "n", 0.0, 0.5);
+		m5.convertToSubstitution = T;
+		m5.color = "lightblue";
+		//non-coding
+		initializeMutationType("m6", 0.5, "f", 0.5);
+		m6.convertToSubstitution = T;
+		m6.color = "grey";
 
 	//section C: genomic elements
-	initializeGenomicElementType("g1", m6, 1.0); //non-coding
-	initializeGenomicElementType("g2", m1, 1.0); //Abeta
-	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //Ahillcoeff
-	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
-	initializeGenomicElementType("g6", m5, 1.0); //Balpha
+		initializeGenomicElementType("g1", m6, 1.0); //non-coding
+		initializeGenomicElementType("g2", m1, 1.0); //Abeta
+		initializeGenomicElementType("g3", m2, 1.0); //Aalpha
+		initializeGenomicElementType("g4", m3, 1.0); //Ahillcoeff
+		initializeGenomicElementType("g5", m4, 1.0); //Bbeta
+		initializeGenomicElementType("g6", m5, 1.0); //Balpha
 
 	//section D: chromosome structure
-	initializeGenomicElement(g1, 0, 1999);
-	initializeGenomicElement(g2, 2000, 2999); //Abeta
-	initializeGenomicElement(g1, 3000, 3499); //spacer
-	initializeGenomicElement(g3, 3500, 4499); //Aalpha
-	initializeGenomicElement(g1, 4500, 4999); //spacer
-	initializeGenomicElement(g4, 5000, 5999); //Ahillcoeff
-	initializeGenomicElement(g1, 6000, 6499); //spacer
-	initializeGenomicElement(g5, 6500, 7499); //Bbeta
-	initializeGenomicElement(g1, 7500, 7999); //spacer
-	initializeGenomicElement(g6, 8000, 8999); //Balpha
-	initializeGenomicElement(g1, 9000, 10999); //end spacer
+		initializeGenomicElement(g1, 0, 1999);
+		initializeGenomicElement(g2, 2000, 2999); //Abeta
+		initializeGenomicElement(g1, 3000, 3499); //spacer
+		initializeGenomicElement(g3, 3500, 4499); //Aalpha
+		initializeGenomicElement(g1, 4500, 4999); //spacer
+		initializeGenomicElement(g4, 5000, 5999); //Ahillcoeff
+		initializeGenomicElement(g1, 6000, 6499); //spacer
+		initializeGenomicElement(g5, 6500, 7499); //Bbeta
+		initializeGenomicElement(g1, 7500, 7999); //spacer
+		initializeGenomicElement(g6, 8000, 8999); //Balpha
+		initializeGenomicElement(g1, 9000, 10999); //end spacer
 
 	//section DD: colorcoding
-	g1.color = "darkgrey";
-	g2.color = "firebrick";
-	g3.color = "firebrick";
-	g4.color = "firebrick";
-	g5.color = "tan3";
-	g6.color = "tan3";
+		g1.color = "darkgrey";
+		g2.color = "firebrick";
+		g3.color = "firebrick";
+		g4.color = "firebrick";
+		g5.color = "yellow";
+		g6.color = "yellow";
 
 	//section E: advanced behaviour / mechanics
 
@@ -102,114 +95,44 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 2000);
+	sim.addSubpop("p1", 200);
 }
 
-//okay, heres the money maker:
-early() {
-	for (ind in sim.subpopulations.individuals) {
-
-		//Node A, alpha value
-		AAM = ind.sumOfMutationsOfType(m2);
-		AAT = (Aalpha + AAM);
-		ind.setValue("aat", AAT);
-
-		//Node A, beta value
-		ABM = ind.sumOfMutationsOfType(m1);
-		ABT = (Abeta + ABM);
-		ind.setValue("abt", ABT);
-
-		//Node A, hill coeff
-		AHM = ind.sumOfMutationsOfType(m3);
-		AHT = (Ahillcoeff + AHM);
-		ind.setValue("aht", AHT);
-
-		//Node B, alpha value
-		BAM = ind.sumOfMutationsOfType(m5);
-		BAT = (Balpha + BAM);
-		ind.setValue("bat", BAT);
-
-
-		//Node B, beta value
-		BBM = ind.sumOfMutationsOfType(m4);
-		BBT = (Bbeta + BBM);
-		ind.setValue("bbt", BBT);
-
-	}
-}
-
+/fitness code
 1: late() {
-	inds = sim.subpopulations.individuals;
+	for (ind in sim.subpopulations.individuals) {
+		//code for the concentration of A
+		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
+		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
+		AConc = Aalpa - Abeta;
+		ind.setvalue("Aconcentration", AConc);
 
-	//preparing fitness values
-	FAbeta = inds.sumOfMutationsOfType(m1);
-	scalem1 = dnorm(FAbeta, 1.0, 2.0);
-	FAalpha = inds.sumOfMutationsOfType(m2);
-	scalem2 = dnorm(FAalpha, 1.0, 2.0);
-	FAhillcoeff = inds.sumOfMutationsOfType(m3);
-	scalem3 = dnorm(FAhillcoeff, 1.0, 2.0);
-	FBbeta = inds.sumOfMutationsOfType(m4);
-	scalem4 = dnorm(FBbeta, 1.0, 2.0);
-	FBalpha = inds.sumOfMutationsOfType(m5);
-	scalem5 = dnorm(FBalpha, 1.0, 2.0);
 
-	//ADDITIVE fitness function, the entire network is added to the fitnessScaling [NULL MODEL]
-	inds.fitnessScaling = 1.0 + (dnorm(FAbeta, 1.0, 2.0) / scalem1) + (dnorm(FAalpha, 1.0, 2.0) / scalem2) + (dnorm(FAhillcoeff, 1.0, 2.0) / scalem3) + (dnorm(FBbeta, 1.0, 2.0) / scalem4) + (dnorm(FBalpha, 1.0, 2.0) / scalem5);
+		//code for the concentration of B
+		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI)
+		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI)
+		BConc = [Balpha * AConc] - Balpha;
+		ind.setvalue("Bconcentration", BConc);
+		//i dont need to set all of these as values to thr individual right?
 
-	if (sim.generation % 10 == 0) {
-		catn("Here's your mean params:");
-		catn("Abeta" + mean(FAbeta));
-		catn("Aalpha" + mean(FAalpha));
-		catn("Ahillcoeff" + mean(FAhillcoeff));
-		catn("Bbeta" + mean(FBbeta));
-		catn("Balpha" + mean(FBalpha));
-		catn();
+	 	//fitnessScaling
+		inds.fitnessScaling = 1.0 + ((abs(BOpt - BConc)*(-1))/BOpt)
+		//penalty system that punishes any deviance from Bopt
+
+		//add in if statement that sets fitness to 1.5 if Bopt = BConc?
+		//maybe use tags for that? 
 	}
-}
-
-//output / testing block
-1:20000 late() {
 
 	if (sim.generation % 100 != 0) return;
 
+	//output code to test the values
 	inds = sim.subpopulations.individuals;
-	//Node A, alpha values
-	test3 = mean(inds.getValue("aat"));
+	data = cbind(inds.index, inds.getValue("Aconcentration"), inds.getValue("Bconcentration"));
+	print("Here are your values:");
+	print(sample(data, 10);
 
-	//Node A, beta values
-	test6 = mean(inds.getValue("abt"));
-
-	//Node A, hill coeff values
-	test9 = mean(inds.getValue("aht"));
-
-	//Node B, alpha values
-	test12 = mean(inds.getValue("bat"));
-
-	//Node B, beta values
-	test15 = mean(inds.getValue("bbt"));
-
-	catn();
-	catn("Node A, Alpha:");
-	catn("Mean AAT equals" + test3);
-	catn();
-	catn("Node A, Beta:");
-	catn("Mean ABT equals" + test6);
-	catn();
-	catn("Node A, Hill Coeff:");
-	catn("Mean AHT equals" + test9);
-	catn();
-	catn("Node B, Alpha:");
-	catn("Mean BAT equals" + test12);
-	catn();
-	catn("Node B, Beta:");
-	catn("Mean BBT equals" + test15);
-	catn();
-	catn("100 GENERATIONs HAVE PASSED!!");
-	catn("SO MUCH OUTPUT AAAAAAAAAAAA");
-	catn("REMEMBER THIS IS ONLY THE TOTAL GETVALUES (ADDED TO INITIAL PARAMS");
-	catn();
 }
 
-20000 late() {
+200 late() {
 	sim.outputFull();
 }

@@ -1,0 +1,56 @@
+///////////////////////////////////////////////////////////////////////
+// Negative Autoregulation Motif code
+// Author: Stella M. S. Knief
+// Work in Progress as of 23/04/2021
+// Created for Honours 2021
+/////////////////////////////////////////////////////////////////////
+
+//Going to base this off my digital yeast code for the start
+
+//START COMMANDS
+initialize() {
+
+	//section A: constants
+
+
+	//Section AA: Recombination
+
+
+	//section B: mutations
+	
+
+	//section C: genomic elements
+
+	//section D: chromosome structure
+
+
+	//section DD: colorcoding
+
+	//section E: advanced behaviour / mechanics
+
+}
+//initialize command bracket ends here
+
+//POPULATION CODE
+1 early() {
+	sim.addSubpop("p1", 2000);
+}
+
+//okay, heres the money maker:
+early() {
+	for (ind in sim.subpopulations.individuals) {
+
+
+	}
+}
+
+//output / testing block
+1:20000 late() {
+
+	if (sim.generation % 100 != 0) return;
+
+}
+
+20000 late() {
+	sim.outputFull();
+}
