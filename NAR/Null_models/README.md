@@ -6,10 +6,10 @@ Compiled here are notes on the different models found above. Included are descri
 
 Version | Description | Build Status
 ------------- | ------------- | -------------
-V1 | Stabilising Selection Only, No penalty in fitness function | ***Presumed Functioning, Needs Testing***
-V2 | Burn-In, then Directional Selection, No Penalty in fitness function | ***WIP***
-V3 | Stabilising Selection Only, Penalty in fitness function | ***Not Started***
-V4 | Burn-In, then Directional Selection, Penalty in fitness function | ***Not Started***
+V1 | Stabilising Selection Only| ***Presumed Functioning, Needs Testing***
+V2 | Burn-In, then Directional Selection | ***WIP***
+V3 | REDACTED | ***Not Started***
+V4 | REDACTED | ***Not Started***
 
 ----
 
