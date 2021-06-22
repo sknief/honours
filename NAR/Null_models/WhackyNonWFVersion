@@ -15,25 +15,26 @@
 //START COMMANDS
 initialize() {
 
-	initializeSLiMOptions(keepPedigrees=T);
-
+	initializeSLiMModelType("nonWF");
+	//initializeSLiMOptions(keepPedigrees=T);
+	initializeSLiMOptions(keepPedigrees=T, dimensionality="xy", periodicity="xy");
 
 	//section A: constants
-	defineConstant("BOpt", 250); //check this value later
-	defineConstant("AbetaINI", 50); //values from Jans model
-	defineConstant("AalphaINI", 20); //see above
+	defineConstant("BOpt", 50); //check this value later
+	defineConstant("AbetaINI", 20); //values from Jans model
+	defineConstant("AalphaINI", 5); //see above
 	defineConstant("AhillcoeffINI", 10); //see above
-	defineConstant("BbetaINI", 15); //see above
-	defineConstant("BalphaINI", 10); //see above
-
-
+	defineConstant("BbetaINI", 1.5); //see above
+	defineConstant("BalphaINI", 1); //see above
+	defineConstant("K", 2000);	// carrying capacity
+	defineConstant("S", 0.1);   // sigma_S, the spatial competition width
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
 	rates = c(1e-8, 0.5, 1e-8);
 	initializeRecombinationRate(rates, ends);
 	//section B: mutations
-	initializeMutationRate(6.3e-6);
+	initializeMutationRate(1e-8);
 	//null model mutations all based on neutral distributions
 	//each region has their own mutationtype
 	//Abeta
@@ -87,6 +88,12 @@ initialize() {
 	g5.color = "yellow";
 	g6.color = "yellow";
 
+	//section E: advanced behaviour / mechanics
+	// spatial competition
+	initializeInteractionType(1, "xy", reciprocal=T, maxDistance=S*3);
+	i1.setInteractionFunction("n", 1.0, S);
+	// spatial mate choice
+	initializeInteractionType(2, "xy", reciprocal=T, maxDistance=0.1);
 
 }
 
@@ -95,58 +102,88 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 2000);
+	sim.addSubpop("p1", 200);
+	p1.individuals.setSpatialPosition(p1.pointUniform(1));
 }
 
-//make non-coding neutral
-fitness(m6) { return 1.0; }
+reproduction() {
+	// choose our nearest neighbor as a mate, within the max distance
+	mate = i2.nearestNeighbors(individual, 1);
+	for (i in seqLen(rpois(1, 0.1)))
+	{
+		if (mate.size())
+			offspring = subpop.addCrossed(individual, mate);
+		else
+			offspring = subpop.addSelfed(individual);
+		// set offspring position
+		pos = individual.spatialPosition + rnorm(2, 0, 0.02);
+		offspring.setSpatialPosition(p1.pointPeriodic(pos));
+	}
 
-//for this version, make ahillcoeff neutral
-fitness(m3) { return 1.0; }
+}
+
+
+//old code snippet to try
+early() {
+	i1.evaluate();
+	// spatial competition provides density-dependent selection
+	inds = p1.individuals;
+	competition = i1.totalOfNeighborStrengths(inds);
+	competition = (competition + 1) / (2 * PI * S^2);
+	inds.fitnessScaling = K / competition;
+}
 
 //fitness code
-1:late() {
+1: late() {
 	for (ind in sim.subpopulations.individuals) {
 		//code for the concentration of A
-		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
-		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
-		AConc = Abeta - Aalpha;
+		Aalpha = AalphaINI + ((ind.sumOfMutationsOfType(m2) * AalphaINI)/AalphaINI);
+		Abeta = AbetaINI  + ((ind.sumOfMutationsOfType(m1) * AbetaINI)/AbetaINI);
+		AConc = Aalpha - Abeta;
 		ind.setValue("Aconcentration", AConc);
 
 
 		//code for the concentration of B
-		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
-		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
+		Balpha = BalphaINI + ((ind.sumOfMutationsOfType(m5) * BalphaINI)/BalphaINI);
+		Bbeta = BbetaINI + ((ind.sumOfMutationsOfType(m4) * BbetaINI)/BbetaINI);
 		BConc = (Bbeta - Balpha)*AConc;
 		ind.setValue("Bconcentration", BConc);
+		//i dont need to set all of these as values to the individual right?
 
 		//fitnessScaling
-		/*
 		if (BConc < 0)
 			ind.fitnessScaling = 0.5;
-		else */
-			ind.fitnessScaling = exp(-(BConc-BOpt)^2);
+		else
+			ind.fitnessScaling = 1.0 + exp(-(BConc-BOpt)^2);
 
-}
-}
 
-/*
-fitness(NULL){
-for (ind in sim.subpopulations.individuals) {
-	FBConc = ind.getValue("Bconcentration");
-	hold = FBConc - BOpt;
-	return 1.0 + exp(-(hold)^2);
 	}
+
+	if (sim.generation % 100 != 0) return;
+
+	//output code to test the values
+	/*
+	inds = sim.subpopulations.individuals;
+	index = inds.pedigreeID;
+	index = asFloat(index);
+	data = rbind(inds.getValue("Aconcentration"), inds.getValue("Bconcentration"));
+	print("Here are your values:");
+	catn(rbind(index, data));
+	*/
 }
-*/
 
 //HISTORY PLOT CODE + OUTPUT CODE
 
-1 early() {
+1 late() {
 
 	//B Conc Code
 	sim.setValue("history", matrix(c(0.0, 0.0), nrow=1));
 	defineConstant("pngPath", writeTempFile("plot_", ".png", ""));
+
+	//Fitness Plot Code
+	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
+	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
+
 
 	if (exists("slimgui"))
 		slimgui.openDocument(pngPath);
@@ -162,6 +199,8 @@ for (ind in sim.subpopulations.individuals) {
 
 	//B Conc Plot Code
 	meanNetwork = mean(inds.getValue("Bconcentration"));
+	//Mean Fitness Plot Code
+	meanFitness = mean(inds.getValue("Bconcentration"));
 
 
 	catn();
@@ -179,13 +218,31 @@ for (ind in sim.subpopulations.individuals) {
 	rstr = paste(c('{',
 		'x <- c(' + paste(history[,0], sep=", ") + ')',
 		'y <- c(' + paste(history[,1], sep=", ") + ')',
-		'png(width=15, height=15, units="in", res=72, file="' + pngPath + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 20000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
+		'png(width=15, height=15, units="in", res=72, file="' + pngPath + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 20000), ylim=c(-50,50), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
 		'box()',
 		'dev.off()',
 		'}'), sep="\n");
 	scriptPath = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath);
 	deleteFile(scriptPath);
+
+	//Fitness plot code
+	history2 = sim.getValue("history2");
+	history2 = rbind(history2, c(sim.generation, meanFitness));
+	sim.setValue("history2", history2);
+	//aes data for history plot -> sends data to R
+	rstr = paste(c('{',
+		'x <- c(' + paste(history2[,0], sep=", ") + ')',
+		'y <- c(' + paste(history2[,1], sep=", ") + ')',
+		'png(width=15, height=15, units="in", res=72, file="' + pngPath2 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 20000), ylim=c(-50,50), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
+		'box()',
+		'dev.off()',
+		'}'), sep="\n");
+	scriptPath2 = writeTempFile("plot_", ".R", rstr);
+	system("/usr/lib/R/bin/Rscript", args=scriptPath2);
+	deleteFile(scriptPath2);
+
+
 
 } //late code closes here
 
@@ -195,3 +252,15 @@ late() {
 	if (sum(p1.individualCount) == 0)
 		stop("Complete extinction in generation " + sim.generation + ".");
 }
+
+//spatial code
+ late() {
+         // move around a bit
+        for (ind in p1.individuals)
+         {
+            newPos = ind.spatialPosition + runif(2, -0.01, 0.01);
+            ind.setSpatialPosition(p1.pointPeriodic(newPos));
+         }
+         // then look for mates
+         i2.evaluate();
+     }
