@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////
 // [NULL MODEL] Negative Autoregulation Motif code
-// Version: 1 (WF Null distributions) [OUTPUT HEAVY VERSION]
+// Version: 2 (WF Null distributions) [WITH BURNIN]
 // Author: Stella M. S. Knief
-// Work in Progress as of 06/06/2021
+// Work in Progress as of 22/06/2021
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
@@ -105,7 +105,15 @@ fitness(m6) { return 1.0; }
 fitness(m3) { return 1.0; }
 
 //fitness code
-1:late() {
+
+//burn-in period
+1:999 fitness(m1) { return 1.0; }
+1:999 fitness(m2) { return 1.0; }
+1:999 fitness(m4) { return 1.0; }
+1:999 fitness(m5) { return 1.0; }
+
+
+1000:late() {
 	for (ind in sim.subpopulations.individuals) {
 		//code for the concentration of A
 		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
@@ -153,7 +161,7 @@ for (ind in sim.subpopulations.individuals) {
 }
 
 
-1:2000 late() {
+1000:2000 late() {
 	// output, run every 1000 generations
 
 	if (sim.generation % 100 != 0) return;
