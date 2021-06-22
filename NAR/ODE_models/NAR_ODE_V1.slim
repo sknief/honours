@@ -1,11 +1,10 @@
-///////////////////////////////////////////////////////////////////////
-// [NULL MODEL] Negative Autoregulation Motif code
-// Version: 1 (WF Null distributions) [OUTPUT HEAVY VERSION]
-// Author: Stella M. S. Knief
-// Work in Progress as of 06/06/2021
-// Running/Functioning as of 22/06/2021
-// Created for Honours 2021
-/////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+// [ODE MODEL] Negative Autoregulation Motif code                   //
+// Version: 1 (WF ODE distributions) [NO BURN IN]                   //
+// Author: Stella M. S. Knief                                       //
+// Work in Progress as of 22/06/2021                                //
+// Created for Honours 2021                                         //
+//////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
 	Trait under selection is BConc, the concentration of B
 	This version of the code simulates stabilising selection, with an
@@ -13,7 +12,7 @@
 */
 
 
-//START COMMANDS
+//START COMMANDS -------------------------------------------------------------------------------------------
 initialize() {
 
 	initializeSLiMOptions(keepPedigrees=T);
@@ -91,21 +90,76 @@ initialize() {
 
 }
 
-//initialize command bracket ends here
 
 
-//POPULATION CODE
+//POPULATION CODE -----------------------------------------------------------------------------------------
 1 early() {
 	sim.addSubpop("p1", 8000);
 }
 
+
+//FILE MANIPULATION ------------------------------------------------------------------------------------------
+
+2 early() {
+getwd();
+}
+
+/* commented out for the sake of trying strplit stuff
+early() {
+	for (ind in sim.subpopulations.individuals) {
+		//Node A, alpha value
+		AAD = ind.sumOfMutationsOfType(m2);
+		ind.setValue("aad", AAD);
+	}
+
+	inds = sim.subpopulations.individuals;
+	luna = c(inds.getValue("aad"));
+	freya = inds.genomes.mutationsOfType(m2);
+	print(freya);
+	sylvia = matrix(luna, ncol = 1);
+	print(sylvia); //lets check what this puts output
+
+	/*if the above works
+	bygate = cbind(freya, sylvia);
+	print(bygate);
+	*/
+
+}
+*/
+
+//ODE input/read-in
+early(){
+	input = readFile("~/Desktop/ODE.txt");
+	input = asFloat(strsplit(ODE));
+	print("These are your ODE here:");
+	print(ODE);
+	freya = cbind([GENERATIONTHING], input);
+	print(freya);
+
+
+	val = isFloat(ODE);
+	print("TRUE OR FALSE that we all  FLOAT down here?:" + ODE);
+
+
+
+
+}
+
+//ODE output/write-to
+late(){
+
+
+}
+
+
+//FITNESS CODE ---------------------------------------------------------------------------------------------
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
 //for this version, make ahillcoeff neutral
 fitness(m3) { return 1.0; }
 
-//fitness code
+//Node code
 1:late() {
 	for (ind in sim.subpopulations.individuals) {
 		//code for the concentration of A
@@ -141,7 +195,7 @@ for (ind in sim.subpopulations.individuals) {
 }
 */
 
-//HISTORY PLOT CODE + OUTPUT CODE
+//HISTORY PLOT CODE + OUTPUT CODE --------------------------------------------------------------------------
 
 1 early() {
 
@@ -190,10 +244,3 @@ for (ind in sim.subpopulations.individuals) {
 	deleteFile(scriptPath);
 
 } //late code closes here
-
-
-//Callback for if they all die
-late() {
-	if (sum(p1.individualCount) == 0)
-		stop("Complete extinction in generation " + sim.generation + ".");
-}
