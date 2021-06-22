@@ -28,5 +28,4 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
   </details>
 
 ### Null Model V2 ###
-
 *22/06/2021* - Added a burn-in section, which appears to work? Need to get more information on how other models handle burn-in; quasi-functional for now though.
