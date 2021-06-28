@@ -115,6 +115,13 @@ fitness(m6) { return 1.0; }
 //for this version, make K neutral
 fitness(m3) { return 1.0; }
 
+//trial?
+fitness(NULL) {
+if (ind.fitnessScaling <= -1)
+	return -0.5;
+else return relFitness;
+}
+
 
 //fitness code
 1:late() {
@@ -135,6 +142,7 @@ fitness(m3) { return 1.0; }
 		fitnessfunction = exp(-(BConc-BOpt)^2);
 		fortyfitnessfunction = fitnessfunction * 40;
 
+//could potentially modify this? may make <= -1 and return -0.5
 		//fitnessScaling
 		if (fitnessfunction < 0) {
 			ind.fitnessScaling = fitnessfunction + 0.01;
@@ -241,14 +249,3 @@ fitness(m3) { return 1.0; }
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
-
-
-
-} //late code closes here
-
-
-//Callback for if they all die
-late() {
-	if (sum(p1.individualCount) == 0)
-		stop("Complete extinction in generation " + sim.generation + ".");
-}
