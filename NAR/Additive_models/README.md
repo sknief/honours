@@ -8,8 +8,11 @@ Version | Description | Build Status
 ------------- | ------------- | -------------
 V1.0 | Stabilising Selection Only| ***Needs Bug Fixing***
 V1.1 | Modified copy of V1.0, during meeting with Daniel | ***Retired, Used as Reference***
-V2.0 | Burn-In, then Directional Selection | ***Presumed Functioning, Needs Testing***
-WhackyNonWFVersion | a nonWF version with spatial selection & mating. Based on V1 | ***Regretted***
+V1.2 | Modified copy of V1.0, Enhancement (Plots + Genotypes) | ***Succeeded***
+V1.3.0 | Successor to V1.2, Begin of Bug Fixing | ***Succeeded***
+V1.3.1 | Bug Fix, successor to V1.3.0  | ***Work in Progress***
+V2.0 | Burn-In, then Directional Selection | ***Outdated as of V1.2***
+WhackyNonWFVersion | a nonWF version with spatial selection & mating. Based on V1.0 | ***Regretted***
 
 ----
 
@@ -46,23 +49,32 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
  </details>
 
 
-### Additive Model V1.3 ###
+### Additive Model V1.3.0 ###
 
 *28/06/2021* - Modification of V1.2 with new fitnessScaling statements - ATTEMPTED BUG FIX. Important info on the SLiM error message below (taken from [slim-discuss](https://groups.google.com/g/slim-discuss/c/06IeoXNo6F0/m/IBl9m6R9BgAJ))
 
 > I ran this script under SLiMgui and got the "total fitness of all individuals is <= 0.0" error.  This seems to make sense; the behavior I saw was that the number of TE mutations was increasing without bound.  A quick check in R indicates that your fitness function, for the parameters a and b that you use, underflows to 0.0 when n equals 1575; the number becomes so small that it is indistinguishable from zero given the limited precision of floating-point numbers.  So when every individual has that many TE mutations, SLiM can no longer choose individuals to mate because every individual has a fitness of 0.
 
 Now from the SLiM Manual:
->Note that these distributions can in principle produce selection coefficients smaller than -1.0. In that case, the mutations will be evaluated as “lethal” by SLiM, and the relative fitness of the individual will be set to 0.0. 
+>Note that these distributions can in principle produce selection coefficients smaller than -1.0. In that case, the mutations will be evaluated as “lethal” by SLiM, and the relative fitness of the individual will be set to 0.0.
+
+Lots of insight, little improvement.
 
 <details>
    <summary>Patch Notes</summary>
-   <p> * Changed `Ahillcoeff` to `K`</p>
-   <p> * Changed `K` colour block to lightblue</p>
-   <p> * Additional Live Plot: [A]/t</p>
-   <p> * Additional Live Plot: [A]/[B]</p>
+   <p> * Added more `fitness` callbacks</p>
 </details>
 
+### Additive Model V1.3.1 ###
+
+*29/06/2021* - Modification of V1.3.1 with attempted bug fixed: script based fitness to avoid sampling selection coefficients smaller than or equal to -1.0 (addressing the second blockquote above). This has not fixed it entirely, so reworking fitness callbacks still. If I cannot get it to work, I might text Ben again and move onto the ODE models.
+
+<details>
+   <summary>Patch Notes</summary>
+   <p> * New `fitness(NULL)` callback to avoid fitnessScaling going -1</p>
+   <p> * Script based fitness call that appears to function like the original code</p>
+   <p> * Deleted old vistigal code</p>
+</details>
 
 ### Additive Model V2.0 ###
 *22/06/2021* - Added a burn-in section, which appears to work? Need to get more information on how other models handle burn-in; quasi-functional for now though.
