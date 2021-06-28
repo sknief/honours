@@ -95,7 +95,7 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 2000);
+	sim.addSubpop("p1", 200);
 }
 
 //make non-coding neutral
@@ -103,6 +103,28 @@ fitness(m6) { return 1.0; }
 
 //for this version, make K neutral
 fitness(m3) { return 1.0; }
+
+//BUG FIX TEST SECTION
+fitness(m1) {
+	if (mut.selectionCoeff <= -1)
+	return 0.5;
+	}
+
+fitness(m2) {
+	if (mut.selectionCoeff <= -1)
+	return 0.5;
+	}
+
+fitness(m4) {
+	if (mut.selectionCoeff <= -1)
+	return 0.5;
+	}
+
+fitness(m5) {
+	if (mut.selectionCoeff <= -1)
+	return 0.5;
+	}
+
 
 //fitness code
 1:late() {
