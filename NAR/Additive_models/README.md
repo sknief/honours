@@ -46,6 +46,18 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
  </details>
 
 
+### Additive Model V1.3 ###
+
+*28/06/2021* - Modification of V1.2 with new fitnessScaling statements - ATTEMPTED BUG FIX.  
+
+<details>
+   <summary>Patch Notes</summary>
+   <p> * Changed `Ahillcoeff` to `K`</p>
+   <p> * Changed `K` colour block to lightblue</p>
+   <p> * Additional Live Plot: [A]/t</p>
+   <p> * Additional Live Plot: [A]/[B]</p>
+</details>
+
 
 ### Additive Model V2.0 ###
 *22/06/2021* - Added a burn-in section, which appears to work? Need to get more information on how other models handle burn-in; quasi-functional for now though.
