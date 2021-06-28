@@ -48,7 +48,9 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
 
 ### Additive Model V1.3 ###
 
-*28/06/2021* - Modification of V1.2 with new fitnessScaling statements - ATTEMPTED BUG FIX.  
+*28/06/2021* - Modification of V1.2 with new fitnessScaling statements - ATTEMPTED BUG FIX. Important info on the SLiM error message below (taken from [slim-discuss](https://groups.google.com/g/slim-discuss/c/06IeoXNo6F0/m/IBl9m6R9BgAJ))
+
+> I ran this script under SLiMgui and got the "total fitness of all individuals is <= 0.0" error.  This seems to make sense; the behavior I saw was that the number of TE mutations was increasing without bound.  A quick check in R indicates that your fitness function, for the parameters a and b that you use, underflows to 0.0 when n equals 1575; the number becomes so small that it is indistinguishable from zero given the limited precision of floating-point numbers.  So when every individual has that many TE mutations, SLiM can no longer choose individuals to mate because every individual has a fitness of 0.
 
 <details>
    <summary>Patch Notes</summary>
