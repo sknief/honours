@@ -52,6 +52,9 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
 
 > I ran this script under SLiMgui and got the "total fitness of all individuals is <= 0.0" error.  This seems to make sense; the behavior I saw was that the number of TE mutations was increasing without bound.  A quick check in R indicates that your fitness function, for the parameters a and b that you use, underflows to 0.0 when n equals 1575; the number becomes so small that it is indistinguishable from zero given the limited precision of floating-point numbers.  So when every individual has that many TE mutations, SLiM can no longer choose individuals to mate because every individual has a fitness of 0.
 
+Now from the SLiM Manual:
+>Note that these distributions can in principle produce selection coefficients smaller than -1.0. In that case, the mutations will be evaluated as “lethal” by SLiM, and the relative fitness of the individual will be set to 0.0. 
+
 <details>
    <summary>Patch Notes</summary>
    <p> * Changed `Ahillcoeff` to `K`</p>
