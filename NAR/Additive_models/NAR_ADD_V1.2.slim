@@ -1,9 +1,8 @@
 ///////////////////////////////////////////////////////////////////////
 // [NULL MODEL] Negative Autoregulation Motif code
-// Version: 1 (WF Null distributions) [OUTPUT HEAVY VERSION]
+// Version: 1.2 (Additive Model, Including Bux Fixes + additional plots)
 // Author: Stella M. S. Knief
-// Work in Progress as of 06/06/2021
-// Running/Functioning as of 22/06/2021
+// Work in Progress as of 28/06/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
@@ -23,7 +22,7 @@ initialize() {
 	defineConstant("BOpt", 250); //test value: 250
 	defineConstant("AbetaINI", 30); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 10); //test value: 20
-	defineConstant("AhillcoeffINI", 10); //test value: 10, not examined here tho
+	defineConstant("K", 10); //test value: 10, not examined here tho
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
 
@@ -45,7 +44,7 @@ initialize() {
 	initializeMutationType("m2", 0.5, "n", 0.0, 0.5);
 	m2.convertToSubstitution = T;
 	m2.color = "pink";
-	//Ahillcoeff
+	//K
 	initializeMutationType("m3", 0.5, "n", 0.0, 0.5);
 	m3.convertToSubstitution = T;
 	m3.color = "white";
@@ -65,7 +64,7 @@ initialize() {
 	initializeGenomicElementType("g1", m6, 1.0); //non-coding
 	initializeGenomicElementType("g2", m1, 1.0); //Abeta
 	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //Ahillcoeff
+	initializeGenomicElementType("g4", m3, 1.0); //K
 	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
 	initializeGenomicElementType("g6", m5, 1.0); //Balpha
 	//section D: chromosome structure
@@ -74,7 +73,7 @@ initialize() {
 	initializeGenomicElement(g1, 3000, 3499); //spacer
 	initializeGenomicElement(g3, 3500, 4499); //Aalpha
 	initializeGenomicElement(g1, 4500, 4999); //spacer
-	initializeGenomicElement(g4, 5000, 5999); //Ahillcoeff
+	initializeGenomicElement(g4, 5000, 5999); //K
 	initializeGenomicElement(g1, 6000, 6499); //spacer
 	initializeGenomicElement(g5, 6500, 7499); //Bbeta
 	initializeGenomicElement(g1, 7500, 7999); //spacer
@@ -84,7 +83,7 @@ initialize() {
 	g1.color = "darkgrey";
 	g2.color = "firebrick";
 	g3.color = "firebrick";
-	g4.color = "firebrick";
+	g4.color = "lightblue";
 	g5.color = "yellow";
 	g6.color = "yellow";
 
@@ -102,7 +101,7 @@ initialize() {
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
-//for this version, make ahillcoeff neutral
+//for this version, make K neutral
 fitness(m3) { return 1.0; }
 
 //fitness code
@@ -145,12 +144,23 @@ for (ind in sim.subpopulations.individuals) {
 
 1 early() {
 
-	//B Conc Code
-	sim.setValue("history", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath", writeTempFile("plot_", ".png", ""));
+	//[B Conc]/t plot code
+	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
+	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
 
-	if (exists("slimgui"))
-		slimgui.openDocument(pngPath);
+	//[A Conc]/t plot code
+	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
+	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
+
+	//[A Conc]/[B Conc] plot code
+	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
+	defineConstant("pngPath3", writeTempFile("plot_", ".png", ""));
+
+	if (exists("slimgui")) {
+		slimgui.openDocument(pngPath1);
+		slimgui.openDocument(pngPath2);
+		slimgui.openDocument(pngPath3);
+		}
 }
 
 
@@ -164,6 +174,8 @@ for (ind in sim.subpopulations.individuals) {
 	//Output Dump
 	meanNetwork = mean(inds.getValue("Bconcentration"));
 	meanACONC = mean(inds.getValue("Aconcentration"));
+	meandivision = meanACONC/meanNetwork;
+
 
 	catn();
 	catn();
@@ -173,21 +185,55 @@ for (ind in sim.subpopulations.individuals) {
 	catn();
 	catn();
 
-	//B Conc plot code
-	history = sim.getValue("history");
-	history = rbind(history, c(sim.generation, meanNetwork));
-	sim.setValue("history", history);
+//[B Conc]/t plot code
+	history1 = sim.getValue("history1");
+	history1 = rbind(history1, c(sim.generation, meanNetwork));
+	sim.setValue("history1", history1);
 	//aes data for history plot -> sends data to R
 	rstr = paste(c('{',
-		'x <- c(' + paste(history[,0], sep=", ") + ')',
-		'y <- c(' + paste(history[,1], sep=", ") + ')',
-		'png(width=15, height=15, units="in", res=72, file="' + pngPath + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
+		'x <- c(' + paste(history1[,0], sep=", ") + ')',
+		'y <- c(' + paste(history1[,1], sep=", ") + ')',
+		'png(width=15, height=15, units="in", res=72, file="' + pngPath1 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
 		'box()',
 		'dev.off()',
 		'}'), sep="\n");
-	scriptPath = writeTempFile("plot_", ".R", rstr);
-	system("/usr/lib/R/bin/Rscript", args=scriptPath);
-	deleteFile(scriptPath);
+	scriptPath1 = writeTempFile("plot_", ".R", rstr);
+	system("/usr/lib/R/bin/Rscript", args=scriptPath1);
+	deleteFile(scriptPath1);
+
+//[A Conc]/t plot code
+	history2 = sim.getValue("history2");
+	history2 = rbind(history2, c(sim.generation, meanACONC));
+	sim.setValue("history2", history2);
+	//aes data for history plot -> sends data to R
+	rstr = paste(c('{',
+		'x <- c(' + paste(history2[,0], sep=", ") + ')',
+		'y <- c(' + paste(history2[,1], sep=", ") + ')',
+		'png(width=15, height=15, units="in", res=72, file="' + pngPath2 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="A CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
+		'box()',
+		'dev.off()',
+		'}'), sep="\n");
+	scriptPath2 = writeTempFile("plot_", ".R", rstr);
+	system("/usr/lib/R/bin/Rscript", args=scriptPath2);
+	deleteFile(scriptPath2);
+
+//[A Conc]/[B Conc] plot code
+	history3 = sim.getValue("history3");
+	history3 = rbind(history3, c(sim.generation, meandivision));
+	sim.setValue("history3", history3);
+	//aes data for history plot -> sends data to R
+	rstr = paste(c('{',
+		'x <- c(' + paste(history3[,0], sep=", ") + ')',
+		'y <- c(' + paste(history3[,1], sep=", ") + ')',
+		'png(width=15, height=15, units="in", res=72, file="' + pngPath3 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="A CONC / B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
+		'box()',
+		'dev.off()',
+		'}'), sep="\n");
+	scriptPath3 = writeTempFile("plot_", ".R", rstr);
+	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
+	deleteFile(scriptPath3);
+
+
 
 } //late code closes here
 

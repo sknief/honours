@@ -33,5 +33,19 @@ Fitness is derived from AConc (and therefore its components) and Balpha and Bbet
 
 *27/06/2021* - Modification of V1.0 that I worked on during a meeting with Daniel (Supervisor); ended up with exponential mutation samples and changed fitness functions - not functioning though; kept just as a reference and for historic reasons.
 
+### Additive Model V1.2 ###
+
+*28/06/2021* - Modification of V1.0 with bug fixes and additional plots; following e-mail correspondance with Daniel. The behaviour observed from the new plots lines up with the expected bahviour; A flucatuates around the initial value and [A] and [B] are not correlated.  
+
+<details>
+  <summary>Patch Notes</summary>
+  <p> * Changed `Ahillcoeff` to `K`</p>
+  <p> * Changed `K` colour block to lightblue</p>
+  <p> * Additional Live Plot: [A]/t</p>
+  <p> * Additional Live Plot: [A]/[B]</p>
+ </details>
+
+
+
 ### Additive Model V2.0 ###
 *22/06/2021* - Added a burn-in section, which appears to work? Need to get more information on how other models handle burn-in; quasi-functional for now though.
