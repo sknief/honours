@@ -17,6 +17,9 @@ initialize() {
 
 	initializeSLiMOptions(keepPedigrees=T);
 
+	//seed that terminates after 1 gen for bug fix ref
+	//setSeed(1652932535495);
+
 	//section A: constants
 	defineConstant("BOpt", 250); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
