@@ -26,15 +26,8 @@ initialize() {
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
 
-//very experimental
-	function (float$)scriptfunction(float x)
-		{
-		 m = 	rnorm(1, 0, 0.5);
-		 if (m >= -1) return -0.8;
-		 else return m;
-		}
 
-scriptstring = "if ((rnorm (1, 0, 0.5)) >=-1) return -0.8; else return (rnorm (1,0,0.5));"
+script = "if ((rnorm (1, 0, 0.5)) <=-1) return -0.8; else return (rnorm (1,0,0.5));";
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
@@ -117,7 +110,7 @@ fitness(m3) { return 1.0; }
 
 //trial?
 fitness(NULL) {
-if (ind.fitnessScaling <= -1)
+if (inds.fitnessScaling <= -1)
 	return -0.5;
 else return relFitness;
 }
@@ -249,3 +242,5 @@ else return relFitness;
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
+
+	}
