@@ -16,20 +16,20 @@
 initialize() {
 
 	initializeSLiMOptions(keepPedigrees=T);
-
-	//seed that terminates after 1 gen for bug fix ref
-	//setSeed(1652932535495);
+	//setSeed(1662298458200);
+	//setSeed(1662300579992);
 
 	//section A: constants
-	defineConstant("BOpt", 250); //test value: 250
+	defineConstant("BOpt", 200); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
 	defineConstant("K", 10); //test value: 10, not examined here tho
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
+	defineConstant("S", 2); //selection coeff
 
 
-	script = "if ((rnorm (1, 0, 0.5)) <=-1) return -0.1; else return (rnorm (1,0,0.5));";
+	script = "x = rnorm(1, 0, 0.5); if (x <= -1) return -0.5; else if (x >= 1) return 0.5; else return x;";
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
@@ -103,64 +103,40 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 200);
-}
-
-fitness(m1) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
+	sim.addSubpop("p1", 100);
 
 }
-
-fitness(m2) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-
-}
-
 
 //for this version, make K neutral
 fitness(m3) { return 1.0; }
 
 
-fitness(m4) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-}
-
-
-fitness(m5) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-
-}
-
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
+
 fitness(NULL) {
-
 // individuals tagged for death die here
-if (individual.tag == 1)
-	return 1.0;  }
+if (individual.tag == 0)
+	return 0.0;
+	else
+		return relFitness;
+}
 
-
+/*
 
 //fitness code
-1:late() {
-	for (ind in sim.subpopulations.individuals) {
+1:100 late() {
+
+sim.subpopulations.individuals.tag = 1;
+
+for (ind in sim.subpopulations.individuals) {
 		//code for the concentration of A
 		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
 		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
 		AConc = Abeta - Aalpha;
 		ind.setValue("Aconcentration", AConc);
 
-		if (ind.getValue("Aconcentration") < 0)
-				ind.tag = 1;
 
 		//code for the concentration of B
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
@@ -168,22 +144,52 @@ if (individual.tag == 1)
 		BConc = (Bbeta - Balpha)*AConc;
 		ind.setValue("Bconcentration", BConc);
 
-		if (ind.getValue("Bconcentration") < 0)
+		ACONC = ind.getValue("Aconcentration");
+		BCONC = ind.getValue("Bconcentration");
+
+		if (ACONC < 0)
+			ind.tag = 0;
+		else if (ACONC > 300)
+			ind.tag = 0;
+		else if (BCONC < 0)
+			ind.tag = 0;
+		else if (BCONC > 300)
+			ind.tag = 0;
+		else
 			ind.tag = 1;
+}
+}
+*/
+
+1:2000 late() {
+
+sim.subpopulations.individuals.tag = 1;
+
+for (ind in sim.subpopulations.individuals) {
+		//code for the concentration of A
+		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
+		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
+		AConc = Abeta - Aalpha;
+		ind.setValue("Aconcentration", AConc);
 
 
-		fitnessfunction = exp(-(BConc-BOpt)^2);
+		//code for the concentration of B
+		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
+		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
+		BConc = (Bbeta - Balpha)*AConc;
+		ind.setValue("Bconcentration", BConc);
 
+		fitnessfunction = exp(-((BConc-BOpt)/S)^2);
+		//fitnessfunction = exp(-(BConc-BOpt)^2);
 
-//could potentially modify this? may make <= -1 and return -0.5
-		//fitnessScaling
-		if (fitnessfunction < 0) {
-			ind.fitnessScaling = fitnessfunction + 0.01;
+//fitnessScaling
+		if (fitnessfunction == 0) {
+			ind.fitnessScaling = fitnessfunction + 0.1;
 			print("WHOOPSIE");
+			ind.tag = 0;
 			}
 		else
 			ind.fitnessScaling = fitnessfunction;
-
 }
 }
 
@@ -216,9 +222,9 @@ if (individual.tag == 1)
 1:2000 late() {
 	// output, run every 1000 generations
 
-	if (sim.generation % 1 != 0) return;
+	if (sim.generation % 5 != 0) return;
 
-	sim.outputFull();
+	//sim.outputFull();
 
 	inds = sim.subpopulations.individuals;
 
