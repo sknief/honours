@@ -79,9 +79,9 @@ Lots of insight, little improvement.
 
 *29/06/2021* Second update: I looked at all mutations of three seperate model runs before they crashed and evaluated the mutations - all of them had a bery large effect size positive mutation (>1) in an alpha region (which is responsible for the deletion of protein). You can see how an increase in Aalpha leads to a massive drop in AConc which then leads to a big drop in BConc and failure of the model.
 
-![Aconc](/home/stella/github/honours/NAR/Additive_models/ReadMe_Files/bugfixlog3A.png)
+![Aconc](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/bugfixlog3A.png)
 
-![Bconc](/home/stella/github/honours/NAR/Additive_models/ReadMe_Files/bugfixlog3B.png)
+![Bconc](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/bugfixlog3B.png)
 
 The corresponding output log can be found [here](/home/stella/github/honours/NAR/Additive_models/BUG_FIX/Log3.txt).
 
@@ -108,7 +108,7 @@ After I fixed that, my code was still throwing the same error message, so the ne
 
 This observation was largely backed by the graphs produced by the simulations right before they crashed and the output logs (found [here](https://github.com/sknief/honours/tree/master/NAR/Additive_models/BUG_FIX)). Most notably, this one made me realize its a matter of the fitness function rather than just the mutations as they are sampled:
 
-![too high](/home/stella/github/honours/NAR/Additive_models/ReadMe_Files/evidence 1.png)
+![too high](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/evidence%201.png)
 
 I will attempt to fix all of that tomorrow.
 
@@ -123,11 +123,11 @@ I will attempt to fix all of that tomorrow.
 2. Implementing a "failsafe" so that if the fitnessScaling callback returns a "0", it gets promoted to a 0.01 for the sake of that callback, and the affected individual gets manually removed using a tag-based lethal callback. The outcome remains the same, only SLiM does not throw a techincal error due to the fitnessScaling value being 0. I also realized that previous attempt at this silently failed.
 
 Both work like a charm:
-![fitness plot](/home/stella/github/honours/NAR/Additive_models/ReadMe_Files/evidence 2.png)
+![fitness plot](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/evidence%202.pdf)
 
 Models started running to completion now.
 
-![Bconc](/home/stella/github/honours/NAR/Additive_models/ReadMe_Files/evidence3.png)
+![Bconc](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/evidence3.png)
 
 And they have survived the Bug Fix Testing check! The next version will the the "release" version of this model, i.e. cleaned-up and hopefully suitable for running on the HPC.
 
@@ -181,7 +181,7 @@ As it already says it in the code, the preset is that the callback returns 0.0, 
 
 It is possible to change the fitness callback so that it returns a fitness of 0.1, which results in highly likely but not certain death. In doing so, very distant optima can be achieved, but BConc is able to have "crashes" into a negative concentration (which makes little biological sense, but if it was a generic phenotype this would be acceptable, so its an issue with context here).
 
-![Crash example](NAR/Additive_models/ReadMe_Files/0.1 example.png)
+![Crash example](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/0.1%20example.png)
 
 I personally believe the first option to be better suited for my models, but this option exists.
 
