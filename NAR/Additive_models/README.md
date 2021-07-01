@@ -73,8 +73,21 @@ Lots of insight, little improvement.
    <summary>Patch Notes</summary>
    <p> * New `fitness(NULL)` callback to avoid fitnessScaling going -1</p>
    <p> * Script based fitness call that appears to function like the original code</p>
-   <p> * Deleted old vistigal code</p>
+   <p> * Deleted old vestigial code</p>
 </details>
+
+*30/06/2021* After correspondance with Ben, I found why my coefficients weren't sampled properly...
+
+>Hi Stella!
+>OK, so first let's cover why the script-based MutationType you made didn't protect you the way you expected it to.  It is:
+>if ((rnorm (1, 0, 0.5)) <=-1) return -0.1; else return (rnorm (1,0,0.5));
+>So this draws a random deviate from a normal distribution, and if it's <= -1 it returns -0.1.  Otherwise, it draws a *new* random deviate from the same distribution, and returns that.  One issue here is that you compare the first draw to -1, but then you return -0.1; is that intentional?  I would think that if you wanted a lower bound of -1 you'd return -1, whereas if you wanted a lower bound of -0.1 you'd return -0.1.  But setting that aside, the big issue here is that the second random deviate could be anything; just because you checked for the lower bound on the *first* draw doesn't mean that the *second* draw won't be below the lower bound.  So, assuming you want to enforce a lower bound of -1, better logic would be:
+>x = rnorm(1, 0, 0.5); if (x <= -1) return -1.0; else return x;
+>That will clip the drawn number to a lower bound of -1.
+
+The full correspondance is found on [slim-discuss](https://groups.google.com/g/slim-discuss/c/jqXEwgtJs0E)
+
+
 
 ### Additive Model V2.0 ###
 *22/06/2021* - Added a burn-in section, which appears to work? Need to get more information on how other models handle burn-in; quasi-functional for now though.
