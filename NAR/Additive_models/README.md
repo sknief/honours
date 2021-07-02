@@ -179,7 +179,7 @@ else
 
 As it already says it in the code, the preset is that the callback returns 0.0, which eliminates the individual. This enacts the same level of selection as a fitnessScaling callback that equals 0 would without terminating the simulation.
 
-It is possible to change the fitness callback so that it returns a fitness of 0.1, which results in highly likely but not certain death. In doing so, very distant optima can be achieved, but BConc is able to have "crashes" into a negative concentration (which makes little biological sense, but if it was a generic phenotype this would be acceptable, so its an issue with context here).
+It is possible to change the fitness callback so that it returns a fitness of 0.1, which results in highly likely but not certain death. In doing so, very distant optima can be achieved, but mean BConc is able to have "crashes" into a negative concentration (which makes little biological sense, but if it was a generic phenotype this would be acceptable, so its an issue with context here). [EDIT: Its a mean value so maybe that crash is driven by an outlier rather than representing the population; backed by quick bounce back.]
 
 ![Crash example](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/0.1%20example.png)
 
