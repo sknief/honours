@@ -1,70 +1,83 @@
 ///////////////////////////////////////////////////////////////////////
 // [ODE MODEL] Negative Autoregulation Motif code
-// Version: 1, based on ADD_V1.3.1 [first atteempt]
+// Version: 1.0 [Based on NAR_ADD_v2.0]
 // Author: Stella M. S. Knief
-// Work in Progress as of 30/06/21
+// Work in progress started on 03/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
-/*Important Model Notes:
-	Trait under selection is BConc, the concentration of B
-	This version of the code simulates stabilising selection, with an
-	optimum value of BOpt
+/*Model Editing Notes/WIP Notes/Things I gotta put in my labnotebook
+1. set up first 	ODE = readFile("~/Desktop/ODE_MODEL_INPUT.txt"); file
+2. //!!!! need to get a way to connect ind index to the corresponding individuals
+3. identify index or keepPedigrees for identifying individuals
+4. read up K value / daniels notes etc etc
+5. try the print(paramstoexport);
+6. try the writefile
+7. prepare for meeting with Nick
 */
 
 
+//FUNCTIONS?
+/* alternative for larger file sets
+//reading in table functions (from pg 380 of manual)
+function (i)readIntTable(s$ path)
+{
+	if (!fileExists(path))
+		stop("readIntTable(): File not found at path " + path);
+	l = readFile(path);
+	m = sapply(l, "asInteger(strsplit(applyValue));", simplify="matrix");
+	return t(m);
+}
+*/
+
 //START COMMANDS
 initialize() {
-
 	initializeSLiMOptions(keepPedigrees=T);
 
-	//seed that terminates after 1 gen for bug fix ref
-	//setSeed(1652932535495);
-
 	//section A: constants
-	defineConstant("BOpt", 250); //test value: 250
+	defineConstant("BOpt", 200); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
-	defineConstant("K", 10); //test value: 10,
+	defineConstant("K", 10); //test value: 10, here neutral
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
-
-
-	script = "if ((rnorm (1, 0, 0.5)) <=-1) return -0.1; else return (rnorm (1,0,0.5));";
+	defineConstant("S", 2); //selection coeff
+	defineConstant("identifier", 1); //R script ID
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
 	rates = c(1e-8, 0.5, 1e-8);
 	initializeRecombinationRate(rates, ends);
+
 	//section B: mutations
 	initializeMutationRate(6.3e-6);
 	//null model mutations all based on neutral distributions
+	//these distributions are bounded at -1 and 1, hence this scripttextile:
+	script = "x = rnorm(1, 0, 0.5); if (x <= -1) return -0.5; else if (x >= 1) return 0.5; else return x;";
 	//each region has their own mutationtype
-	//Abeta
-	initializeMutationType("m1", 0.5, "s", script);
-	m1.color = "lightblue";
-	m1.convertToSubstitution = T;
-	//Aalpha
-	initializeMutationType("m2", 0.5, "s", script);
-	m2.convertToSubstitution = T;
-	m2.color = "pink";
-	//K
-	initializeMutationType("m3", 0.5, "s", script);
-	m3.convertToSubstitution = T;
-	m3.color = "white";
-	//Bbeta
-	initializeMutationType("m4", 0.5, "s", script);
-	m4.convertToSubstitution = T;
-	m4.color = "pink";
-	//Balpha
-	initializeMutationType("m5", 0.5, "s", script);
-	m5.convertToSubstitution = T;
-	m5.color = "lightblue";
-
-	//non-coding
-	initializeMutationType("m6", 0.5, "s", script);
-	m6.convertToSubstitution = T;
-	m6.color = "grey";
-
+		//Abeta
+		initializeMutationType("m1", 0.5, "s", script);
+		m1.color = "lightblue";
+		m1.convertToSubstitution = T;
+		//Aalpha
+		initializeMutationType("m2", 0.5, "s", script);
+		m2.convertToSubstitution = T;
+		m2.color = "pink";
+		//K
+		initializeMutationType("m3", 0.5, "s", script);
+		m3.convertToSubstitution = T;
+		m3.color = "white";
+		//Bbeta
+		initializeMutationType("m4", 0.5, "s", script);
+		m4.convertToSubstitution = T;
+		m4.color = "pink";
+		//Balpha
+		initializeMutationType("m5", 0.5, "s", script);
+		m5.convertToSubstitution = T;
+		m5.color = "lightblue";
+		//non-coding
+		initializeMutationType("m6", 0.5, "s", script);
+		m6.convertToSubstitution = T;
+		m6.color = "grey";
 
 	//section C: genomic elements
 	initializeGenomicElementType("g1", m6, 1.0); //non-coding
@@ -73,7 +86,6 @@ initialize() {
 	initializeGenomicElementType("g4", m3, 1.0); //K
 	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
 	initializeGenomicElementType("g6", m5, 1.0); //Balpha
-
 
 	//section D: chromosome structure
 	initializeGenomicElement(g1, 0, 1999);
@@ -87,6 +99,7 @@ initialize() {
 	initializeGenomicElement(g1, 7500, 7999); //spacer
 	initializeGenomicElement(g6, 8000, 8999); //Balpha
 	initializeGenomicElement(g1, 9000, 10999); //end spacer
+
 	//section DD: colorcoding
 	g1.color = "darkgrey";
 	g2.color = "firebrick";
@@ -94,105 +107,85 @@ initialize() {
 	g4.color = "lightblue";
 	g5.color = "yellow";
 	g6.color = "yellow";
-
-
 }
-
-//initialize command bracket ends here
 
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 200);
+	sim.addSubpop("p1", 100);
 }
 
-fitness(m1) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
+///////////////////////////////////////////////////////////////////////////////
+//the code above is not to be changed! (Apart from params for models)
+///////////////////////////////////////////////////////////////////////////////
 
+//FITNESS CALLBACKS + CALCULATIONS
+early() {
+	//read in files:
+	//remember files need to contain generation 0 info for this to work
+	ODE = readFile("~/Desktop/ODE_MODEL_INPUT.txt");
+	ODE =  asFloat(strsplit(ODE));
+	//testing code:
+	print("These are your values here:");
+	print(ODE);
+	val = isFloat(ODE);
+	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
+
+	for (ind in sim.subpopulations.individuals) {
+		//define ACONC and B conc for graphs
+		//!!!! need to get a way to connect ind index to the corresponding individuals
+		ind.setValue("Aconcentration", ODE[,1])
+		ind.setValue("Bconcentration", ODE[,2])
+	}
+
+	//potentially place fitnessScaling callback here
 }
 
-fitness(m2) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-
-}
-
-
-//for this version, make K neutral
-fitness(m3) { return 1.0; }
-
-
-fitness(m4) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-}
-
-
-fitness(m5) {
-if (mut.selectionCoeff > 1.0)
-	return 0.1;
-else return mut.selectionCoeff;
-
-}
 
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
-fitness(NULL) {
-
-// individuals tagged for death die here
-if (individual.tag == 1)
-	return 1.0;  }
-
-
-
-//fitness code
-1:late() {
+1:2000 late() {
 	for (ind in sim.subpopulations.individuals) {
-		//code for the concentration of A
+			//code for the concentration of A
+			//ind.setValue("ind.id", ind.index); //EXP
+			//or
+		ind.id = ind.index;
 		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
 		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
-		AConc = Abeta - Aalpha;
-		ind.setValue("Aconcentration", AConc);
-
-		if (ind.getValue("Aconcentration") < 0)
-				ind.tag = 1;
-
-		//code for the concentration of B
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-		BConc = (Bbeta - Balpha)*AConc;
-		ind.setValue("Bconcentration", BConc);
+!!!!!!!	K function //EXP
 
-		if (ind.getValue("Bconcentration") < 0)
-			ind.tag = 1;
+		paramstoexport = cbind((asString(ind.id, Aalpha, Abeta, Balpha, Bbeta)));
+		print(paramstoexport);
 
+		//run if the print works
+		//writeFile(asString(paste0(c("ODE_MODEL_OUTPUT", identifier, "params.csv"))), paramstoexport, append = T);
+		//REF CODE:
+		//writeFile(asString(paste0(c("./matrices/model", modelindex, "/", asString(seed), "_", sizefxoutname, "trait1.csv"))), sizefxfile, append = T);
 
-		fitnessfunction = exp(-(BConc-BOpt)^2);
+		//time for fitnessScaling
 
+		//this might throw errors cause its in an early callback but we can try
+		fitnessfunction = exp(-((BConc-BOpt)/S)^2);
 
-//could potentially modify this? may make <= -1 and return -0.5
-		//fitnessScaling
-		if (fitnessfunction < 0) {
-			ind.fitnessScaling = fitnessfunction + 0.01;
-			print("WHOOPSIE");
+		//fitnessScaling callback to avoid SLiM bug
+		if (fitnessfunction == 0) {
+			ind.fitnessScaling = fitnessfunction + 0.1;
+						print("WHOOPSIE");
+				ind.tag = 0;
 			}
-		else
-			ind.fitnessScaling = fitnessfunction;
-
+			else
+					ind.fitnessScaling = fitnessfunction;
+		}
+	}
 }
-}
-
-
+/////////////////////////////////////////////////////////
 
 //HISTORY PLOT CODE + OUTPUT CODE
-
+//enable plots
 1 early() {
-
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
 	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
@@ -212,22 +205,19 @@ if (individual.tag == 1)
 		}
 }
 
-
+//update plots
 1:2000 late() {
-	// output, run every 1000 generations
+	// choose when to update plots below
+	if (sim.generation % 5 != 0) return;
 
-	if (sim.generation % 1 != 0) return;
+	//debug-puposes only: sim.outputFull();
 
-	sim.outputFull();
-
+	//Report mean phenotypes
 	inds = sim.subpopulations.individuals;
-
-	//Output Dump
 	meanNetwork = mean(inds.getValue("Bconcentration"));
 	meanACONC = mean(inds.getValue("Aconcentration"));
 	meandivision = meanACONC/meanNetwork;
-
-
+	//Actual Output Code
 	catn();
 	catn();
 	catn("Generation: " + sim.generation);
@@ -237,7 +227,7 @@ if (individual.tag == 1)
 	catn();
 	catn();
 
-//[B Conc]/t plot code
+	//[B Conc]/t plot code
 	history1 = sim.getValue("history1");
 	history1 = rbind(history1, c(sim.generation, meanNetwork));
 	sim.setValue("history1", history1);
@@ -253,7 +243,7 @@ if (individual.tag == 1)
 	system("/usr/lib/R/bin/Rscript", args=scriptPath1);
 	deleteFile(scriptPath1);
 
-//[A Conc]/t plot code
+	//[A Conc]/t plot code
 	history2 = sim.getValue("history2");
 	history2 = rbind(history2, c(sim.generation, meanACONC));
 	sim.setValue("history2", history2);
@@ -269,7 +259,7 @@ if (individual.tag == 1)
 	system("/usr/lib/R/bin/Rscript", args=scriptPath2);
 	deleteFile(scriptPath2);
 
-//[A Conc]/[B Conc] plot code
+	//[A Conc]/[B Conc] plot code
 	history3 = sim.getValue("history3");
 	history3 = rbind(history3, c(sim.generation, meandivision));
 	sim.setValue("history3", history3);
@@ -284,5 +274,4 @@ if (individual.tag == 1)
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
-
-	}
+}
