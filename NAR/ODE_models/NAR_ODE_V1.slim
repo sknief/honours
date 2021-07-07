@@ -112,7 +112,7 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 1000);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -120,6 +120,7 @@ initialize() {
 ///////////////////////////////////////////////////////////////////////////////
 
 //FITNESS CALLBACKS + CALCULATIONS
+/*
 early() {
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -140,31 +141,36 @@ early() {
 
 	//potentially place fitnessScaling callback here
 }
-
+*/
 
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
 1:2000 late() {
+
+	lines = NULL;
+
 	for (ind in sim.subpopulations.individuals) {
 			//code for the concentration of A
 			//ind.setValue("ind.id", ind.index); //EXP
 			//or
-		ind.id = ind.index;
+		ID = ind.index;
 		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
 		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-!!!!!!!	K function //EXP
+//!!!!!!!	K function //EXP
 
-		paramstoexport = cbind((asString(ind.id, Aalpha, Abeta, Balpha, Bbeta)));
+		paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta);
 		print(paramstoexport);
+		lines = c(lines, paramstoexport);
 
 		//run if the print works
 		//writeFile(asString(paste0(c("ODE_MODEL_OUTPUT", identifier, "params.csv"))), paramstoexport, append = T);
 		//REF CODE:
 		//writeFile(asString(paste0(c("./matrices/model", modelindex, "/", asString(seed), "_", sizefxoutname, "trait1.csv"))), sizefxfile, append = T);
 
+/*
 		//time for fitnessScaling
 
 		//this might throw errors cause its in an early callback but we can try
@@ -178,11 +184,14 @@ fitness(m6) { return 1.0; }
 			}
 			else
 					ind.fitnessScaling = fitnessfunction;
+*/
 		}
-	}
-}
-/////////////////////////////////////////////////////////
 
+	writeFile(asString(paste0(c("ODE_MODEL_OUTPUT", identifier, "params.csv"))), lines);
+
+	}
+/////////////////////////////////////////////////////////
+/*
 //HISTORY PLOT CODE + OUTPUT CODE
 //enable plots
 1 early() {
@@ -275,3 +284,4 @@ fitness(m6) { return 1.0; }
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
 }
+*/
