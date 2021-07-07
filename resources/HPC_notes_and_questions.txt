@@ -3,4 +3,6 @@ Things to discuss with Nick (07/07/21)
 sapply vs cbind
 best loop for values and getting that into files
 setcfgparams? should i copy that?
+
+
 how to get HPC ready
