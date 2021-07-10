@@ -6,9 +6,7 @@
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
-	Trait under selection is BConc, the concentration of B
-	This version of the code simulates stabilising selection, with an
-	optimum value of BOpt
+	THIS IS THE ONE WHERE NODE B DOES NOT EXIST
 */
 
 
@@ -17,12 +15,9 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
 	//section A: constants
-	defineConstant("BOpt", 200); //test value: 250
+	defineConstant("AOpt", 100); //test value: 50; some limits in terms of values this can take
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
-	defineConstant("K", 10); //test value: 10, here neutral
-	defineConstant("BbetaINI", 15); //test value: 15
-	defineConstant("BalphaINI", 10); //test value: 10
 	defineConstant("S", 2); //selection coeff
 
 	//Section AA: Recombination
@@ -44,18 +39,6 @@ initialize() {
 		initializeMutationType("m2", 0.5, "s", script);
 		m2.convertToSubstitution = T;
 		m2.color = "pink";
-		//K
-		initializeMutationType("m3", 0.5, "s", script);
-		m3.convertToSubstitution = T;
-		m3.color = "white";
-		//Bbeta
-		initializeMutationType("m4", 0.5, "s", script);
-		m4.convertToSubstitution = T;
-		m4.color = "pink";
-		//Balpha
-		initializeMutationType("m5", 0.5, "s", script);
-		m5.convertToSubstitution = T;
-		m5.color = "lightblue";
 		//non-coding
 		initializeMutationType("m6", 0.5, "s", script);
 		m6.convertToSubstitution = T;
@@ -65,9 +48,6 @@ initialize() {
 	initializeGenomicElementType("g1", m6, 1.0); //non-coding
 	initializeGenomicElementType("g2", m1, 1.0); //Abeta
 	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //K
-	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
-	initializeGenomicElementType("g6", m5, 1.0); //Balpha
 
 	//section D: chromosome structure
 	initializeGenomicElement(g1, 0, 1999);
@@ -75,20 +55,12 @@ initialize() {
 	initializeGenomicElement(g1, 3000, 3499); //spacer
 	initializeGenomicElement(g3, 3500, 4499); //Aalpha
 	initializeGenomicElement(g1, 4500, 4999); //spacer
-	initializeGenomicElement(g4, 5000, 5999); //K
-	initializeGenomicElement(g1, 6000, 6499); //spacer
-	initializeGenomicElement(g5, 6500, 7499); //Bbeta
-	initializeGenomicElement(g1, 7500, 7999); //spacer
-	initializeGenomicElement(g6, 8000, 8999); //Balpha
-	initializeGenomicElement(g1, 9000, 10999); //end spacer
+	initializeGenomicElement(g1, 5000, 10999); //end spacer
 
 	//section DD: colorcoding
 	g1.color = "darkgrey";
 	g2.color = "firebrick";
 	g3.color = "firebrick";
-	g4.color = "lightblue";
-	g5.color = "yellow";
-	g6.color = "yellow";
 }
 
 
@@ -99,9 +71,6 @@ initialize() {
 
 
 //FITNESS CALLBACKS + CALCULATIONS
-//for this version, make K neutral
-fitness(m3) { return 1.0; }
-
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
@@ -128,20 +97,14 @@ fitness(NULL) {
 			AConc = Abeta - Aalpha;
 			ind.setValue("Aconcentration", AConc);
 
-			//code for the concentration of B
-			Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
-			Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-			BConc = (Bbeta - Balpha)*AConc;
-			ind.setValue("Bconcentration", BConc);
-
 			//negative concentrations should be lethal (impossible!!)
-			if (BConc < 0) {
+			if (AConc < 0) {
 				print("EEK");
 				ind.tag = 0;
 				}
 
 			//the stabilising selection function
-			fitnessfunction = exp(-((BConc-BOpt)/S)^2);
+			fitnessfunction = exp(-((AConc-AOpt)/S)^2);
 
 			//fitnessScaling callback to avoid SLiM bug
 			if (fitnessfunction == 0) {
@@ -158,22 +121,12 @@ fitness(NULL) {
 //HISTORY PLOT CODE + OUTPUT CODE
 //enable plots
 1 early() {
-	//[B Conc]/t plot code
-	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
-
 	//[A Conc]/t plot code
 	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
 	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
 
-	//[A Conc]/[B Conc] plot code
-	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath3", writeTempFile("plot_", ".png", ""));
-
 	if (exists("slimgui")) {
-		slimgui.openDocument(pngPath1);
 		slimgui.openDocument(pngPath2);
-		slimgui.openDocument(pngPath3);
 		}
 }
 
@@ -186,34 +139,14 @@ fitness(NULL) {
 
 	//Report mean phenotypes
 	inds = sim.subpopulations.individuals;
-	meanNetwork = mean(inds.getValue("Bconcentration"));
 	meanACONC = mean(inds.getValue("Aconcentration"));
-	meandivision = meanACONC/meanNetwork;
 	//Actual Output Code
 	catn();
 	catn();
 	catn("Generation: " + sim.generation);
 	catn("Mean A CONC: " + meanACONC);
-	catn("Mean B CONC: " + meanNetwork);
-	catn("Mean correlation " + meandivision);
 	catn();
 	catn();
-
-	//[B Conc]/t plot code
-	history1 = sim.getValue("history1");
-	history1 = rbind(history1, c(sim.generation, meanNetwork));
-	sim.setValue("history1", history1);
-	//aes data for history plot -> sends data to R
-	rstr = paste(c('{',
-		'x <- c(' + paste(history1[,0], sep=", ") + ')',
-		'y <- c(' + paste(history1[,1], sep=", ") + ')',
-		'png(width=15, height=15, units="in", res=72, file="' + pngPath1 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
-		'box()',
-		'dev.off()',
-		'}'), sep="\n");
-	scriptPath1 = writeTempFile("plot_", ".R", rstr);
-	system("/usr/lib/R/bin/Rscript", args=scriptPath1);
-	deleteFile(scriptPath1);
 
 	//[A Conc]/t plot code
 	history2 = sim.getValue("history2");
@@ -231,19 +164,4 @@ fitness(NULL) {
 	system("/usr/lib/R/bin/Rscript", args=scriptPath2);
 	deleteFile(scriptPath2);
 
-	//[A Conc]/[B Conc] plot code
-	history3 = sim.getValue("history3");
-	history3 = rbind(history3, c(sim.generation, meandivision));
-	sim.setValue("history3", history3);
-	//aes data for history plot -> sends data to R
-	rstr = paste(c('{',
-		'x <- c(' + paste(history3[,0], sep=", ") + ')',
-		'y <- c(' + paste(history3[,1], sep=", ") + ')',
-		'png(width=15, height=15, units="in", res=72, file="' + pngPath3 + '")', 'par(mar=c(4.0, 4.0, 1.5, 1.5))', 'plot(x=x, y=y, xlim=c(0, 2000), ylim=c(-250,250), type="l",', 'xlab="Generation", ylab="A CONC / B CONC", cex.axis=0.95,', 'cex.lab=1.2, mgp=c(2.5, 0.7, 0), col="red", lwd=2,', 'xaxp=c(0, 20000, 1000))',
-		'box()',
-		'dev.off()',
-		'}'), sep="\n");
-	scriptPath3 = writeTempFile("plot_", ".R", rstr);
-	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
-	deleteFile(scriptPath3);
 }
