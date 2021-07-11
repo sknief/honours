@@ -17,7 +17,7 @@ Please Note that this Versions system corresponds both to the SliM model AND its
 ## Notes on the Different Models ##
 ### Null Model V.1 ###
 
-*22/06/2021* - Started Working on V1.
+*03/07/2021* - Started Working on V1.
 
 *05/07/2021 - 06/07/21* Blind-coded (BC) the key components.  
 
@@ -53,6 +53,8 @@ Please Note that this Versions system corresponds both to the SliM model AND its
 
 
 *11/07/21* Huge Coding Day: working on R script and SliM model.
+
+Note to self: SLiM wd on Linux boot is the desktop, which I should probably change in the long run. 
 
 THESE NOTES ARE PROVISIONAL AS OF 18:25PM
 <details>

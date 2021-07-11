@@ -5,15 +5,7 @@
 // Work in progress started on 03/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
-/*Model Editing Notes/WIP Notes/Things I gotta put in my labnotebook
-1. set up first 	ODE = readFile("~/Desktop/ODE_MODEL_INPUT.txt"); file
-2. //!!!! need to get a way to connect ind index to the corresponding individuals
-3. identify index or keepPedigrees for identifying individuals
-4. read up K value / daniels notes etc etc
-5. try the print(paramstoexport);
-6. try the writefile
-7. prepare for meeting with Nick
-*/
+
 
 
 //FUNCTIONS?
@@ -33,6 +25,9 @@ function (i)readIntTable(s$ path)
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
+	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
+	setSeed(asInteger(seed));
+
 	//section A: constants
 	defineConstant("BOpt", 200); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
@@ -41,7 +36,6 @@ initialize() {
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
 	defineConstant("S", 2); //selection coeff
-	defineConstant("identifier", 1); //R script ID
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
@@ -159,7 +153,7 @@ fitness(m6) { return 1.0; }
 		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-		//!!!!!!!	K function //EXP
+//!!!!!!!	K function //EXP
 
 		paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta);
 		print(paramstoexport);
@@ -187,7 +181,8 @@ fitness(m6) { return 1.0; }
 */
 		}
 
-	writeFile(asString(paste0(c("ODE_MODEL_OUTPUT", identifier, "params.csv"))), lines);
+	gen = sim.generation;
+	writeFile(asString(paste0(c("ODE_MODEL_OUTPUT_", seed , "_", gen , "_params.csv"))), lines);
 
 	}
 /////////////////////////////////////////////////////////
