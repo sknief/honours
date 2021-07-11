@@ -1,8 +1,8 @@
-///////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 // [ADDITIVE MODEL] Negative Autoregulation Motif code
 // Version: 2.0 [Bug-free Release Version]
 // Author: Stella M. S. Knief
-// "Released" on 01/07/21
+// "Released" on 11/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
@@ -15,14 +15,20 @@
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
+	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
+	setSeed(asInteger(seed));
+
+
 	//section A: constants
-	defineConstant("BOpt", 200); //test value: 250
-	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
-	defineConstant("AalphaINI", 20); //test value: 20
+	defineConstant("AConcINI", 20);
+	defineConstant("BConcINI", 0);
+	defineConstant("BOpt", 200); //test value: 200
+	defineConstant("AbetaINI", 5); //test value: 50; some limits in terms of values this can take
+	defineConstant("AalphaINI", 2); //test value: 20
 	defineConstant("K", 10); //test value: 10, here neutral
-	defineConstant("BbetaINI", 15); //test value: 15
-	defineConstant("BalphaINI", 10); //test value: 10
-	defineConstant("S", 2); //selection coeff
+	defineConstant("BbetaINI", 8); //test value: 15
+	defineConstant("BalphaINI", 5); //test value: 10
+	defineConstant("S", 3); //selection coeff
 
 	//Section AA: Recombination
 	ends = c(6250, 6251, 10999);
@@ -124,13 +130,13 @@ fitness(NULL) {
 			//code for the concentration of A
 			Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
 			Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
-			AConc = Abeta - Aalpha;
+			AConc = (Abeta*AConcINI - Aalpha*AConcINI) + AConcINI;
 			ind.setValue("Aconcentration", AConc);
 
 			//code for the concentration of B
 			Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 			Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-			BConc = (Bbeta - Balpha)*AConc;
+			BConc = (Bbeta*AConc - Balpha*BConcINI) + BConcINI;
 			ind.setValue("Bconcentration", BConc);
 
 			//negative concentrations should be lethal (impossible!!)
@@ -159,15 +165,16 @@ fitness(NULL) {
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath1", writeTempFile("plot_BConc"+ seed +  "_", ".png", ""));
 
 	//[A Conc]/t plot code
 	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath2", writeTempFile("plot_Aconc"+ seed + "_", ".png", ""));
 
 	//[A Conc]/[B Conc] plot code
 	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath3", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath3", writeTempFile("plot_ABConc_"+ seed + "_",  ".png", ""));
+
 
 	if (exists("slimgui")) {
 		slimgui.openDocument(pngPath1);
