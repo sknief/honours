@@ -189,3 +189,60 @@ It is possible to change the fitness callback so that it returns a fitness of 0.
 I personally believe the first option to be better suited for my models, but this option exists.
 
 The next version (V3.0), will have new writeToFile functions and more general optimizations for the HPC - this should mark the last version of these models.
+
+### Additive Model V2.1 ###
+
+*11/07/21* Essentially Model V2.0 but I've removed Node B. Works just as well.
+
+### Additive Model V2.2 ###
+
+*11/07/21* Essentially Model V2.0 but I changed the AConc and BConc calculations, which has also lead to different parameter ranges:
+
+The code from V2.0:
+
+```
+AConc = Abeta - Aalpha;
+...
+BConc = (Bbeta - Balpha)*AConc;  
+```
+
+is now:
+
+```
+AConc = (Abeta*AConcINI - Aalpha*AConcINI) + AConcINI;
+...
+BConc = (Bbeta*AConc - Balpha*BConcINI) + BConcINI;
+
+```
+
+Parameter ranges shift from V2.0:
+```
+defineConstant("BOpt", 200); //test value: 200
+defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
+defineConstant("AalphaINI", 20); //test value: 20
+defineConstant("K", 10); //test value: 10, here neutral
+defineConstant("BbetaINI", 15); //test value: 15
+defineConstant("BalphaINI", 10); //test value: 10
+```
+
+to
+
+```
+defineConstant("AConcINI", 20);
+defineConstant("BConcINI", 0);
+defineConstant("BOpt", 200); //test value: 200
+defineConstant("AbetaINI", 5); //test value: 50; some limits in terms of values this can take
+defineConstant("AalphaINI", 2); //test value: 20
+defineConstant("K", 10); //test value: 10, here neutral
+defineConstant("BbetaINI", 8); //test value: 15
+defineConstant("BalphaINI", 5); //test value: 10
+defineConstant("S", 3); //selection coeff
+```
+
+I've done these changes in anticpation that my ODE model may need an AConcINI and BConcINI by the sheer nature of their formulae; better to prepare now than to have to come back and do this later. It runs well, but I'd have to retest the ranges.
+
+I think it also makes more sense as alpha and beta are supposed to be production rates and removal rates, so smaller params check out (as does having an ini value).
+
+Furthermore, this has given a nicer AConc Plot:
+
+![AConc V2.0](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/v2.2.png) 
