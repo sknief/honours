@@ -16,8 +16,11 @@
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
+	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
+	setSeed(asInteger(seed));
+
 	//section A: constants
-	defineConstant("BOpt", 200); //test value: 250
+	defineConstant("BOpt", 200); //test value: 200
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
 	defineConstant("K", 10); //test value: 10, here neutral
@@ -94,7 +97,7 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 800);
 }
 
 
@@ -160,15 +163,15 @@ fitness(NULL) {
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath1", writeTempFile("plot_BConc"+ seed +  "_", ".png", ""));
 
 	//[A Conc]/t plot code
 	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath2", writeTempFile("plot_Aconc"+ seed + "_", ".png", ""));
 
 	//[A Conc]/[B Conc] plot code
 	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath3", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath3", writeTempFile("plot_ABConc_"+ seed + "_",  ".png", ""));
 
 	if (exists("slimgui")) {
 		slimgui.openDocument(pngPath1);
