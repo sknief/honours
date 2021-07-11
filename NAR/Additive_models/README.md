@@ -6,15 +6,18 @@ Compiled here are notes on the different models found above. Included are descri
 
 Version | Description | Build Status
 ------------- | ------------- | -------------
-V1.0 | Stabilising Selection Only| ***Needs Bug Fixing***
+V1.0 | Stabilising Selection Only| ***Succeeded***
 V1.1 | Modified copy of V1.0, during meeting with Daniel | ***Retired, Used as Reference***
 V1.2 | Modified copy of V1.0, Enhancement (Plots + Genotypes) | ***Succeeded***
 V1.3.0 | Successor to V1.2, Begin of Bug Fixing | ***Succeeded***
-V1.3.1 | WIP Bug Fix, successor to V1.3.0  | ***Completed***
+V1.3.1 | WIP Bug Fix, successor to V1.3.0  | ***Succeeded**
 V2.0 | Initial Release! Functioning Model! | ***Passed Testing***
+V2.1 | Alternative Version with only node A | ***Work In Progress***
+V2.2 | Alternative Version with an intitial B Conc and A Conc | ***Work in Progress***
 V3.0 | HPC Worthy Model | ***Work in Progress***
 WhackyNonWFVersion | a nonWF version with spatial selection & mating. Based on V1.0 | ***Regretted***
 
+Essentially: V1 = Barebone Coding, V2 = Functioning Models + Variations, V3 = HPC-appropriate versions of V2 models
 ----
 
 ## Notes on the Different Models ##
