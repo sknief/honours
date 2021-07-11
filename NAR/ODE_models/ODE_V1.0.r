@@ -1,5 +1,5 @@
 ######################################################
-#           R CODE FOR ODE MODELS AAAAAAA            #
+#           R CODE FOR ODE MODELS HILL FUNC VS       #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 

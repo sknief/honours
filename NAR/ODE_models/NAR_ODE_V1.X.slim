@@ -32,7 +32,7 @@ initialize() {
 	defineConstant("BOpt", 200); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
-	defineConstant("K", 10); //test value: 10, here neutral
+	defineConstant("K", 10); //test value: 10
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
 	defineConstant("S", 2); //selection coeff
@@ -145,24 +145,17 @@ fitness(m6) { return 1.0; }
 	lines = NULL;
 
 	for (ind in sim.subpopulations.individuals) {
-			//code for the concentration of A
-			//ind.setValue("ind.id", ind.index); //EXP
-			//or
+
 		ID = ind.index;
 		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
 		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-//!!!!!!!	K function //EXP
+		Knew = K + (ind.sumOfMutationsOfType(m3) * K);
 
-		paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta);
+		paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta, ", ", Knew);
 		print(paramstoexport);
 		lines = c(lines, paramstoexport);
-
-		//run if the print works
-		//writeFile(asString(paste0(c("ODE_MODEL_OUTPUT", identifier, "params.csv"))), paramstoexport, append = T);
-		//REF CODE:
-		//writeFile(asString(paste0(c("./matrices/model", modelindex, "/", asString(seed), "_", sizefxoutname, "trait1.csv"))), sizefxfile, append = T);
 
 /*
 		//time for fitnessScaling

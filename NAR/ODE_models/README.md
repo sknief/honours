@@ -6,11 +6,12 @@ Compiled here are notes on the different models found above. Included are descri
 
 Version | Description | Build Status
 ------------- | ------------- | -------------
-V1 | Experimental Barebone Coding Version | ***WIP***
+V1.0 | Experimental Barebone Coding Version | ***WIP***
+V1.1 | Same as above but used the Step-function rather than Hill function | ***WIP***
 V2 | First Bug-Free Release | ***Not Started Yet***
 V3 | HPC-ready Model | ***Not Started Yet***
 
-Please Note that this Versions system corresponds both to the SliM model AND its corresponding R script - these will have the same version number!
+Please Note that this Versions system corresponds both to the SliM model AND its corresponding R script - these will have the same version number! An X instead of a secondary number indicates that the current SliM model is used with multiple scripts and is still being tested. 
 
 ----
 
@@ -46,7 +47,7 @@ Please Note that this Versions system corresponds both to the SliM model AND its
 *10/07/21* Continued working on R script - functions need more thinking but the groundwork is there
 
    <details>
-     <summary>Patch Notes for ODE_V1.r</summary>
+     <summary>Patch Notes for ODE_V1.0.r</summary>
      <p> * Stage two semi-complete: ODE functions need improvement up but exist </p>
      <p> * Stage three complete: writing to file and exporting </p>
     </details>
@@ -54,18 +55,18 @@ Please Note that this Versions system corresponds both to the SliM model AND its
 
 *11/07/21* Huge Coding Day: working on R script and SliM model.
 
-Note to self: SLiM wd on Linux boot is the desktop, which I should probably change in the long run. 
+Note to self: SLiM wd on Linux boot is the desktop, which I should probably change in the long run.
 
 THESE NOTES ARE PROVISIONAL AS OF 18:25PM
 <details>
   <summary>Patch Notes for NAR_ODE_V1.slim</summary>
   <p> * Added an indication of Seed and generation number to file output names </p>
-  <p> * worked K into the code ? </p>
+  <p> * worked K into the code  </p>
   <p> * Tested and fixed code that reads in R code </p>
  </details>
 
 <details>
-  <summary>Patch Notes for ODE_V1.r</summary>
-   <p> * Fixed ODE functions</p>
-   <p> * anything else? </p>
+  <summary>Patch Notes for ODE_V1.1.r</summary>
+   <p> * New ODE functions</p>
+   <p> * Notes for future improvement </p>
 </details>
