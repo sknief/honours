@@ -1,8 +1,8 @@
 ///////////////////////////////////////////////////////////////////////
 // [ADDITIVE MODEL] Negative Autoregulation Motif code
-// Version: 2.0 [Bug-free Release Version]
+// Version: 2.1 [Bug-free Release Version, Node A ONLY]
 // Author: Stella M. S. Knief
-// "Released" on 01/07/21
+// "Released" on 11/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 /*Important Model Notes:
@@ -15,7 +15,7 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
 	//section A: constants
-	defineConstant("AOpt", 100); //test value: 50; some limits in terms of values this can take
+	defineConstant("AOpt", 80); //test value: 50; some limits in terms of values this can take
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
 	defineConstant("S", 2); //selection coeff
