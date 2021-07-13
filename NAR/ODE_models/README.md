@@ -11,7 +11,7 @@ V1.1 | Same as above but used the Step-function rather than Hill function | ***W
 V2 | First Bug-Free Release | ***Not Started Yet***
 V3 | HPC-ready Model | ***Not Started Yet***
 
-Please Note that this Versions system corresponds both to the SliM model AND its corresponding R script - these will have the same version number! An X instead of a secondary number indicates that the current SliM model is used with multiple scripts and is still being tested. 
+Please Note that this Versions system corresponds both to the SliM model AND its corresponding R script - these will have the same version number! An X instead of a secondary number indicates that the current SliM model is used with multiple scripts and is still being tested.
 
 ----
 
@@ -70,3 +70,14 @@ THESE NOTES ARE PROVISIONAL AS OF 18:25PM
    <p> * New ODE functions</p>
    <p> * Notes for future improvement </p>
 </details>
+
+*13/07/21* QUick Messy Update Cause I am tired: ODE code works, tibbles work, read in code works only need to fix one thing in the slim code as in how to refer to each individual output row to refer to the matching rganism but I can ask nick about that / do some research...
+
+Left to do:
+* Integral code
+* Cleaner Output so that it matches the format of NodeAOutput.txt on here
+* The match up thing detailed above
+* Fine tuning
+* Runtime estimates
+
+HYUUUUUUUUUUUUUUGE!!!!!!!!!
