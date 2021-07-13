@@ -90,11 +90,11 @@ new %>% unnest(ode_out)
 individualid <- params$ID
 outputA <- as.matrix(outputA)
 outputA <- data.frame(cbind(individualid, outputA))
-NodeAOutput <- write.csv(outputA, "NodeAoutput.csv")
+NodeAOutput <- write.table(outputA, "NodeAoutput.txt")
 
 outputB <- as.matrix(outputB)
 outputB <- data.frame(cbind(individualid, outputB))
-NodeBOutput <- write.csv((c(individualid, outputB)), "NodeBoutput.csv")
+NodeBOutput <-write.table(outputB, "NodeBoutput.txt")
 #note: make output code tighter, plus trim header, just internet is down atm
 
 
