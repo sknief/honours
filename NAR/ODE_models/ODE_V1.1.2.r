@@ -44,7 +44,6 @@ params$TK <- {
   }
 }
 
-#i think i gotta for loop this again:
 
 params$ODEout <- 0
 state <- c(A = 1, B = 1)
@@ -64,11 +63,26 @@ dat <- raw_dat %>%
                                                 Abeta = Abeta,
                                                 Balpha = Balpha,
                                                 Bbeta = Bbeta,
-                                                ThetaK = ThetaK)))))
-         # integral_out = int_fun(unnest(ode_out)))
+                                                ThetaK = ThetaK)))),
 
 
-##### 3. save that into MULTIPLE singleton files ########
+
+          integral_out = integrate(f = (approxfun(unnest(ode_out)[1, 3])),
+                                   lower = range(unnest(ode_out)[1]),
+                                   upper = range(unnest(ode_out)[1]))
+         )
+
+#integral trial code section
+integral_out = integrate(f = (approxfun(unnest(dat$ode_out, cols = c(time, B)))),
+                         lower = range(range(times)[1]),
+                         upper = range(range(times)[2])
+                          )
+
+new %>% unnest(ode_out)
+#the format? where does it go? like conceptually?
+
+
+### 3. save that into MULTIPLE singleton files ########
 
 #This sections needs to be modified with the actual output content, rn its just the functional skeleton
 # ie change the variable names thats all.
