@@ -130,7 +130,8 @@ initialize() {
 		//this might throw errors cause its in an early callback but we can try
 		//ODEVAL = ind.getValue("ODEVAL");
 
-		ind.setValue("ODEVAL", ODE[*,1]);
+		hh = ind.index;
+		ind.setValue("ODEVAL", ODE[hh,1]);
 		ODEVAL = ind.getValue("ODEVAL");
 		print(ODEVAL);
 
@@ -148,7 +149,7 @@ initialize() {
 
 	inds = sim.subpopulations.individuals;
 	print(mean(inds.getValue("ODEVAL")));
-	print("Success!);
+	print("Success!");
 
 	}
 
