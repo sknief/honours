@@ -9,7 +9,6 @@
 
 
 //FUNCTIONS?
-/* alternative for larger file sets
 //reading in table functions (from pg 380 of manual)
 function (i)readIntTable(s$ path)
 {
@@ -19,7 +18,7 @@ function (i)readIntTable(s$ path)
 	m = sapply(l, "asInteger(strsplit(applyValue));", simplify="matrix");
 	return t(m);
 }
-*/
+
 
 //START COMMANDS
 initialize() {
@@ -29,7 +28,7 @@ initialize() {
 	setSeed(asInteger(seed));
 
 	//section A: constants
-	defineConstant("BOpt", 200); //test value: 250
+	defineConstant("BOpt", 18); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
 	defineConstant("K", 10); //test value: 10
@@ -106,7 +105,7 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 1000);
+	sim.addSubpop("p1", 100);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -114,28 +113,48 @@ initialize() {
 ///////////////////////////////////////////////////////////////////////////////
 
 //FITNESS CALLBACKS + CALCULATIONS
-/*
-early() {
+
+3 early() {
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readFile("~/Desktop/ODE_MODEL_INPUT.txt");
-	ODE =  asFloat(strsplit(ODE));
+	ODE = readIntTable("~/Desktop/NodeAoutput.txt");
+	//ODE = asFloat(strsplit(ODE));
 	//testing code:
 	print("These are your values here:");
 	print(ODE);
 	val = isFloat(ODE);
 	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
 
+
 	for (ind in sim.subpopulations.individuals) {
-		//define ACONC and B conc for graphs
-		//!!!! need to get a way to connect ind index to the corresponding individuals
-		ind.setValue("Aconcentration", ODE[,1])
-		ind.setValue("Bconcentration", ODE[,2])
+		//this might throw errors cause its in an early callback but we can try
+		//ODEVAL = ind.getValue("ODEVAL");
+
+		hh = ind.index;
+		ind.setValue("ODEVAL", ODE[hh,1]);
+		ODEVAL = ind.getValue("ODEVAL");
+		print(ODEVAL);
+
+		fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
+
+		//fitnessScaling callback to avoid SLiM bug
+		if (fitnessfunction == 0) {
+			ind.fitnessScaling = fitnessfunction + 0.1;
+					print("WHOOPSIE");
+			ind.tag = 0; }
+		else
+			ind.fitnessScaling = fitnessfunction;
+		}
+
+
+	inds = sim.subpopulations.individuals;
+	print(mean(inds.getValue("ODEVAL")));
+	print("Success!");
+
 	}
 
-	//potentially place fitnessScaling callback here
-}
-*/
+
+
 
 //make non-coding neutral
 fitness(m6) { return 1.0; }
@@ -153,31 +172,19 @@ fitness(m6) { return 1.0; }
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
 		Knew = K + (ind.sumOfMutationsOfType(m3) * K);
 
-		paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta, ", ", Knew);
-		print(paramstoexport);
-		lines = c(lines, paramstoexport);
+		//export section #1
+		//paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta, ", ", Knew);
+		//print(paramstoexport);
+		//lines = c(lines, paramstoexport);
 
-/*
-		//time for fitnessScaling
-
-		//this might throw errors cause its in an early callback but we can try
-		fitnessfunction = exp(-((BConc-BOpt)/S)^2);
-
-		//fitnessScaling callback to avoid SLiM bug
-		if (fitnessfunction == 0) {
-			ind.fitnessScaling = fitnessfunction + 0.1;
-						print("WHOOPSIE");
-				ind.tag = 0;
-			}
-			else
-					ind.fitnessScaling = fitnessfunction;
-*/
 		}
 
-	gen = sim.generation;
-	writeFile(asString(paste0(c("ODE_MODEL_OUTPUT_", seed , "_", gen , "_params.csv"))), lines);
+	//export section #2
+	//gen = sim.generation;
+	//writeFile(asString(paste0(c("ODE_MODEL_OUTPUT_", seed , "_", gen , "_params.csv"))), lines);
+}
 
-	}
+
 /////////////////////////////////////////////////////////
 /*
 //HISTORY PLOT CODE + OUTPUT CODE
