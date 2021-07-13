@@ -6,9 +6,11 @@
 
 #install.packages("deSolve")
 #install.packages("tidyverse")
+#install.packages("DescTools")
 
 library(deSolve)
 library(tidyverse)
+library(DescTools)
 
 #### 1. read in file, format and potentially clean ######
 
@@ -18,6 +20,7 @@ params <- read.csv(file = "/Users/sknie/Desktop/ODE_MODEL_OUTPUT1params.csv", he
 
 #debug note:
 params$K <- runif(1000, 0, 3)
+
 
 colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
 
@@ -63,14 +66,24 @@ dat <- raw_dat %>%
                                                 Abeta = Abeta,
                                                 Balpha = Balpha,
                                                 Bbeta = Bbeta,
-                                                ThetaK = ThetaK)))),
+                                                ThetaK = ThetaK))) %>%
+                          mutate_all(.funs = as.numeric)))
 
 
+smalldat <- head(dat)
 
-          integral_out = integrate(f = (approxfun(unnest(ode_out)[1, 3])),
-                                   lower = range(unnest(ode_out)[1]),
-                                   upper = range(unnest(ode_out)[1]))
-         )
+
+dat2 <- smalldat %>%
+  rowwise() %>%
+    mutate(integral_out = list(map(.x = seq(from = 1, to = 6, by = 1),
+                              .f = ~ AUC(smalldat$ode_out[[1]][[.x]]$time, smalldat$ode_out[[1]][[.x]]$B,
+                                         from = 0, to = 100, absolutearea = TRUE))))
+#from the console
+dat2 <- smalldat %>%
+  +     mutate(integral_out = list(map(.x = seq(from = 1, to = 6, by = 1),
+                                       +                               .f = ~ AUC(smalldat$ode_out[[1]][[.x]]$time, smalldat$ode_out[[1]][[.x]]$B,
+                                                                                  +                                          from = 0, to = 100, absolutearea = TRUE))))
+
 
 #integral trial code section
 integral_out = integrate(f = (approxfun(unnest(dat$ode_out, cols = c(time, B)))),
@@ -78,9 +91,9 @@ integral_out = integrate(f = (approxfun(unnest(dat$ode_out, cols = c(time, B))))
                          upper = range(range(times)[2])
                           )
 
-new %>% unnest(ode_out)
-#the format? where does it go? like conceptually?
 
+#how to refer to things within that big bracket tmrw:
+.$ode_out[[1]][[1]]$time
 
 ### 3. save that into MULTIPLE singleton files ########
 
@@ -88,13 +101,13 @@ new %>% unnest(ode_out)
 # ie change the variable names thats all.
 
 individualid <- params$ID
-outputA <- as.matrix(outputA)
+outputA <- dat$Bbeta
 outputA <- data.frame(cbind(individualid, outputA))
 NodeAOutput <- write.table(outputA, "NodeAoutput.txt")
 
 outputB <- as.matrix(outputB)
 outputB <- data.frame(cbind(individualid, outputB))
-NodeBOutput <-write.table(outputB, "NodeBoutput.txt")
+NodeBOutput <- write.csv((c(individualid, outputB)), "NodeBoutput.csv")
 #note: make output code tighter, plus trim header, just internet is down atm
 
 
