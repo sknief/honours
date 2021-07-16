@@ -40,10 +40,10 @@ params$ThetaK <- 0
 
 params$TK <- {  #TK is not a part of the dataset, it is just a dummy variable
   for(i in 1:length(params$K)) {
-  if (params$K[i] < 1) {
-     params$ThetaK[i] = 1}
-  else {
-    params$ThetaK[i] = 0}
+    if (params$K[i] < 1) {
+      params$ThetaK[i] = 1}
+    else {
+      params$ThetaK[i] = 0}
   }
 }
 
@@ -74,9 +74,9 @@ smalldat <- head(dat)
 #testing the AUC function and the appropriate level of deepn indexing (AUC is part of DescTools)
 dat2 <- smalldat %>%
   rowwise() %>%
-    mutate(integral_out = list(map(.x = seq(from = 1, to = 6, by = 1),
-                              .f = ~ AUC(smalldat$ode_out[[1]][[.x]]$time, smalldat$ode_out[[1]][[.x]]$B,
-                                         from = 0, to = 100, absolutearea = TRUE))))
+  mutate(integral_out = list(map(.x = seq(from = 1, to = 6, by = 1),
+                                 .f = ~ AUC(smalldat$ode_out[[1]][[.x]]$time, smalldat$ode_out[[1]][[.x]]$B,
+                                            from = 0, to = 100, absolutearea = TRUE))))
 
 #semi-functional fragment saved from the console
 dat2 <- smalldat %>%
@@ -93,11 +93,18 @@ dat2 <- smalldat %>%
 individualid <- params$ID
 outputA <- dat$Bbeta
 outputA <- data.frame(cbind(individualid, outputA))
-NodeAOutput <- write.table(outputA, "NodeAoutput.txt")
 
 outputB <- as.matrix(outputB)
 outputB <- data.frame(cbind(individualid, outputB))
-NodeBOutput <- write.csv((c(individualid, outputB)), "NodeBoutput.csv")
+
+
+luna <- as.data.frame(cbind(runif(10, 0, 5), runif(10, 0, 20)))
+
+NodeAOutput <- write.table(luna, "ODEoutput.txt", 
+                           append = FALSE, 
+                           row.names = FALSE,
+                           col.names = FALSE)
+
 #note: make output code tighter, plus trim header, just internet is down atm
 
 
