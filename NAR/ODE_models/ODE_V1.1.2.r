@@ -26,31 +26,43 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
 
 ####  Part 2. calculate ODE values ########################################################################################
 
-#the ODE function (here based on a step function)
-Sylvia <-function(t, state, parameters) {
-  with(as.list(c(state, parameters)), {
-    dA <- (ThetaK * Aalpha - Abeta * A)
-    dB <- (Balpha - Bbeta*A)
+#Sylvia is based on a step function
+#Sylvia <-function(t, state, parameters) {
+#  with(as.list(c(state, parameters)), {
+#    dA <- (ThetaK * Aalpha - Abeta * A)
+#    dB <- (Balpha - Bbeta*A)
+#    list(c(dA, dB))
+#  })
+#}
+
+#these lines are not needed unless you use Sylvia
+#Turn K into the threshold value (from K to ThetaK)
+#params$ThetaK <- 0
+
+#params$TK <- {  #TK is not a part of the dataset, it is just a dummy variable
+#  for(i in 1:length(params$K)) {
+#    if (params$K[i] < 1) {
+#      params$ThetaK[i] = 1}
+#    else {
+#      params$ThetaK[i] = 0}
+#  }
+#}
+
+
+#Freya depends on a Hill Function
+Freya <-function(t, state, parameters) {
+  with(as.list(c(state,parameters)), {
+    dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
+    dB <- Bbeta * dA  - Balpha*B
     list(c(dA, dB))
   })
 }
 
-#Turn K into the threshold value (from K to ThetaK)
-params$ThetaK <- 0
-
-params$TK <- {  #TK is not a part of the dataset, it is just a dummy variable
-  for(i in 1:length(params$K)) {
-    if (params$K[i] < 1) {
-      params$ThetaK[i] = 1}
-    else {
-      params$ThetaK[i] = 0}
-  }
-}
 
 #Values for the ODE to come
 params$ODEout <- 0
 state <- c(A = 1, B = 1)
-times <- seq(0, 100, by = 1)
+times <- seq(0, 10, by = 1)
 
 #introduce tidyverse and nesting abilities
 raw_dat <- as_tibble(params)
@@ -60,12 +72,14 @@ dat <- raw_dat %>%
   rowwise() %>%
   mutate(ode_out = nest(as_tibble(ode(y = state,
                                       times = times,
-                                      func = Sylvia,
+                                      func = Freya,
                                       parms = c(Aalpha = Aalpha,
                                                 Abeta = Abeta,
                                                 Balpha = Balpha,
                                                 Bbeta = Bbeta,
-                                                ThetaK = ThetaK))) %>%
+                                                Xstart = 1,
+                                                Xstop = 6,
+                                                Hilln = 1000))) %>%
                           mutate_all(.funs = as.numeric)))
 
 #smalldat is a subset of dat that is smaller so i have a quicker runtime while testing
