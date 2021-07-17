@@ -88,24 +88,15 @@ dat2 <- smalldat %>%
 
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 
-#Still need to change the variable names to the final ones
 
 individualid <- params$ID
-outputA <- dat$Bbeta
-outputA <- data.frame(cbind(individualid, outputA))
 
-outputB <- as.matrix(outputB)
-outputB <- data.frame(cbind(individualid, outputB))
+# luna <- as.data.frame(cbind(runif(10, 0, 5), runif(10, 0, 20))) #test output
 
-
-luna <- as.data.frame(cbind(runif(10, 0, 5), runif(10, 0, 20)))
-
-NodeAOutput <- write.table(luna, "ODEoutput.txt", 
-                           append = FALSE, 
+write.table(luna, "ODEoutput.txt",
+                           append = FALSE,
                            row.names = FALSE,
                            col.names = FALSE)
-
-#note: make output code tighter, plus trim header, just internet is down atm
 
 
 ####### CODE GRAVEYARD ################################################################################################
