@@ -26,10 +26,11 @@ initialize() {
 	defineConstant("BConcINI", 0);
 	defineConstant("BOpt", 200); //test value: 200
 	defineConstant("GeneA1", 5); //test value: 50; some limits in terms of values this can take
-	defineConstant("AalphaINI", 2); //test value: 20
-	defineConstant("K", 10); //test value: 10, here neutral
-	defineConstant("BbetaINI", 8); //test value: 15
-	defineConstant("BalphaINI", 5); //test value: 10
+	defineConstant("GeneA2", 2); //test value: 20
+	defineConstant("GeneA3", 10); //test value: 10, here neutral
+	defineConstant("GeneB1", 8); //test value: 15
+	defineConstant("GeneB2", 5); //test value: 10
+	defineConstant("deltaT", 6);
 	defineConstant("S", 3); //selection coeff
 
 	//Section AA: Recombination
@@ -69,23 +70,23 @@ initialize() {
 		m6.color = "grey";
 	//section C: genomic elements
 	initializeGenomicElementType("g1", m6, 1.0); //non-coding
-	initializeGenomicElementType("g2", m1, 1.0); //Abeta
-	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //K
-	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
-	initializeGenomicElementType("g6", m5, 1.0); //Balpha
+	initializeGenomicElementType("g2", m1, 1.0); //GeneA1
+	initializeGenomicElementType("g3", m2, 1.0); //GeneA2
+	initializeGenomicElementType("g4", m3, 1.0); //GeneA3
+	initializeGenomicElementType("g5", m4, 1.0); //GeneB1
+	initializeGenomicElementType("g6", m5, 1.0); //GeneB2
 
 	//section D: chromosome structure
 	initializeGenomicElement(g1, 0, 1999);
-	initializeGenomicElement(g2, 2000, 2999); //Abeta
+	initializeGenomicElement(g2, 2000, 2999); //GeneA1
 	initializeGenomicElement(g1, 3000, 3499); //spacer
-	initializeGenomicElement(g3, 3500, 4499); //Aalpha
+	initializeGenomicElement(g3, 3500, 4499); //GeneA2
 	initializeGenomicElement(g1, 4500, 4999); //spacer
-	initializeGenomicElement(g4, 5000, 5999); //K
+	initializeGenomicElement(g4, 5000, 5999); //GeneA3
 	initializeGenomicElement(g1, 6000, 6499); //spacer
-	initializeGenomicElement(g5, 6500, 7499); //Bbeta
+	initializeGenomicElement(g5, 6500, 7499); //GeneB3
 	initializeGenomicElement(g1, 7500, 7999); //spacer
-	initializeGenomicElement(g6, 8000, 8999); //Balpha
+	initializeGenomicElement(g6, 8000, 8999); //GeneB4
 	initializeGenomicElement(g1, 9000, 10999); //end spacer
 
 	//section DD: colorcoding
@@ -105,9 +106,6 @@ initialize() {
 
 
 //FITNESS CALLBACKS + CALCULATIONS
-//for this version, make K neutral
-fitness(m3) { return 1.0; }
-
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
@@ -129,15 +127,17 @@ fitness(NULL) {
 
 	for (ind in sim.subpopulations.individuals) {
 			//code for the concentration of A
-			Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
-			Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
-			AConc = (Abeta*AConcINI - Aalpha*AConcINI) + AConcINI;
-			ind.setValue("Aconcentration", AConc);
+			GeneA1T = GeneA1 + (ind.sumOfMutationsOfType(m1) * GeneA1);
+			GeneA2T = GeneA2  + (ind.sumOfMutationsOfType(m2) * GeneA2);
+			GeneA3T = GeneA3  + (ind.sumOfMutationsOfType(m3) * GeneA3);
+			GeneATotal = GeneA1T + GeneA2T + GeneA3T;
+			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
-			Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
-			Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-			BConc = (Bbeta*AConc - Balpha*BConcINI) + BConcINI;
+			GeneB1T = GeneB1 + (ind.sumOfMutationsOfType(m5) * GeneB1);
+			GeneB2T = GeneB2 + (ind.sumOfMutationsOfType(m4) * GeneB2);
+			BGamma = GeneB1T + GeneB2T + GeneATotal;
+			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
 
 			//negative concentrations should be lethal (impossible!!)
@@ -193,13 +193,13 @@ fitness(NULL) {
 	//Report mean phenotypes
 	inds = sim.subpopulations.individuals;
 	meanNetwork = mean(inds.getValue("Bconcentration"));
-	meanACONC = mean(inds.getValue("Aconcentration"));
+	meanACONC = mean(inds.getValue("ATotals"));
 	meandivision = meanACONC/meanNetwork;
 	//Actual Output Code
 	catn();
 	catn();
 	catn("Generation: " + sim.generation);
-	catn("Mean A CONC: " + meanACONC);
+	catn("Mean A Totals: " + meanACONC);
 	catn("Mean B CONC: " + meanNetwork);
 	catn("Mean correlation " + meandivision);
 	catn();
