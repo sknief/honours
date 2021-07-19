@@ -1,8 +1,7 @@
 ######################################################
-# R CODE FOR ODE MODELS [Step version a la Daniel]   #
+# R CODE FOR ODE MODELS [Hill Function Vers]   #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
-# The functions used here are those given by Daniel in his e-mail "ODE evolution"
 
 #install.packages("deSolve")
 #install.packages("tidyverse")
