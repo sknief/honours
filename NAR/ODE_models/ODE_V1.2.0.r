@@ -15,7 +15,7 @@ library(DescTools)
 
 #UBUNTU:params <- read.csv("/home/stella/Desktop/ODE_MODEL_OUTPUT1params.csv", header = FALSE, sep = ",", dec = ".")
 #WINDOWS:
-params <- read.csv(file = "/Users/sknie/Desktop/ODE_MODEL_OUTPUT1params.csv", header = FALSE, sep = ",", dec = ".")
+params <- read.csv(file = "/Users/sknie/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values
