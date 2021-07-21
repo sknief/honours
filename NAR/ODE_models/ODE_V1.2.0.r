@@ -3,28 +3,30 @@
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
-#install.packages("deSolve")
-#install.packages("tidyverse")
-#install.packages("DescTools")
+install.packages("deSolve")
+install.packages("tidyverse")
+install.packages("DescTools")
 
 library(deSolve)
 library(tidyverse)
 library(DescTools)
 
+setwd("~/Documents/SLiM-Workhorse")
+
 #### Part 1. read in file, format and potentially clean #################################################################
 
-#UBUNTU:params <- read.csv("/home/stella/Desktop/ODE_MODEL_OUTPUT1params.csv", header = FALSE, sep = ",", dec = ".")
-#WINDOWS:
-params <- read.csv(file = "/Users/sknie/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+#UBUNTU:
+params <- read.csv("~/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+#WINDOWS:params <- read.csv(file = "/Users/sknie/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values
-gen <- params[x][1]
-seed <- params[y][1]
+gen <- params[7][1]
+seed <- params[8][1]
 
 
 #trim
-params <- select(params, -c(spaceholder1, sp2))
+params <- select(params, -c(params[7], params[8]))
 
 
 colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
@@ -58,7 +60,7 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
     dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
-    dB <- Bbeta * dA  - Balpha*B
+    dB <- Bbeta * A  - Balpha*B
     list(c(dA, dB))
   })
 }

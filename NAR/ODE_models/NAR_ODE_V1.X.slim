@@ -6,8 +6,6 @@
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
 
-
-
 //FUNCTIONS?
 //reading in table functions (from pg 380 of manual)
 function (i)readIntTable(s$ path)
@@ -22,8 +20,23 @@ function (i)readIntTable(s$ path)
 
 //START COMMANDS
 initialize() {
+
+	setwd("~/Documents/SLiM-Workhorse");
+
 	initializeSLiMOptions(keepPedigrees=T);
 
+	// find Rscript (for the functionality)
+ 	if (fileExists("/usr/lib/R/bin/Rscript"))
+  		defineConstant("RSCRIPT", "/usr/lib/R/bin/Rscript");
+ 	else if (fileExists("/usr/local/bin/Rscript"))
+  		defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
+ 	else
+  		stop("Couldn't find Rscript.");
+
+	//find RScript (as in my code)
+	defineConstant("magiccode", "/home/stella/github/honours/NAR/ODE_models/ODE_V1.2.0.r");
+
+	//seeding
 	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
 	setSeed(asInteger(seed));
 
@@ -115,10 +128,11 @@ initialize() {
 //FITNESS CALLBACKS + CALCULATIONS
 
 3 early() {
+
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable("~/Desktop/NodeAoutput.txt");
-	//ODE = asFloat(strsplit(ODE));
+	ODE = readIntTable("~/Documents/SLiM-Workhorse/ODEoutput.txt");
+
 	//testing code:
 	print("These are your values here:");
 	print(ODE);
@@ -127,9 +141,6 @@ initialize() {
 
 
 	for (ind in sim.subpopulations.individuals) {
-		//this might throw errors cause its in an early callback but we can try
-		//ODEVAL = ind.getValue("ODEVAL");
-
 		hh = ind.index;
 		ind.setValue("ODEVAL", ODE[hh,1]);
 		ODEVAL = ind.getValue("ODEVAL");
@@ -154,10 +165,9 @@ initialize() {
 	}
 
 
-
-
 //make non-coding neutral
 fitness(m6) { return 1.0; }
+
 
 1:2000 late() {
 
@@ -171,17 +181,28 @@ fitness(m6) { return 1.0; }
 		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
 		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
 		Knew = K + (ind.sumOfMutationsOfType(m3) * K);
+		gen = sim.generation;
 
-		//export section #1
-		//paramstoexport = paste0(ID, ", ", Aalpha,", ", Abeta, ", ", Balpha, ", ", Bbeta, ", ", Knew);
-		//print(paramstoexport);
-		//lines = c(lines, paramstoexport);
-
+		//export section #1: accumulation of individual data
+		paramstoexport = paste0(ID, ", ",
+										Aalpha,", ",
+										Abeta, ", ",
+										Balpha, ", ",
+										Bbeta, ", ",
+										Knew, ", ",
+										gen, ", ",
+										seed);
+		print(paramstoexport);
+		lines = c(lines, paramstoexport);
 		}
 
-	//export section #2
-	//gen = sim.generation;
-	//writeFile(asString(paste0(c("ODE_MODEL_OUTPUT_", seed , "_", gen , "_params.csv"))), lines);
+	//export section #2: writing one file per generation
+	gen = sim.generation;
+	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+
+	//export section #3: sending it to R
+	system(RSCRIPT, args=magiccode);
+
 }
 
 
