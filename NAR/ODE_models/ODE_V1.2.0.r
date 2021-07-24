@@ -17,15 +17,15 @@ params <- read.csv("~/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE,
 
 #trim generation + seed out
 #store as values
-gen <- params[7][1]
-seed <- params[8][1]
+gen <- as.numeric(unique(params[7][1]))
+seed <- as.numeric(unique(params[8][1][1]))
 
 
 #trim
-params <- select(params, -c(params[7], params[8]))
+params[8] <- NULL
+params[7] <- NULL
 
-
-colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
+colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
 
 ####  Part 2. calculate ODE values ########################################################################################
 
@@ -56,15 +56,14 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "K")
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
     dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
-    dB <- Bbeta * A  - Balpha*B
+    dB <- Bbeta * (A > Bthreshold && A <= Bthreshold )  - Balpha*B
     list(c(dA, dB))
   })
 }
 
 
 #Values for the ODE to come
-params$ODEout <- 0
-state <- c(A = 0, B = 0)
+state <- c(A = 10, B = 10)
 times <- seq(0, 10, by = 1)
 
 #introduce tidyverse and nesting abilities
@@ -82,15 +81,16 @@ dat <- raw_dat %>%
                                                 Bbeta = Bbeta,
                                                 Xstart = 1,
                                                 Xstop = 6,
-                                                Hilln = 1000))) %>%
+                                                Bthreshold = 5,
+                                                Hilln = Hilln))) %>%
                           mutate_all(.funs = as.numeric)))
 
 #base loops for the AUC functions
 dat$integral_out = 0
-dat$integral_outt = for (h in 1:1000) {
-                        dat$integral_out[h] = (AUC(dat[[8]][[h]]$time,
-                                                   dat[[8]][[h]]$B,
-                                                  absolutearea = TRUE))
+dat$integral_outt = for (h in 1:length(dat$ID)) {
+  dat$integral_out[h] = (AUC(dat[[7]][[h]]$time,
+                             dat[[7]][[h]]$B,
+                             absolutearea = TRUE))
 }
 
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
@@ -99,10 +99,12 @@ dat$integral_outt = for (h in 1:1000) {
 
 luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out), col.names = names(c("Index", "BConc")))
 
+luna[is.na(luna)] <- 0
+
 write.table(luna, "ODEoutput.txt",
-                           append = FALSE,
-                           row.names = FALSE,
-                           col.names = FALSE)
+            append = FALSE,
+            row.names = FALSE,
+            col.names = FALSE)
 
 #val is the savepoint of all data for the records
 
@@ -111,19 +113,20 @@ val <- as.data.frame(x = cbind(dat$ID,
                                dat$Abeta,
                                dat$Balpha,
                                dat$Bbeta,
-                               dat$K,
-                               dat$integral_out),
-                     col.names = names("Index",
-                                         "AAlpha",
-                                         "ABeta",
-                                         "BAlpha",
-                                         "BBeta",
-                                         "K",
-                                         "BConc"))
+                               dat$Hilln,
+                               dat$integral_out))
+colnames(val) = c("Index",
+                  "AAlpha",
+                  "ABeta",
+                  "BAlpha",
+                  "BBeta",
+                  "Hilln",
+                  "BConc")
+
 
 valname <- paste("Val_",seed,"_generation_",gen)
 
 write.table(val, valname,
             append = FALSE,
             row.names = FALSE,
-            col.names = FALSE)
+            col.names = TRUE)

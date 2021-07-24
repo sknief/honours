@@ -44,7 +44,7 @@ initialize() {
 	defineConstant("BOpt", 18); //test value: 250
 	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	defineConstant("AalphaINI", 20); //test value: 20
-	defineConstant("K", 10); //test value: 10
+	defineConstant("HillnINI", 10); //test value: 10
 	defineConstant("BbetaINI", 15); //test value: 15
 	defineConstant("BalphaINI", 10); //test value: 10
 	defineConstant("S", 2); //selection coeff
@@ -127,7 +127,7 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-3 early() {
+2:2000 early() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -176,11 +176,11 @@ fitness(m6) { return 1.0; }
 	for (ind in sim.subpopulations.individuals) {
 
 		ID = ind.index;
-		Aalpha = AalphaINI + (ind.sumOfMutationsOfType(m2) * AalphaINI);
-		Abeta = AbetaINI  + (ind.sumOfMutationsOfType(m1) * AbetaINI);
-		Balpha = BalphaINI + (ind.sumOfMutationsOfType(m5) * BalphaINI);
-		Bbeta = BbetaINI + (ind.sumOfMutationsOfType(m4) * BbetaINI);
-		Knew = K + (ind.sumOfMutationsOfType(m3) * K);
+		Aalpha = AalphaINI + exp(ind.sumOfMutationsOfType(m2));
+		Abeta = AbetaINI  + exp(ind.sumOfMutationsOfType(m1));
+		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m5));
+		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m4));
+		Hilln = HillnINI + exp(ind.sumOfMutationsOfType(m3));
 		gen = sim.generation;
 
 		//export section #1: accumulation of individual data
@@ -189,7 +189,7 @@ fitness(m6) { return 1.0; }
 										Abeta, ", ",
 										Balpha, ", ",
 										Bbeta, ", ",
-										Knew, ", ",
+										Hilln, ", ",
 										gen, ", ",
 										seed);
 		print(paramstoexport);
