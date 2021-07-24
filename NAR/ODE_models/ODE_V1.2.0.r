@@ -3,10 +3,6 @@
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
-install.packages("deSolve")
-install.packages("tidyverse")
-install.packages("DescTools")
-
 library(deSolve)
 library(tidyverse)
 library(DescTools)
