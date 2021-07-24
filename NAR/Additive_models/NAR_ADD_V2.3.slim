@@ -127,15 +127,15 @@ fitness(NULL) {
 
 	for (ind in sim.subpopulations.individuals) {
 			//code for the concentration of A
-			GeneA1T = GeneA1 + (ind.sumOfMutationsOfType(m1) * GeneA1);
-			GeneA2T = GeneA2  + (ind.sumOfMutationsOfType(m2) * GeneA2);
-			GeneA3T = GeneA3  + (ind.sumOfMutationsOfType(m3) * GeneA3);
+			GeneA1T = GeneA1 + exp(ind.sumOfMutationsOfType(m1));
+			GeneA2T = GeneA2  + exp(ind.sumOfMutationsOfType(m2));
+			GeneA3T = GeneA3  + exp(ind.sumOfMutationsOfType(m3));
 			GeneATotal = GeneA1T + GeneA2T + GeneA3T;
 			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
-			GeneB1T = GeneB1 + (ind.sumOfMutationsOfType(m5) * GeneB1);
-			GeneB2T = GeneB2 + (ind.sumOfMutationsOfType(m4) * GeneB2);
+			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)) * GeneB1);
+			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)) * GeneB2);
 			BGamma = GeneB1T + GeneB2T + GeneATotal;
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
