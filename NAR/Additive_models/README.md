@@ -13,7 +13,8 @@ V1.3.0 | Successor to V1.2, Begin of Bug Fixing | ***Succeeded***
 V1.3.1 | WIP Bug Fix, successor to V1.3.0  | ***Succeeded**
 V2.0 | Initial Release! Functioning Model! | ***Passed Testing***
 V2.1 | Alternative Version with only node A | ***Passed Testing***
-V2.2 | Alternative Version with an intitial B Conc and A Conc | ***Needs Testing***
+V2.2 | Alternative Version with an intitial B Conc and A Conc | ***Succeeded***
+V2.3 | Revised additive structure | ***CURRENT MODEL***
 V3.0 | HPC Worthy Model | ***Work in Progress***
 WhackyNonWFVersion | a nonWF version with spatial selection & mating. Based on V1.0 | ***Regretted***
 
@@ -246,3 +247,8 @@ I think it also makes more sense as alpha and beta are supposed to be production
 Furthermore, this has given a nicer AConc Plot:
 
 ![AConc V2.0](https://github.com/sknief/honours/blob/master/NAR/Additive_models/ReadMe_Files/v2.2.png)
+
+
+### Additive Model V2.3 ###
+
+*24/07/21* After a meeting with Daniel and Jan changed the way the addtitive model operates so that the genes are now unnamed, the mutations are acquired from an exponential and it is a purely additive trait. Working model. 
