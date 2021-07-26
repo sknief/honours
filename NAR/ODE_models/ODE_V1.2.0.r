@@ -93,11 +93,18 @@ dat$integral_outt = for (h in 1:length(dat$ID)) {
                              absolutearea = TRUE))
 }
 
+#same again to get a value for A
+dat$A_out = 0
+dat$A_outt = for (h in 1:length(dat$ID)) {
+  dat$A_out[h] = (AUC(dat[[7]][[h]]$time,
+                             dat[[7]][[h]]$A,
+                             absolutearea = TRUE))
+}
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 #luna is the things to keep and parse to slim
 
 
-luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out), col.names = names(c("Index", "BConc")))
+luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out, dat$A_out), col.names = names(c("Index", "BConc", "Aconc")))
 
 luna[is.na(luna)] <- 0
 
@@ -114,14 +121,16 @@ val <- as.data.frame(x = cbind(dat$ID,
                                dat$Balpha,
                                dat$Bbeta,
                                dat$Hilln,
-                               dat$integral_out))
+                               dat$integral_out,
+                               dat$A_out))
 colnames(val) = c("Index",
                   "AAlpha",
                   "ABeta",
                   "BAlpha",
                   "BBeta",
                   "Hilln",
-                  "BConc")
+                  "BConc",
+                  "AConc")
 
 
 valname <- paste("Val_",seed,"_generation_",gen)
