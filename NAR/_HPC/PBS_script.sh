@@ -7,6 +7,6 @@
 
 cd $TMPDIR
 
-~/SLiM/slim ~/SLiM/Scripts/Tests/Example/SLiM/slim_example.slim
+~/SLiM/slim ~/scripts/NAR_ODE_V1.X.slim
 
-cat /$TMPDIR/slim_output.csv >> /scratch/user/$USER/slim_output.csv
+mv -v ~/$TMPDIR/* ~/scratch/user/$USER/
