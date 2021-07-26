@@ -5,6 +5,9 @@
 // Work in progress started on 03/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
+//all output apart from the plot images will be in the central work folder -
+//plots cannot be moved due to writeTempFile specifications
+
 
 //FUNCTIONS?
 //reading in table functions (from pg 380 of manual)
@@ -22,7 +25,7 @@ function (i)readIntTable(s$ path)
 initialize() {
 
 	setwd("~/Documents/SLiM-Workhorse");
-
+	defineConstant(beginTime, clock()); // record the computer's time at the start of the run
 	initializeSLiMOptions(keepPedigrees=T);
 
 	// find Rscript (for the functionality)
@@ -302,4 +305,13 @@ fitness(m6) { return 1.0; }
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
+}
+
+//detailed output code
+2000 late() {
+catn("Time taken: " + clock() - beginTime);
+time = clock() - beginTime;
+writeFile("RuntimeEstimate.txt", time);
+sim.outputFull("~/Documents/SLiM-Workhorse/SLiMulation_Output_Full_" + seed +".txt");
+sim.outputFixedMutations("~/Documents/SLiM-Workhorse/SLiMulation_Output_FixedMutations_" + seed +".txt");
 }
