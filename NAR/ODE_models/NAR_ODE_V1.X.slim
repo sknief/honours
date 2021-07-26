@@ -134,17 +134,19 @@ initialize() {
 	ODE = readIntTable("~/Documents/SLiM-Workhorse/ODEoutput.txt");
 
 	//testing code:
-	print("These are your values here:");
-	print(ODE);
-	val = isFloat(ODE);
-	print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
+	//print("These are your values here:");
+	//print(ODE);
+	//val = isFloat(ODE);
+	//print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
 
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;
 		ind.setValue("ODEVAL", ODE[hh,1]);
+		ind.setValue("AConc", ODE[hh, 2]);
 		ODEVAL = ind.getValue("ODEVAL");
-		print(ODEVAL);
+		AConc = ind.getValue("AConc");
+		//print("Individual value: " + ODEVAL);
 
 		fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
 
@@ -159,6 +161,7 @@ initialize() {
 
 
 	inds = sim.subpopulations.individuals;
+	print("Here's the mean ODEVAL!");
 	print(mean(inds.getValue("ODEVAL")));
 	print("Success!");
 
@@ -192,7 +195,7 @@ fitness(m6) { return 1.0; }
 										Hilln, ", ",
 										gen, ", ",
 										seed);
-		print(paramstoexport);
+		//print(paramstoexport);
 		lines = c(lines, paramstoexport);
 		}
 
@@ -207,21 +210,21 @@ fitness(m6) { return 1.0; }
 
 
 /////////////////////////////////////////////////////////
-/*
+
 //HISTORY PLOT CODE + OUTPUT CODE
 //enable plots
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath1", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath1", writeTempFile("plot_BConc"+ seed +  "_", ".png", ""));
 
 	//[A Conc]/t plot code
 	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath2", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath2", writeTempFile("plot_Aconc"+ seed + "_", ".png", ""));
 
 	//[A Conc]/[B Conc] plot code
 	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
-	defineConstant("pngPath3", writeTempFile("plot_", ".png", ""));
+	defineConstant("pngPath3", writeTempFile("plot_ABConc_"+ seed + "_",  ".png", ""));
 
 	if (exists("slimgui")) {
 		slimgui.openDocument(pngPath1);
@@ -239,8 +242,8 @@ fitness(m6) { return 1.0; }
 
 	//Report mean phenotypes
 	inds = sim.subpopulations.individuals;
-	meanNetwork = mean(inds.getValue("Bconcentration"));
-	meanACONC = mean(inds.getValue("Aconcentration"));
+	meanNetwork = mean(inds.getValue("ODEVAL"));
+	meanACONC = mean(inds.getValue("AConc"));
 	meandivision = meanACONC/meanNetwork;
 	//Actual Output Code
 	catn();
@@ -300,4 +303,3 @@ fitness(m6) { return 1.0; }
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
 }
-*/
