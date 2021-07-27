@@ -54,12 +54,12 @@ initialize() {
 	defineConstant("S", 2); //selection coeff
 
 	//Section AA: Recombination
-	ends = c(6250, 6251, 10999);
-	rates = c(1e-8, 0.5, 1e-8);
+	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
+	rates = c(1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8);
 	initializeRecombinationRate(rates, ends);
 
 	//section B: mutations
-	initializeMutationRate(6.3e-6);
+	initializeMutationRate(6.3e-5);
 	//null model mutations all based on neutral distributions
 	//these distributions are bounded at -1 and 1, hence this scripttextile:
 	script = "x = rnorm(1, 0, 0.5); if (x <= -1) return -0.5; else if (x >= 1) return 0.5; else return x;";
@@ -98,17 +98,17 @@ initialize() {
 	initializeGenomicElementType("g6", m5, 1.0); //Balpha
 
 	//section D: chromosome structure
-	initializeGenomicElement(g1, 0, 1999);
-	initializeGenomicElement(g2, 2000, 2999); //Abeta
-	initializeGenomicElement(g1, 3000, 3499); //spacer
-	initializeGenomicElement(g3, 3500, 4499); //Aalpha
-	initializeGenomicElement(g1, 4500, 4999); //spacer
-	initializeGenomicElement(g4, 5000, 5999); //K
-	initializeGenomicElement(g1, 6000, 6499); //spacer
-	initializeGenomicElement(g5, 6500, 7499); //Bbeta
-	initializeGenomicElement(g1, 7500, 7999); //spacer
-	initializeGenomicElement(g6, 8000, 8999); //Balpha
-	initializeGenomicElement(g1, 9000, 10999); //end spacer
+	initializeGenomicElement(g1, 0, 99);
+	initializeGenomicElement(g2, 100, 1099); //Abeta
+	initializeGenomicElement(g1, 1100, 1199); //spacer
+	initializeGenomicElement(g3, 1200, 2199); //Aalpha
+	initializeGenomicElement(g1, 2200, 2299); //spacer
+	initializeGenomicElement(g4, 2300, 3299); //K
+	initializeGenomicElement(g1, 3300, 3399); //spacer
+	initializeGenomicElement(g5, 3400, 4399); //Bbeta
+	initializeGenomicElement(g1, 4400, 4499); //spacer
+	initializeGenomicElement(g6, 4500, 5499); //Balpha
+	initializeGenomicElement(g1, 5500, 5599); //end spacer
 
 	//section DD: colorcoding
 	g1.color = "darkgrey";
