@@ -28,6 +28,7 @@ initialize() {
 	defineConstant(beginTime, clock()); // record the computer's time at the start of the run
 	initializeSLiMOptions(keepPedigrees=T);
 
+//NOTE: CHANGE FILE PATH
 	// find Rscript (for the functionality)
  	if (fileExists("/usr/lib/R/bin/Rscript"))
   		defineConstant("RSCRIPT", "/usr/lib/R/bin/Rscript");
