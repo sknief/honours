@@ -27,8 +27,8 @@ initialize() {
 	defineConstant("S", 3); //selection coeff
 
 	//Section AA: Recombination
-	ends = c(6250, 6251, 10999);
-	rates = c(1e-8, 0.5, 1e-8);
+	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
+	rates = c(1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8, 0.5, 1e-8);
 	initializeRecombinationRate(rates, ends);
 
 	//section B: mutations
