@@ -9,7 +9,6 @@
 //START COMMANDS
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
-	defineConstant(beginTime, clock()); // record the computer's time at the start of the run
 	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
 	setSeed(asInteger(seed));
 
@@ -291,9 +290,6 @@ fitness(NULL) {
 
 //detailed output code
 20 late() {
-catn("Time taken: " + clock() - beginTime);
-time = clock() - beginTime;
-writeFile("RuntimeEstimate.txt", time);
 sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
 }
