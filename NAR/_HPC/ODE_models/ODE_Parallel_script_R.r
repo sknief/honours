@@ -31,7 +31,7 @@ library(doParallel)
 library(future)
 
 #NOTE: Change the file path
-seeds <- read.csv("~/Desktop/seeds.csv", header = T)
+seeds <- read.csv("~/scripts/seeds.csv", header = T)
 
 
 cl <- makeCluster(future::availableCores())
@@ -41,9 +41,9 @@ registerDoParallel(cl)
 #NOTE: change the number of params and path
 foreach(i=1:nrow(df.p)) %:%
   foreach(j=seeds$Seed) %dopar% {
-        slim_out <- system(sprintf("/path/to/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim",
+        slim_out <- system(sprintf("~/SLiM/build/slim -s %s -d param1=%f -d param2=%s  ~/Desktop/example_script.slim",
                                   as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
   }
 
-  
+
 stopCluster(cl)

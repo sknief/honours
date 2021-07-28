@@ -45,5 +45,5 @@ foreach(i=1:nrow(df.p)) %:%
                                   as.character(j), df.p[i,]$param1, df.p[i,]$param2, intern=T))
   }
 
-  
+
 stopCluster(cl)

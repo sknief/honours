@@ -7,7 +7,7 @@
 
 cd $TMPDIR
 
-~/SLiM/build/slim ~/scripts/NAR_ADD_SELECTION.slim
+R --file=/home/$USER/scripts/ODE_Parallel_script_R.r
 
 cat /$TMPDIR/* >> /scratch/user/$USER/
 
