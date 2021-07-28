@@ -127,8 +127,8 @@ fitness(NULL) {
 			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
-			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)));
-			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)));
+			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5));
+			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4));
 			BGamma = GeneB1T + GeneB2T + GeneATotal;
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
@@ -189,8 +189,8 @@ fitness(NULL) {
 		GeneA2T = GeneA2  + exp(ind.sumOfMutationsOfType(m2));
 		GeneA3T = GeneA3  + exp(ind.sumOfMutationsOfType(m3));
 		GeneATotal = GeneA1T + GeneA2T + GeneA3T;
-		GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)));
-		GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)));
+		GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5));
+		GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4));
 		BGamma = GeneB1T + GeneB2T + GeneATotal;
 		BConc = BGamma * deltaT;
 		gen = sim.generation;
