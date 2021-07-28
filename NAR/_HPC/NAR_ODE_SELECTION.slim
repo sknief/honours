@@ -29,6 +29,10 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
 //NOTE: CHANGE FILE PATH
+
+defineConstant("RSCRIPT", "R --file= ~/scripts/ODE_script.r");
+
+/*
 	// find Rscript (for the functionality)
  	if (fileExists("/usr/lib/R/bin/Rscript"))
   		defineConstant("RSCRIPT", "/usr/lib/R/bin/Rscript");
@@ -36,6 +40,8 @@ initialize() {
   		defineConstant("RSCRIPT", "/usr/local/bin/Rscript");
  	else
   		stop("Couldn't find Rscript.");
+*/
+
 
 	//find RScript (as in my code)
 	defineConstant("magiccode", "~/scripts/ODE_SCRIPT.r");
@@ -131,11 +137,11 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:2000 early() {
+2:20 early() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable("~/$TMPDIR/ODEoutput.txt");
+	ODE = readIntTable("ODEoutput.txt");
 
 	//testing code:
 	//print("These are your values here:");
@@ -176,7 +182,7 @@ initialize() {
 fitness(m6) { return 1.0; }
 
 
-1:2000 late() {
+1:20 late() {
 
 	lines = NULL;
 
@@ -238,7 +244,7 @@ fitness(m6) { return 1.0; }
 }
 
 //update plots
-1:2000 late() {
+1:20 late() {
 	// choose when to update plots below
 	if (sim.generation % 5 != 0) return;
 
@@ -309,10 +315,10 @@ fitness(m6) { return 1.0; }
 }
 
 //detailed output code
-2000 late() {
+20 late() {
 catn("Time taken: " + clock() - beginTime);
 time = clock() - beginTime;
 writeFile("RuntimeEstimate.txt", time);
-sim.outputFull("~/$TMPDIR/SLiMulation_Output_Full_" + seed +".txt");
-sim.outputFixedMutations("~/$TMPDIR/SLiMulation_Output_FixedMutations_" + seed +".txt");
+sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
+sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
 }

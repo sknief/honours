@@ -7,7 +7,7 @@
 
 cd $TMPDIR
 
-~/SLiM/slim ~/scripts/NAR_ODE_V1.X.slim
+~/SLiM/build/slim ~/scripts/NAR_ODE_SELECTION.slim
 
 cat /$TMPDIR/* >> /scratch/user/$USER/
 
