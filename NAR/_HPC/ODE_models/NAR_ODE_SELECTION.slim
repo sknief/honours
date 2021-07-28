@@ -34,7 +34,7 @@ initialize() {
 
 //NOTE: CHANGE FILE PATH
 
-setCfgParam("RSCRIPT", "R --file= ~/scripts/ODE_script.r");
+setCfgParam("RSCRIPT", "R --file = ~/scripts/ODE_script.r");
 
 //commented out cause its useless on the HPC
 /*
@@ -147,13 +147,6 @@ setCfgParam("RSCRIPT", "R --file= ~/scripts/ODE_script.r");
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
 	ODE = readIntTable("ODEoutput.txt");
-
-	//testing code:
-	//print("These are your values here:");
-	//print(ODE);
-	//val = isFloat(ODE);
-	//print("TRUE OR FALSE that we all  FLOAT down here?:" + val);
-
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;
@@ -321,9 +314,6 @@ fitness(m6) { return 1.0; }
 
 //detailed output code
 20 late() {
-catn("Time taken: " + clock() - beginTime);
-time = clock() - beginTime;
-writeFile("RuntimeEstimate.txt", time);
 sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
 }
