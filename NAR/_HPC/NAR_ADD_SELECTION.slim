@@ -114,7 +114,7 @@ fitness(NULL) {
 }
 
 //late code that calculates the protein concentrations and bases fitness on them
-1:2000 late() {
+1:20 late() {
 	//all individuals receive an initial tag ( 1= survival)
 	sim.subpopulations.individuals.tag = 1;
 
@@ -127,8 +127,8 @@ fitness(NULL) {
 			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
-			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)) * GeneB1);
-			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)) * GeneB2);
+			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)));
+			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)));
 			BGamma = GeneB1T + GeneB2T + GeneATotal;
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
@@ -177,8 +177,49 @@ fitness(NULL) {
 		}
 }
 
+//output code to be cleaned
+1:20 late() {
+
+	lines = NULL;
+
+	for (ind in sim.subpopulations.individuals) {
+
+		ID = ind.index;
+		GeneA1T = GeneA1 + exp(ind.sumOfMutationsOfType(m1));
+		GeneA2T = GeneA2  + exp(ind.sumOfMutationsOfType(m2));
+		GeneA3T = GeneA3  + exp(ind.sumOfMutationsOfType(m3));
+		GeneATotal = GeneA1T + GeneA2T + GeneA3T;
+		GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5)));
+		GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4)));
+		BGamma = GeneB1T + GeneB2T + GeneATotal;
+		BConc = BGamma * deltaT;
+		gen = sim.generation;
+
+		//export section #1: accumulation of individual data
+		paramstoexport = paste0(ID, ", ",
+										GeneA1T,", ",
+										GeneA2T, ", ",
+										GeneA3T, ", ",
+										GeneATotal, ", ",
+										GeneB1T, ", ",
+										GeneB2T, ", ",
+										BGamma, ", ",
+										BConc, ", ",
+										gen, ", ",
+										seed);
+		//print(paramstoexport);
+		lines = c(lines, paramstoexport);
+		}
+
+	//export section #2: writing one file per generation
+	gen = sim.generation;
+	writeFile(asString(paste0(c("ADD_SLiM-output_" + gen + ".csv"))), lines);
+
+
+
+/*
 //update plots
-1:2000 late() {
+1:20 late() {
 	// choose when to update plots below
 	if (sim.generation % 5 != 0) return;
 
@@ -246,6 +287,7 @@ fitness(NULL) {
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
 }
+*/
 
 //detailed output code
 20 late() {
