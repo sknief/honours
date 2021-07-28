@@ -7,13 +7,10 @@ library(deSolve)
 library(tidyverse)
 library(DescTools)
 
-setwd("~/$TMPDIR")
-
 #### Part 1. read in file, format and potentially clean #################################################################
 
-#UBUNTU:
-params <- read.csv("~/$TMPDIR/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
-#WINDOWS:params <- read.csv(file = "/Users/sknie/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+#HPC:
+params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values
@@ -28,30 +25,6 @@ params[7] <- NULL
 colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
 
 ####  Part 2. calculate ODE values ########################################################################################
-
-#Sylvia is based on a step function
-#Sylvia <-function(t, state, parameters) {
-#  with(as.list(c(state, parameters)), {
-#    dA <- (ThetaK * Aalpha - Abeta * A)
-#    dB <- (Balpha - Bbeta*A)
-#    list(c(dA, dB))
-#  })
-#}
-
-#these lines are not needed unless you use Sylvia
-#Turn K into the threshold value (from K to ThetaK)
-#params$ThetaK <- 0
-
-#params$TK <- {  #TK is not a part of the dataset, it is just a dummy variable
-#  for(i in 1:length(params$K)) {
-#    if (params$K[i] < 1) {
-#      params$ThetaK[i] = 1}
-#    else {
-#      params$ThetaK[i] = 0}
-#  }
-#}
-
-
 #Freya depends on a Hill Function
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
@@ -63,7 +36,7 @@ Freya <-function(t, state, parameters) {
 
 
 #Values for the ODE to come
-state <- c(A = 10, B = 10)
+state <- c(A = 0, B = 0) #test if this even works
 times <- seq(0, 10, by = 1)
 
 #introduce tidyverse and nesting abilities
