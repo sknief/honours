@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#PBS -q Special
+#PBS -q workq
 #PBS -A qris-uq
 #PBS -N slim_eg
 #PBS -l walltime=4:00:00
@@ -7,7 +7,7 @@
 
 cd $TMPDIR
 
-~/SLiM/build/slim ~/scripts/NAR_ADD_SELECTION.slim
+R --file=/home/$USER/scripts/ODE_Parallel_script_R.r
 
 cat /$TMPDIR/* >> /scratch/user/$USER/
 
