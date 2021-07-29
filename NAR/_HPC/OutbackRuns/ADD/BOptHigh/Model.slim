@@ -18,13 +18,13 @@ initialize() {
 	//section A: constants
 	defineConstant("AConcINI", 20);
 	defineConstant("BConcINI", 0);
-	defineConstant("BOpt", 150);
+	defineConstant("BOpt", 200);
 	defineConstant("GeneA1", 5);
-	defineConstant("GeneA2", 2);
-	defineConstant("GeneB1", 11);
-	defineConstant("GeneB2", 12);
+	defineConstant("GeneA2", 5);
+	defineConstant("GeneB1", 5);
+	defineConstant("GeneB2", 5);
 	defineConstant("deltaT", 6);
-	defineConstant("S", 2); //selection coeff
+	defineConstant("S", 3); //selection coeff
 
 	//Section AA: Recombination
 	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
@@ -136,6 +136,7 @@ fitness(NULL) {
 				ind.tag = 0;
 				}
 
+
 			//the stabilising selection function
 			fitnessfunction = exp(-((BConc-BOpt)/S)^2);
 
@@ -147,6 +148,7 @@ fitness(NULL) {
 				}
 			else
 				ind.fitnessScaling = fitnessfunction;
+
 	}
 }
 
@@ -242,4 +244,10 @@ fitness(NULL) {
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
+}
+
+
+2000 late() {
+sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
+sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
 }
