@@ -13,4 +13,4 @@ module load R/3.5.0
 
 R --file=/home/$USER/OutbackRuns/ODE/Neutral/SUBLAUNCHERTEST.R
 
-mv -v $TMPDIR /scratch/user/$USER/dump
+cp -rp $TMPDIR /scratch/user/$USER/dump

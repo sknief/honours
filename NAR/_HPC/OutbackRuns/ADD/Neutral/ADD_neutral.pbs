@@ -13,4 +13,4 @@ module load R/3.5.0
 
 R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHER.R
 
-mv -v $TMPDIR /scratch/user/$USER/ADD_Neutral
+cp -rp $TMPDIR /scratch/user/$USER/ADD_Neutral

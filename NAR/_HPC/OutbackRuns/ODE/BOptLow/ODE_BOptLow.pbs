@@ -13,4 +13,4 @@ module load R/3.5.0
 
 R --file=/home/$USER/OutbackRuns/ODE/BOptLow/SUBLAUNCHER.R
 
-mv -v $TMPDIR /scratch/user/$USER/ODE_BOptLow
+cp -rp $TMPDIR /scratch/user/$USER/ODE_BOptLow
