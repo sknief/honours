@@ -152,11 +152,6 @@ fitness(NULL) {
 											seed);
 			//print(paramstoexport);
 			lines = c(lines, paramstoexport);
-			}
-
-		//export section #2: writing one file per generation
-		gen = sim.generation;
-		writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
 
 			//negative concentrations should be lethal (impossible!!)
 			if (BConc < 0) {
@@ -164,21 +159,28 @@ fitness(NULL) {
 				ind.tag = 0;
 				}
 
- /* Neutral Model
-			//the stabilising selection function
-			fitnessfunction = exp(-((BConc-BOpt)/S)^2);
+				/* Neutral Model
+						 //the stabilising selection function
+						 fitnessfunction = exp(-((BConc-BOpt)/S)^2);
 
-			//fitnessScaling callback to avoid SLiM bug
-		//	if (fitnessfunction == 0) {
-				ind.fitnessScaling = fitnessfunction + 0.1;
-				print("WHOOPSIE");
-				ind.tag = 0;
-				}
-			else
-				ind.fitnessScaling = fitnessfunction;
-				*/
-	}
+						 //fitnessScaling callback to avoid SLiM bug
+					 if (fitnessfunction == 0) {
+							 ind.fitnessScaling = fitnessfunction + 0.1;
+							 print("WHOOPSIE");
+							 ind.tag = 0;
+							 }
+						 else
+							 ind.fitnessScaling = fitnessfunction;
+							 */
+
 }
+
+
+				//export section #2: writing one file per generation
+		gen = sim.generation;
+		writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+	}
+
 
 
 //HISTORY PLOT CODE + OUTPUT CODE
