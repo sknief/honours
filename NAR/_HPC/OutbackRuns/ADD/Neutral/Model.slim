@@ -124,6 +124,7 @@ fitness(NULL) {
 1:2000 late() {
 	//all individuals receive an initial tag ( 1= survival)
 	sim.subpopulations.individuals.tag = 1;
+	lines = NULL;
 
 	for (ind in sim.subpopulations.individuals) {
 			//code for the concentration of A
