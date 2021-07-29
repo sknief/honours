@@ -1,68 +1,30 @@
-///////////////////////////////////////////////////////////////////////
-// [ODE MODEL] Negative Autoregulation Motif code
-// Version: 1.0 [Based on NAR_ADD_v2.0]
+//////////////////////////////////////////////////////////////////////
+// [ADDITIVE MODEL] Negative Autoregulation Motif code
+// Version: 2.3 [Reworked Additive Version]
 // Author: Stella M. S. Knief
-// Work in progress started on 03/07/21
+// "Released" on 11/07/21
 // Created for Honours 2021
 /////////////////////////////////////////////////////////////////////
-//all output apart from the plot images will be in the central work folder -
-//plots cannot be moved due to writeTempFile specifications
-
-
-//FUNCTIONS?
-//reading in table functions (from pg 380 of manual)
-function (i)readIntTable(s$ path)
-{
-	if (!fileExists(path))
-		stop("readIntTable(): File not found at path " + path);
-	l = readFile(path);
-	m = sapply(l, "asInteger(strsplit(applyValue));", simplify="matrix");
-	return t(m);
-}
-
-
-function (void) setCfgParam (s$ name, ifls value) // setup function for automating constant definitions between gui and command line
-{
-	if (!exists(name))
-		defineConstant(name, value);
-}
 
 
 //START COMMANDS
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
-//NOTE: CHANGE FILE PATH
-
-setCfgParam("RSCRIPT", "R --file = ~/scripts/ODE_script.r");
-
-//commented out cause its useless on the HPC
-/*
-	// find Rscript (for the functionality)
- 	if (fileExists("/usr/lib/R/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
- 	else if (fileExists("/usr/local/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/local/bin/Rscript");
- 	else
-  		stop("Couldn't find Rscript.");
-*/
-
-
-	//find RScript (as in my code)
-	setCfgParam("magiccode", "~/scripts/ODE_SCRIPT.r");
-
-	//seeding
-	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
+	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
 	setSeed(asInteger(seed));
 
+
 	//section A: constants
-	setCfgParam("BOpt", 180); //test value: 250
-	setCfgParam("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
-	setCfgParam("AalphaINI", 20); //test value: 20
-	setCfgParam("HillnINI", 10); //test value: 10
-	setCfgParam("BbetaINI", 15); //test value: 15
-	setCfgParam("BalphaINI", 10); //test value: 10
-	setCfgParam("S", 2); //selection coeff
+	defineConstant("AConcINI", 20);
+	defineConstant("BConcINI", 0);
+	defineConstant("BOpt", 150);
+	defineConstant("GeneA1", 5);
+	defineConstant("GeneA2", 2);
+	defineConstant("GeneB1", 11);
+	defineConstant("GeneB2", 12);
+	defineConstant("deltaT", 6);
+	defineConstant("S", 2); //selection coeff
 
 	//Section AA: Recombination
 	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
@@ -99,33 +61,30 @@ setCfgParam("RSCRIPT", "R --file = ~/scripts/ODE_script.r");
 		initializeMutationType("m6", 0.5, "s", script);
 		m6.convertToSubstitution = T;
 		m6.color = "grey";
-
 	//section C: genomic elements
 	initializeGenomicElementType("g1", m6, 1.0); //non-coding
-	initializeGenomicElementType("g2", m1, 1.0); //Abeta
-	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //K
-	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
-	initializeGenomicElementType("g6", m5, 1.0); //Balpha
+	initializeGenomicElementType("g2", m1, 1.0); //GeneA1
+	initializeGenomicElementType("g3", m2, 1.0); //GeneA2
+	initializeGenomicElementType("g5", m4, 1.0); //GeneB1
+	initializeGenomicElementType("g6", m5, 1.0); //GeneB2
 
 	//section D: chromosome structure
 	initializeGenomicElement(g1, 0, 99);
-	initializeGenomicElement(g2, 100, 1099); //Abeta
+	initializeGenomicElement(g2, 100, 1099);
 	initializeGenomicElement(g1, 1100, 1199); //spacer
-	initializeGenomicElement(g3, 1200, 2199); //Aalpha
+	initializeGenomicElement(g3, 1200, 2199);
 	initializeGenomicElement(g1, 2200, 2299); //spacer
-	initializeGenomicElement(g4, 2300, 3299); //K
-	initializeGenomicElement(g1, 3300, 3399); //spacer
-	initializeGenomicElement(g5, 3400, 4399); //Bbeta
+	initializeGenomicElement(g1, 2300, 3399); //spacer
+	initializeGenomicElement(g5, 3400, 4399);
 	initializeGenomicElement(g1, 4400, 4499); //spacer
-	initializeGenomicElement(g6, 4500, 5499); //Balpha
+	initializeGenomicElement(g6, 4500, 5499);
 	initializeGenomicElement(g1, 5500, 5599); //end spacer
+
 
 	//section DD: colorcoding
 	g1.color = "darkgrey";
 	g2.color = "firebrick";
 	g3.color = "firebrick";
-	g4.color = "lightblue";
 	g5.color = "yellow";
 	g6.color = "yellow";
 }
@@ -133,106 +92,80 @@ setCfgParam("RSCRIPT", "R --file = ~/scripts/ODE_script.r");
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 1000);
 }
 
-///////////////////////////////////////////////////////////////////////////////
-//the code above is not to be changed! (Apart from params for models)
-///////////////////////////////////////////////////////////////////////////////
 
 //FITNESS CALLBACKS + CALCULATIONS
-
-2:20 early() {
-
-	//read in files:
-	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable("ODEoutput.txt");
-
-	for (ind in sim.subpopulations.individuals) {
-		hh = ind.index;
-		ind.setValue("ODEVAL", ODE[hh,1]);
-		ind.setValue("AConc", ODE[hh, 2]);
-		ODEVAL = ind.getValue("ODEVAL");
-		AConc = ind.getValue("AConc");
-		//print("Individual value: " + ODEVAL);
-
-		fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
-
-		//fitnessScaling callback to avoid SLiM bug
-		if (fitnessfunction == 0) {
-			ind.fitnessScaling = fitnessfunction + 0.1;
-					print("WHOOPSIE");
-			ind.tag = 0; }
-		else
-			ind.fitnessScaling = fitnessfunction;
-		}
-
-
-	inds = sim.subpopulations.individuals;
-	print("Here's the mean ODEVAL!");
-	print(mean(inds.getValue("ODEVAL")));
-	print("Success!");
-
-	}
-
-
 //make non-coding neutral
 fitness(m6) { return 1.0; }
 
-
-1:20 late() {
-
-	lines = NULL;
-
-	for (ind in sim.subpopulations.individuals) {
-
-		ID = ind.index;
-		Aalpha = AalphaINI + exp(ind.sumOfMutationsOfType(m2));
-		Abeta = AbetaINI  + exp(ind.sumOfMutationsOfType(m1));
-		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m5));
-		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m4));
-		Hilln = HillnINI + exp(ind.sumOfMutationsOfType(m3));
-		gen = sim.generation;
-
-		//export section #1: accumulation of individual data
-		paramstoexport = paste0(ID, ", ",
-										Aalpha,", ",
-										Abeta, ", ",
-										Balpha, ", ",
-										Bbeta, ", ",
-										Hilln, ", ",
-										gen, ", ",
-										seed);
-		//print(paramstoexport);
-		lines = c(lines, paramstoexport);
-		}
-
-	//export section #2: writing one file per generation
-	gen = sim.generation;
-	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
-
-	//export section #3: sending it to R
-	system(RSCRIPT, args=magiccode);
-
+// individuals tagged have fitnessScaling = 0, which will cause SLiM to throw a fit;
+// give them either minimal fitness (0.1) to push them beyond extreme bounds, or
+// give them lethal fitness (0), to make sure that anything beyond the fitness function counts as lethal
+// biologically speaking i'd prefer lethal ftiness, but ask Jan which one is better
+fitness(NULL) {
+	if (individual.tag == 0)
+		return 0.0;
+	else
+		return relFitness;
 }
 
+//late code that calculates the protein concentrations and bases fitness on them
+1:2000 late() {
+	//all individuals receive an initial tag ( 1= survival)
+	sim.subpopulations.individuals.tag = 1;
 
-/////////////////////////////////////////////////////////
+	for (ind in sim.subpopulations.individuals) {
+			//code for the concentration of A
+			GeneA1T = GeneA1 + exp(ind.sumOfMutationsOfType(m1));
+			GeneA2T = GeneA2  + exp(ind.sumOfMutationsOfType(m2));
+			GeneATotal = GeneA1T + GeneA2T;
+			ind.setValue("ATotals", GeneATotal);
+
+			//code for the concentration of B
+			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5));
+			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4));
+			BGamma = GeneB1T + GeneB2T + GeneATotal;
+			BConc = BGamma * deltaT;
+			ind.setValue("Bconcentration", BConc);
+
+			//negative concentrations should be lethal (impossible!!)
+			if (BConc < 0) {
+				print("EEK");
+				ind.tag = 0;
+				}
+
+			//the stabilising selection function
+			fitnessfunction = exp(-((BConc-BOpt)/S)^2);
+
+			//fitnessScaling callback to avoid SLiM bug
+			if (fitnessfunction == 0) {
+				ind.fitnessScaling = fitnessfunction + 0.1;
+				print("WHOOPSIE");
+				ind.tag = 0;
+				}
+			else
+				ind.fitnessScaling = fitnessfunction;
+	}
+}
+
 
 //HISTORY PLOT CODE + OUTPUT CODE
 //enable plots
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
-	setCfgParam("pngPath1", writeTempFile("plot_BConc"+ seed +  "_", ".png", ""));
+	defineConstant("pngPath1", writeTempFile("plot_BConc"+ seed +  "_", ".png", ""));
 
 	//[A Conc]/t plot code
 	sim.setValue("history2", matrix(c(0.0, 0.0), nrow=1));
-	setCfgParam("pngPath2", writeTempFile("plot_Aconc"+ seed + "_", ".png", ""));
+	defineConstant("pngPath2", writeTempFile("plot_Aconc"+ seed + "_", ".png", ""));
 
 	//[A Conc]/[B Conc] plot code
 	sim.setValue("history3", matrix(c(0.0, 0.0), nrow=1));
-	setCfgParam("pngPath3", writeTempFile("plot_ABConc_"+ seed + "_",  ".png", ""));
+	defineConstant("pngPath3", writeTempFile("plot_ABConc_"+ seed + "_",  ".png", ""));
+
 
 	if (exists("slimgui")) {
 		slimgui.openDocument(pngPath1);
@@ -242,22 +175,21 @@ fitness(m6) { return 1.0; }
 }
 
 //update plots
-1:20 late() {
+1:2000 late() {
 	// choose when to update plots below
 	if (sim.generation % 5 != 0) return;
 
 	//debug-puposes only: sim.outputFull();
-
 	//Report mean phenotypes
 	inds = sim.subpopulations.individuals;
-	meanNetwork = mean(inds.getValue("ODEVAL"));
-	meanACONC = mean(inds.getValue("AConc"));
+	meanNetwork = mean(inds.getValue("Bconcentration"));
+	meanACONC = mean(inds.getValue("ATotals"));
 	meandivision = meanACONC/meanNetwork;
 	//Actual Output Code
 	catn();
 	catn();
 	catn("Generation: " + sim.generation);
-	catn("Mean A CONC: " + meanACONC);
+	catn("Mean A Totals: " + meanACONC);
 	catn("Mean B CONC: " + meanNetwork);
 	catn("Mean correlation " + meandivision);
 	catn();
@@ -310,10 +242,4 @@ fitness(m6) { return 1.0; }
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
-}
-
-//detailed output code
-20 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
-sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
 }
