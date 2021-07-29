@@ -20,7 +20,7 @@ initialize() {
 
 	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
 	setSeed(asInteger(seed));
-
+	setCfgParam("modelindex", 1);
 
 	//section A: constants
 	setCfgParam("BOpt", 150);
@@ -176,7 +176,7 @@ fitness(NULL) {
 
 				//export section #2: writing one file per generation
 		gen = sim.generation;
-		writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+		writeFile(asString(paste0(c("SLiM_Params_" + seed + "_" + modelindex + ".csv"))), lines);
 	}
 
 
@@ -278,6 +278,6 @@ fitness(NULL) {
 */
 
 2000 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
-sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
+sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
+sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
