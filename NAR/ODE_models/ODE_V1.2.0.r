@@ -56,15 +56,16 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
     dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
-    dB <- Bbeta * (A > Bthreshold && A <= Bthreshold )  - Balpha*B
+     dB <- Bbeta * A^Hilln/(Bthreshold^Hilln + A^Hilln) - Balpha*B
     list(c(dA, dB))
   })
 }
 
 
+
 #Values for the ODE to come
-state <- c(A = 10, B = 10)
-times <- seq(0, 10, by = 1)
+state <- c(A = 0, B = 1)
+times <- seq(0, 10, by = 0.1)
 
 #introduce tidyverse and nesting abilities
 raw_dat <- as_tibble(params)
