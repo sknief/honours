@@ -1,5 +1,5 @@
 ######################################################
-# R CODE FOR ODE MODELS Optimisation / plaing with parameters  #
+# R CODE FOR ODE MODELS Optim                        #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
@@ -27,15 +27,16 @@ state <- c(A = 0, B = 0)
 times <- seq(0, 10, by = 0.1)
 
 #introduce tidyverse and nesting abilities
-params <- c(Aalpha = 1,
-              Abeta = 0.5,
-              Balpha = 1,
-              Bbeta = 0.5,
-              Xstart = 1,
-              Xstop = 6,
-              Bthreshold = 0.2,
-              Hilln = 100)
-raw_dat <- as_tibble(params)
+
+param <- read.csv("/Users/sknie/github/honours/NAR/_HPC/Extras/Latinhypercube_100.csv")
+param[6] <- NULL
+param[5] <- 100
+
+
+
+
+
+raw_dat <- as_tibble(param)
 
 #ODE-OUT contains nested tibbles with the ODE-output, which is saved as.numeric so that it remains attribute-free data
 dat <- raw_dat %>%
@@ -43,26 +44,29 @@ dat <- raw_dat %>%
   mutate(ode_out = list(as_tibble(ode(y = state,
               times = times,
               func = Freya,
-                                      parms = c(Aalpha = 0.1,
-                                                Abeta = 0.5,
-                                                Balpha = 1,
-                                                Bbeta = 0.5,
+                                      parms = c(Aalpha = Aalpha,
+                                                Abeta = Abeta,
+                                                Balpha = Balpha,
+                                                Bbeta = Bbeta,
                                                 Xstart = 1,
                                                 Xstop = 6,
                                                 Bthreshold = 0.2,
-                                                Hilln = 100)))
+                                                Hilln = Hilln)))
               %>%
                 mutate_all(.funs = as.numeric)))
 
 
 dat$integral_out = 0
-dat$integral_outt = for (h in 1:length(dat$value)) {
-  dat$integral_out[h] = (AUC(dat[[2]][[h]]$time,
-                             dat[[2]][[h]]$B,
+dat$integral_outt = for (h in 1:length(dat$Aalpha)) {
+  dat$integral_out[h] = (AUC(dat[[6]][[h]]$time,
+                             dat[[6]][[h]]$B,
                              absolutearea = TRUE))
 }
 
 dat
+
+plot(dat$integral_out)
+mean(dat$integral_out)
 
 plot(x = dat[[2]][[1]]$time, y = dat[[2]][[1]]$B)
 plot(x = dat[[2]][[1]]$time, y = dat[[2]][[1]]$A)
