@@ -64,7 +64,7 @@ Freya <-function(t, state, parameters) {
 
 
 #Values for the ODE to come
-state <- c(A = 0, B = 1)
+state <- c(A = 0, B = 0)
 times <- seq(0, 10, by = 0.1)
 
 #introduce tidyverse and nesting abilities
@@ -82,8 +82,8 @@ dat <- raw_dat %>%
                                                 Bbeta = Bbeta,
                                                 Xstart = 1,
                                                 Xstop = 6,
-                                                Bthreshold = 5,
-                                                Hilln = Hilln))) %>%
+                                                Bthreshold = 0.2,
+                                                Hilln = 100))) %>%
                           mutate_all(.funs = as.numeric)))
 
 #base loops for the AUC functions

@@ -25,7 +25,6 @@ function (i)readIntTable(s$ path)
 initialize() {
 
 	setwd("~/Documents/SLiM-Workhorse");
-	defineConstant(beginTime, clock()); // record the computer's time at the start of the run
 	initializeSLiMOptions(keepPedigrees=T);
 
 	// find Rscript (for the functionality)
@@ -44,12 +43,11 @@ initialize() {
 	setSeed(asInteger(seed));
 
 	//section A: constants
-	defineConstant("BOpt", 180); //test value: 250
-	defineConstant("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
-	defineConstant("AalphaINI", 20); //test value: 20
-	defineConstant("HillnINI", 10); //test value: 10
-	defineConstant("BbetaINI", 15); //test value: 15
-	defineConstant("BalphaINI", 10); //test value: 10
+	defineConstant("BOpt", 20); //test value: 250
+	defineConstant("AbetaINI", 0.5); //test value: 50; some limits in terms of values this can take
+	defineConstant("AalphaINI", 1); //test value: 20
+	defineConstant("BbetaINI", 0.5); //test value: 15
+	defineConstant("BalphaINI", 1); //test value: 10
 	defineConstant("S", 2); //selection coeff
 
 	//Section AA: Recombination
@@ -113,7 +111,7 @@ initialize() {
 	g1.color = "darkgrey";
 	g2.color = "firebrick";
 	g3.color = "firebrick";
-	g4.color = "lightblue";
+	g4.color = "lightblue"; //no longer used for calculations, HillN now held constant
 	g5.color = "yellow";
 	g6.color = "yellow";
 }
@@ -121,7 +119,7 @@ initialize() {
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 1000);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -186,7 +184,7 @@ fitness(m6) { return 1.0; }
 		Abeta = AbetaINI  + exp(ind.sumOfMutationsOfType(m1));
 		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m5));
 		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m4));
-		Hilln = HillnINI + exp(ind.sumOfMutationsOfType(m3));
+		Hilln = 100;
 		gen = sim.generation;
 
 		//export section #1: accumulation of individual data
