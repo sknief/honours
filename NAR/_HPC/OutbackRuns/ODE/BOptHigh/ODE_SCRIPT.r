@@ -1,5 +1,5 @@
 ######################################################
-# R CODE FOR ODE MODELS [Hill Function Vers]   #
+# R CODE FOR ODE MODELS [Hill Function Debug]   #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
@@ -7,9 +7,7 @@ library(deSolve)
 library(tidyverse)
 library(DescTools)
 
-#### Part 1. read in file, format and potentially clean #################################################################
-
-#HPC:
+#### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
@@ -29,15 +27,17 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
     dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
-    dB <- Bbeta * (A > Bthreshold && A <= Bthreshold )  - Balpha*B
+     dB <- Bbeta * A^Hilln/(Bthreshold^Hilln + A^Hilln) - Balpha*B
     list(c(dA, dB))
   })
 }
 
 
+
+
 #Values for the ODE to come
-state <- c(A = 0, B = 0) #test if this even works
-times <- seq(0, 10, by = 1)
+state <- c(A = 0, B = 0)
+times <- seq(0, 10, by = 0.1)
 
 #introduce tidyverse and nesting abilities
 raw_dat <- as_tibble(params)
@@ -48,14 +48,14 @@ dat <- raw_dat %>%
   mutate(ode_out = list(as_tibble(ode(y = state,
                                       times = times,
                                       func = Freya,
-                                      parms = c(Aalpha = Aalpha,
-                                                Abeta = Abeta,
-                                                Balpha = Balpha,
-                                                Bbeta = Bbeta,
+                                      parms = c(Aalpha = 1,
+                                                Abeta = 0.5,
+                                                Balpha = 1,
+                                                Bbeta = 0.5,
                                                 Xstart = 1,
                                                 Xstop = 6,
-                                                Bthreshold = 5,
-                                                Hilln = Hilln))) %>%
+                                                Bthreshold = 0.2,
+                                                Hilln = 100))) %>%
                           mutate_all(.funs = as.numeric)))
 
 #base loops for the AUC functions
@@ -65,13 +65,12 @@ dat$integral_outt = for (h in 1:length(dat$ID)) {
                              dat[[7]][[h]]$B,
                              absolutearea = TRUE))
 }
-
 #same again to get a value for A
 dat$A_out = 0
 dat$A_outt = for (h in 1:length(dat$ID)) {
   dat$A_out[h] = (AUC(dat[[7]][[h]]$time,
-                             dat[[7]][[h]]$A,
-                             absolutearea = TRUE))
+                      dat[[7]][[h]]$A,
+                      absolutearea = TRUE))
 }
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 #luna is the things to keep and parse to slim
