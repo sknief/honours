@@ -17,16 +17,16 @@ library(doParallel)
 library(future)
 
 
-seeds <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/seeds.csv"), header = T)
-combos <- read.csv(paste0("/home/",USER,"/SLiM/Scripts/Tests/Example/R/combos.csv"), header = T)
+seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/seeds.csv"), header = T)
+combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/combo.csv"), header = T)
 
 # Set which runs to do according to node
 
 switch (ARR_INDEX,
-        { combos <- combos[1:5,] },
-        { combos <- combos[6:9,] },
-        { combos <- combos[10:13,] },
-        { combos <- combos[14:18,] }
+        { combos <- combos[1:25,] },
+        { combos <- combos[26:50,] },
+        { combos <- combos[51:75,] },
+        { combos <- combos[76:100,] }
 )
 
 
@@ -38,7 +38,8 @@ foreach(i=1:nrow(combos)) %:%
   foreach(j=seeds$Seed) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-    slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim",
-                               as.character(j), combos[i,]$param1, combos[i,]$param2, i, intern=T))
+    slim_out <- system(sprintf("/home/$USER/SLiM/build/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/BOptHigh/Model.slim",
+                               as.character(j), combos[i,]$Aalpha, combos[i,]$Abeta, combos[i,]$Balpha, combos[i,]$Bbeta, i, intern=T))
   }
+
 stopCluster(cl)
