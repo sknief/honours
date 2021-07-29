@@ -117,9 +117,11 @@ fitness(NULL) {
 }
 
 //late code that calculates the protein concentrations and bases fitness on them
+//late code that calculates the protein concentrations and bases fitness on them
 1:2000 late() {
 	//all individuals receive an initial tag ( 1= survival)
 	sim.subpopulations.individuals.tag = 1;
+	lines = NULL;
 
 	for (ind in sim.subpopulations.individuals) {
 			//code for the concentration of A
@@ -135,30 +137,52 @@ fitness(NULL) {
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
 
+			ID = ind.index;
+			gen = sim.generation;
+
+			//export section #1: accumulation of individual data
+			paramstoexport = paste0(ID, ", ",
+											GeneA1T,", ",
+											GeneA2T, ", ",
+											GeneB1T, ", ",
+											GeneB2T, ", ",
+											gen, ", ",
+											seed);
+			//print(paramstoexport);
+			lines = c(lines, paramstoexport);
+
 			//negative concentrations should be lethal (impossible!!)
 			if (BConc < 0) {
 				print("EEK");
 				ind.tag = 0;
 				}
 
+				/* Neutral Model
+						 //the stabilising selection function
+						 fitnessfunction = exp(-((BConc-BOpt)/S)^2);
 
-			//the stabilising selection function
-			fitnessfunction = exp(-((BConc-BOpt)/S)^2);
+						 //fitnessScaling callback to avoid SLiM bug
+					 if (fitnessfunction == 0) {
+							 ind.fitnessScaling = fitnessfunction + 0.1;
+							 print("WHOOPSIE");
+							 ind.tag = 0;
+							 }
+						 else
+							 ind.fitnessScaling = fitnessfunction;
+							 */
 
-			//fitnessScaling callback to avoid SLiM bug
-			if (fitnessfunction == 0) {
-				ind.fitnessScaling = fitnessfunction + 0.1;
-				print("WHOOPSIE");
-				ind.tag = 0;
-				}
-			else
-				ind.fitnessScaling = fitnessfunction;
-
-	}
 }
 
 
+				//export section #2: writing one file per generation
+		gen = sim.generation;
+		writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+	}
+
+
+
 //HISTORY PLOT CODE + OUTPUT CODE
+/*
 //enable plots
 1 early() {
 	//[B Conc]/t plot code
@@ -180,6 +204,8 @@ fitness(NULL) {
 		slimgui.openDocument(pngPath3);
 		}
 }
+*/
+
 
 //update plots
 1:2000 late() {
@@ -202,6 +228,7 @@ fitness(NULL) {
 	catn();
 	catn();
 
+/*
 	//[B Conc]/t plot code
 	history1 = sim.getValue("history1");
 	history1 = rbind(history1, c(sim.generation, meanNetwork));
@@ -250,6 +277,7 @@ fitness(NULL) {
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
 }
+*/
 
 
 2000 late() {
