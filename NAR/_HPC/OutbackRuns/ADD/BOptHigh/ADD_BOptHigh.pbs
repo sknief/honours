@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #PBS -q workq
 #PBS -A qris-uq
-#PBS -N ADD_Neutral
+#PBS -N ADD_BoptHigh
 #PBS -J 1-4
 #PBS -l walltime=12:00:00
 #PBS -l select=1:ncpus=24:mem=120G
@@ -11,6 +11,6 @@ cd $TMPDIR
 
 module load R/3.5.0
 
-R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHER.R
+R --file=/home/$USER/OutbackRuns/ADD/BOptHigh/SUBLAUNCHER.R
 
-mv -v $TMPDIR /scratch/user/$USER/ADD_Neutral
+mv -v $TMPDIR /scratch/user/$USER/ADD_BOptHigh
