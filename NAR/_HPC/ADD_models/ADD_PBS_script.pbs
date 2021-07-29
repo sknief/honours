@@ -1,5 +1,5 @@
 #!/bin/bash -l
-#PBS -q workq
+#PBS -q Special
 #PBS -A qris-uq
 #PBS -N slim_eg
 #PBS -l walltime=4:00:00
