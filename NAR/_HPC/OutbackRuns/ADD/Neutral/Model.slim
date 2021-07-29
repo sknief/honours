@@ -139,6 +139,25 @@ fitness(NULL) {
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
 
+			ID = ind.index;
+			gen = sim.generation;
+
+			//export section #1: accumulation of individual data
+			paramstoexport = paste0(ID, ", ",
+											GeneA1T,", ",
+											GeneA2T, ", ",
+											GeneB1T, ", ",
+											GeneB2T, ", ",
+											gen, ", ",
+											seed);
+			//print(paramstoexport);
+			lines = c(lines, paramstoexport);
+			}
+
+		//export section #2: writing one file per generation
+		gen = sim.generation;
+		writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+
 			//negative concentrations should be lethal (impossible!!)
 			if (BConc < 0) {
 				print("EEK");
