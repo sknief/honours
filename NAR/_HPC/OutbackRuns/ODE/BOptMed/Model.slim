@@ -317,8 +317,7 @@ fitness(m6) { return 1.0; }
 	*/
 }
 
-//detailed output code
-20 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed +".txt");
-sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed +".txt");
+2000 late() {
+sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
+sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
