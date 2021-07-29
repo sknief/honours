@@ -164,6 +164,7 @@ fitness(NULL) {
 
 //HISTORY PLOT CODE + OUTPUT CODE
 //enable plots
+/*
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
@@ -184,6 +185,7 @@ fitness(NULL) {
 		slimgui.openDocument(pngPath3);
 		}
 }
+*/
 
 //update plots
 1:2000 late() {
@@ -206,6 +208,7 @@ fitness(NULL) {
 	catn();
 	catn();
 
+/*
 	//[B Conc]/t plot code
 	history1 = sim.getValue("history1");
 	history1 = rbind(history1, c(sim.generation, meanNetwork));
@@ -253,6 +256,7 @@ fitness(NULL) {
 	scriptPath3 = writeTempFile("plot_", ".R", rstr);
 	system("/usr/lib/R/bin/Rscript", args=scriptPath3);
 	deleteFile(scriptPath3);
+	*/
 }
 
 2000 late() {
