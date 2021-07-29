@@ -13,10 +13,10 @@ setwd("~/Documents/SLiM-Workhorse")
 
 #UBUNTU:
 #
-params2 <- read.csv("~/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+params1 <- read.csv("~/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 #WINDOWS:params <- read.csv(file = "/Users/sknie/Documents/SLiM-Workhorse/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 #debug:
-params2 <- read.table("~/Documents/SLiM-Workhorse/Val_Test_2.txt", header = TRUE)
+params<- read.table("~/Documents/SLiM-Workhorse/Val_Test_2.txt", header = TRUE)
 
 
 #trim generation + seed out
@@ -60,7 +60,7 @@ colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
 Freya <-function(t, state, parameters) {
   with(as.list(c(state,parameters)), {
     dA <- Abeta * (t > Xstart && t <= Xstop) * 1/(1 + A^Hilln) - Aalpha*A
-    dB <- Bbeta * (A > Bthreshold && A <= Bthreshold )  - Balpha*B
+     dB <- Bbeta * A^Hilln/(Bthreshold^Hilln + A^Hilln) - Balpha*B
     list(c(dA, dB))
   })
 }
@@ -69,8 +69,8 @@ Freya <-function(t, state, parameters) {
 
 
 #Values for the ODE to come
-state <- c(A = 1, B = 1)
-times <- seq(0, 10, by = 1)
+state <- c(A = 0, B = 0)
+times <- seq(0, 10, by = 0.1)
 
 #introduce tidyverse and nesting abilities
 raw_dat <- as_tibble(params)
@@ -81,15 +81,14 @@ dat <- raw_dat %>%
   mutate(ode_out = list(as_tibble(ode(y = state,
                                       times = times,
                                       func = Freya,
-                                      parms = c(Aalpha = Aalpha,
-                                                Abeta = Abeta,
-                                                Balpha = Balpha,
-                                                Bbeta = Bbeta,
+                                      parms = c(Aalpha = 1,
+                                                Abeta = 0.5,
+                                                Balpha = 1,
+                                                Bbeta = 0.5,
                                                 Xstart = 1,
                                                 Xstop = 6,
-                                                Bthreshold = 2,
-                                                Hilln = Hilln),
-                                      method = "euler")) %>%
+                                                Bthreshold = 0.2,
+                                                Hilln = 100))) %>%
                           mutate_all(.funs = as.numeric)))
 
 #base loops for the AUC functions
@@ -99,6 +98,9 @@ dat$integral_outt = for (h in 1:length(dat$ID)) {
                              dat[[7]][[h]]$B,
                              absolutearea = TRUE))
 }
+
+plot(x = dat[[7]][[1]]$time, y = dat[[7]][[1]]$B)
+plot(x = dat[[7]][[1]]$time, y = dat[[7]][[1]]$A)
 
 #same again to get a value for A
 dat$A_out = 0
