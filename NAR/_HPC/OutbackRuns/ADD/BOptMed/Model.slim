@@ -7,24 +7,30 @@
 /////////////////////////////////////////////////////////////////////
 
 
+function (void) setCfgParam (s$ name, ifls value) // setup function for automating constant definitions between gui and command line
+{
+	if (!exists(name))
+		defineConstant(name, value);
+}
+
+
 //START COMMANDS
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 
-	defineConstant("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
+	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
 	setSeed(asInteger(seed));
 
 
 	//section A: constants
-	defineConstant("AConcINI", 20);
-	defineConstant("BConcINI", 0);
-	defineConstant("BOpt", 150);
-	defineConstant("GeneA1", 5);
-	defineConstant("GeneA2", 5);
-	defineConstant("GeneB1", 5);
-	defineConstant("GeneB2", 5);
-	defineConstant("deltaT", 6);
-	defineConstant("S", 3); //selection coeff
+	setCfgParam("BOpt", 150);
+	setCfgParam("GeneA1", 5);
+	setCfgParam("GeneA2", 2);
+	setCfgParam("GeneB1", 11);
+	setCfgParam("GeneB2", 12);
+	setCfgParam("deltaT", 6);
+	setCfgParam("S", 2); //selection coeff
+
 
 	//Section AA: Recombination
 	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
