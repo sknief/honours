@@ -7,6 +7,8 @@
 
 cd $TMPDIR
 
+module load R/3.5.0
+
 R --file=/home/$USER/scripts/ADD_Parallel_script_R.r
 
 cat /$TMPDIR/* >> /scratch/user/$USER/
