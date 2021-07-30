@@ -49,7 +49,7 @@ setCfgParam("RSCRIPT", "R --file = ~/OutbackRuns/ODE/ODE_script.r");
 
 
 	//find RScript (as in my code)
-	setCfgParam("magiccode", "~/scripts/ODE_SCRIPT.r");
+	setCfgParam("magiccode", "~/OutbackRuns/ODE/ODE_script.r");
 
 	//seeding
 	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
@@ -212,7 +212,7 @@ fitness(m6) { return 1.0; }
 	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
 
 	//export section #3: sending it to R
-	system(RSCRIPT, args=magiccode);
+	system(RSCRIPT);
 
 }
 
