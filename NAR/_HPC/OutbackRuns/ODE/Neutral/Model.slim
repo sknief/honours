@@ -35,7 +35,7 @@ initialize() {
 
 //NOTE: CHANGE FILE PATH
 
-setCfgParam("RSCRIPT", "R --file=~/OutbackRuns/ODE/ODE_script.r");
+setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 
 //commented out cause its useless on the HPC
 /*
@@ -213,7 +213,7 @@ fitness(m6) { return 1.0; }
 	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
 
 	//export section #3: sending it to R
-	system(RSCRIPT);
+	system(RSCRIPT, magiccode);
 
 }
 
