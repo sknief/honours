@@ -143,7 +143,7 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:20 early() {
+2:50000 early() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -181,7 +181,7 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 fitness(m6) { return 1.0; }
 
 
-1:20 late() {
+1:50000 late() {
 
 	lines = NULL;
 
@@ -246,7 +246,7 @@ fitness(m6) { return 1.0; }
 */
 
 //update plots
-1:20 late() {
+1:50000 late() {
 	// choose when to update plots below
 	if (sim.generation % 5 != 0) return;
 
@@ -320,7 +320,7 @@ fitness(m6) { return 1.0; }
 }
 
 
-20 late() {
+50000 late() {
 sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
