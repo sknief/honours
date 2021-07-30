@@ -4,8 +4,20 @@
 ######################################################
 
 library(deSolve)
-library(tidyverse)
+library(tibble)
+library(dplyr)
 library(DescTools)
+
+#for parallel purposes
+args <- commandArgs(trailingOnly = TRUE)
+if ( length(args) < 2 ) {
+  cat("Need 2 command line parameters i.e. SEED, PAR\n")
+  q()
+}
+
+parallelseed     <- as.numeric(args[1])
+modelindex    <- as.numeric(args[2])
+###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
@@ -80,7 +92,7 @@ luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out, dat$A_out), col.names 
 
 luna[is.na(luna)] <- 0
 
-write.table(luna, "ODEoutput.txt",
+write.table(luna, paste0("ODEoutput_", parallelseed, "_", modelindex,  ".txt"),
             append = FALSE,
             row.names = FALSE,
             col.names = FALSE)
