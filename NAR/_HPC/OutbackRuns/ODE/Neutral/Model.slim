@@ -137,6 +137,8 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 	sim.addSubpop("p1", 100);
 }
 
+2 early () {print( "Generation One Done!" ); }
+
 ///////////////////////////////////////////////////////////////////////////////
 //the code above is not to be changed! (Apart from params for models)
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,7 +149,7 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable(paste0("ODEoutput_", parallelseed, "_", modelindex,".txt"));
+	ODE = readIntTable(paste0("ODEoutput_", seed, "_", modelindex,".txt"));
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;

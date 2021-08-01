@@ -9,7 +9,9 @@
 
 cd $TMPDIR
 
-module load R/3.6.0+tidyverse+rstan+rtdists
+module load intel
+
+module load R/3.5.0
 
 R
 
