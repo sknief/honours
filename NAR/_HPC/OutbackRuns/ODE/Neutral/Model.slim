@@ -208,8 +208,7 @@ fitness(m6) { return 1.0; }
 	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
 
 	//export section #3: sending it to R
-	system(paste("/opt/R/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
-	//system(RSCRIPT, magiccode);
+	system(RSCRIPT, magiccode);
 
 }
 

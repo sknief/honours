@@ -2,6 +2,7 @@
 # R CODE FOR ODE MODELS [Hill Function Debug]   #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
+
 version
 print("Version was above this!")
 
@@ -10,19 +11,26 @@ library(tibble)
 library(dplyr)
 library(DescTools)
 
-#for parallel purposes
-args <- commandArgs(trailingOnly = TRUE)
-if ( length(args) < 2 ) {
-  cat("Need 2 command line parameters i.e. SEED, PAR\n")
-  q()
-}
 
-parallelseed     <- as.numeric(args[1])
-modelindex    <- as.numeric(args[2])
+#for parallel purposes
+#args <- commandArgs(trailingOnly = TRUE)
+#if ( length(args) < 2 ) {
+#  cat("Need 2 command line parameters i.e. SEED, PAR\n")
+#  q()
+#}
+
+#parallelseed     <- as.numeric(args[1])
+#modelindex    <- as.numeric(args[2])
+
+modelindex <- 1
+
+
 ###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+
+parallelseed <- as.numeric(unique(params[8][1][1]))
 
 #trim generation + seed out
 #store as values
@@ -119,7 +127,7 @@ colnames(val) = c("Index",
                   "AConc")
 
 
-valname <- paste("Val_",seed,"_generation_",gen)
+valname <- paste("Val_",seed,"_generation_",gen,".txt")
 
 write.table(val, valname,
             append = FALSE,
