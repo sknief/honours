@@ -2,16 +2,8 @@
 # R CODE FOR ODE MODELS [Hill Function Debug]   #
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
-
-.libPaths("~/R/x86_64-pc-linux-gnu-library/4.1")
-
 version
 print("Version was above this!")
-
-install.packages("deSolve", repos = "https://cloud.r-project.org")
-install.packages("tibble", repos = "https://cloud.r-project.org")
-install.packages("dplyr", repos = "https://cloud.r-project.org")
-install.packages("DescTools", repos = "https://cloud.r-project.org")
 
 library(deSolve)
 library(tibble)
