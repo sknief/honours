@@ -33,20 +33,13 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 	setCfgParam("modelindex", 1);
 
-//NOTE: CHANGE FILE PATH
-
-setCfgParam("RSCRIPT", "/usr/bin/Rscript");
-
-//commented out cause its useless on the HPC
-/*
-	// find Rscript (for the functionality)
+// find Rscript (for the functionality)
  	if (fileExists("/usr/lib/R/bin/Rscript"))
   		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
- 	else if (fileExists("/usr/local/bin/Rscript"))
+ 	else if (fileExists("/usr/bin/Rscript"))
   		setCfgParam("RSCRIPT", "/usr/local/bin/Rscript");
  	else
   		stop("Couldn't find Rscript.");
-*/
 
 
 	//find RScript (as in my code)
