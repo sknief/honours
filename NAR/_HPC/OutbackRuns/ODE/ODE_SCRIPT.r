@@ -3,9 +3,7 @@
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
-#debugfeature
-version
-print("Version was above this!")
+setwd("/scratch/user/s4471959/ODE_Neutral")
 
 library(deSolve)
 library(tibble)
@@ -14,29 +12,21 @@ library(DescTools)
 
 
 #for parallel purposes
-#args <- commandArgs(trailingOnly = TRUE)
-#if ( length(args) < 2 ) {
-#  cat("Need 2 command line parameters i.e. SEED, PAR\n")
-#  q()
-#}
+args <- commandArgs(trailingOnly = TRUE)
+if ( length(args) < 2 ) {
+  cat("Need 2 command line parameters i.e. SEED, PAR\n")
+  q()
+}
 
-#parallelseed     <- as.numeric(args[1])
-#modelindex    <- as.numeric(args[2])
+parallelseed     <- as.numeric(args[1])
+modelindex    <- as.numeric(args[2])
 
-#debugfeature
-modelindex <- 1
 
 
 ###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
-params <- read.csv("SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
-
-
-#debugfeature
-parallelseed <- as.numeric(unique(params[7][1][1]))
-print("here's your seed")
-print(parallelseed)
+params <- read.csv( paste0("/scratch/user/s4471959/ODE_Neutral/SLiM-output", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values
