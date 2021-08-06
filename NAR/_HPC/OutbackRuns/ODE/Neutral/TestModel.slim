@@ -138,7 +138,7 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:50000 early() {
+2:5 early() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -176,7 +176,7 @@ initialize() {
 fitness(m6) { return 1.0; }
 
 
-1:50000 late() {
+1:5 late() {
 
 	lines = NULL;
 
@@ -240,7 +240,7 @@ fitness(m6) { return 1.0; }
 */
 
 //update plots
-1:50000 late() {
+1:5 late() {
 	// choose when to update plots below
 	if (sim.generation % 5 != 0) return;
 
@@ -314,7 +314,7 @@ fitness(m6) { return 1.0; }
 }
 
 
-50000 late() {
+5 late() {
 sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
