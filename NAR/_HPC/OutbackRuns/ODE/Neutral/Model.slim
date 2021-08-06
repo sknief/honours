@@ -33,13 +33,13 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 	setCfgParam("modelindex", 1);
 
-// find Rscript (for the functionality)
- 	if (fileExists("/usr/lib/R/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
- 	else if (fileExists("/usr/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/local/bin/Rscript");
- 	else
-  		stop("Couldn't find Rscript.");
+	// find Rscript (for the functionality)
+	 	if (fileExists("/usr/lib/R/bin/Rscript"))
+	  		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
+	 	else if (fileExists("/usr/bin/Rscript"))
+	  		setCfgParam("RSCRIPT", "/usr/bin/Rscript");
+	 	else
+	  		stop("Couldn't find Rscript.");
 
 
 	//find RScript (as in my code)

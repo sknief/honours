@@ -1,7 +1,7 @@
 #!/bin/bash -l
-#PBS -q workq
-#PBS -A qris-uq
-#PBS -N ODE_NeutralTest
+#PBS -q Special
+#PBS -A UQ-SCI-BiolSci
+#PBS -N ODE_TEST
 #PBS -J 1-4
 #PBS -l walltime=168:00:00
 #PBS -l select=1:ncpus=24:mem=120G
@@ -9,12 +9,10 @@
 
 cd $TMPDIR
 
-module load intel
+module load R/4.1.0+SLiM
 
-module load R/3.5.0
+alias
 
-R
+Rscript /home/$USER/OutbackRuns/ODE/Neutral/SUBLAUNCHERTEST.R
 
-R --file=/home/$USER/OutbackRuns/ODE/Neutral/SUBLAUNCHERTEST.R
-
-cp -rp $TMPDIR /scratch/user/$USER/dump
+cp -rp $TMPDIR /scratch/user/$USER/ODE_Neutral

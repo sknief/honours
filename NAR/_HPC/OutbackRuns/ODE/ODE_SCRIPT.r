@@ -30,25 +30,25 @@ modelindex <- 1
 ###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
-params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
+params <- read.csv("SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
 
 #debugfeature
-parallelseed <- as.numeric(unique(params[8][1][1]))
+parallelseed <- as.numeric(unique(params[7][1][1]))
 print("here's your seed")
 print(parallelseed)
 
 #trim generation + seed out
 #store as values
-gen <- as.numeric(unique(params[7][1]))
-seed <- as.numeric(unique(params[8][1][1]))
+gen <- as.numeric(unique(params[6][1]))
+seed <- as.numeric(unique(params[7][1][1]))
 
 
 #trim
-params[8] <- NULL
 params[7] <- NULL
+params[6] <- NULL
 
-colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
+colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta")
 
 #debug feature
 print(head(params))
@@ -92,15 +92,15 @@ dat <- raw_dat %>%
 #base loops for the AUC functions
 dat$integral_out = 0
 dat$integral_outt = for (h in 1:length(dat$ID)) {
-  dat$integral_out[h] = (AUC(dat[[7]][[h]]$time,
-                             dat[[7]][[h]]$B,
+  dat$integral_out[h] = (AUC(dat[[6]][[h]]$time,
+                             dat[[6]][[h]]$B,
                              absolutearea = TRUE))
 }
 #same again to get a value for A
 dat$A_out = 0
 dat$A_outt = for (h in 1:length(dat$ID)) {
-  dat$A_out[h] = (AUC(dat[[7]][[h]]$time,
-                      dat[[7]][[h]]$A,
+  dat$A_out[h] = (AUC(dat[[6]][[h]]$time,
+                      dat[[6]][[h]]$A,
                       absolutearea = TRUE))
 }
 
@@ -128,7 +128,6 @@ val <- as.data.frame(x = cbind(dat$ID,
                                dat$Abeta,
                                dat$Balpha,
                                dat$Bbeta,
-                               dat$Hilln,
                                dat$integral_out,
                                dat$A_out))
 colnames(val) = c("Index",
@@ -136,7 +135,6 @@ colnames(val) = c("Index",
                   "ABeta",
                   "BAlpha",
                   "BBeta",
-                  "Hilln",
                   "BConc",
                   "AConc")
 
