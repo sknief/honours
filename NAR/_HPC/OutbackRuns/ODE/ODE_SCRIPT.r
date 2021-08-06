@@ -3,6 +3,7 @@
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
+#debugfeature
 version
 print("Version was above this!")
 
@@ -22,6 +23,7 @@ library(DescTools)
 #parallelseed     <- as.numeric(args[1])
 #modelindex    <- as.numeric(args[2])
 
+#debugfeature
 modelindex <- 1
 
 
@@ -30,7 +32,10 @@ modelindex <- 1
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
+#debugfeature
 parallelseed <- as.numeric(unique(params[8][1][1]))
+print("here's your seed")
+print(parallelseed)
 
 #trim generation + seed out
 #store as values
@@ -43,6 +48,9 @@ params[8] <- NULL
 params[7] <- NULL
 
 colnames(params) <- c("ID", "Aalpha", "Abeta", "Balpha", "Bbeta", "Hilln")
+
+#debug feature
+print(head(params))
 
 ####  Part 2. calculate ODE values ########################################################################################
 #Freya depends on a Hill Function
@@ -94,6 +102,11 @@ dat$A_outt = for (h in 1:length(dat$ID)) {
                       dat[[7]][[h]]$A,
                       absolutearea = TRUE))
 }
+
+#debugfeature
+print("heres the new values apparently")
+print(head(dat))
+
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 #luna is the things to keep and parse to slim
 
