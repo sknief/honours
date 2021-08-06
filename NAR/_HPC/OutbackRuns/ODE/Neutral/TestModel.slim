@@ -50,11 +50,11 @@ initialize() {
 	setSeed(asInteger(seed));
 
 	//section A: constants
-	setCfgParam("BOpt", 180); //test value: 250
-	setCfgParam("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
+	setCfgParam("BOpt", 150); //test value: 250
+	setCfgParam("AbetaINI", 40); //test value: 50; some limits in terms of values this can take
 	setCfgParam("AalphaINI", 20); //test value: 20
 	setCfgParam("HillnINI", 10); //test value: 10
-	setCfgParam("BbetaINI", 15); //test value: 15
+	setCfgParam("BbetaINI", 16); //test value: 15
 	setCfgParam("BalphaINI", 10); //test value: 10
 	setCfgParam("S", 2); //selection coeff
 
@@ -152,6 +152,7 @@ initialize() {
 		AConc = ind.getValue("AConc");
 		//print("Individual value: " + ODEVAL);
 
+/*
 		fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
 
 		//fitnessScaling callback to avoid SLiM bug
@@ -161,6 +162,7 @@ initialize() {
 			ind.tag = 0; }
 		else
 			ind.fitnessScaling = fitnessfunction;
+*/
 		}
 
 
