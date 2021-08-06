@@ -32,6 +32,7 @@ modelindex <- 1
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv("~/SLiM-output.csv", header = FALSE, sep = ",", dec = ".")
 
+
 #debugfeature
 parallelseed <- as.numeric(unique(params[8][1][1]))
 print("here's your seed")
@@ -78,10 +79,10 @@ dat <- raw_dat %>%
   mutate(ode_out = list(as_tibble(ode(y = state,
                                       times = times,
                                       func = Freya,
-                                      parms = c(Aalpha = 1,
-                                                Abeta = 0.5,
-                                                Balpha = 1,
-                                                Bbeta = 0.5,
+                                      parms = c(Aalpha = Aalpha,
+                                                Abeta = Abeta,
+                                                Balpha = Balpha,
+                                                Bbeta = Bbeta,
                                                 Xstart = 1,
                                                 Xstop = 6,
                                                 Bthreshold = 0.2,
