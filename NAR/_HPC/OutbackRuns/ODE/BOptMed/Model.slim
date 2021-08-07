@@ -43,7 +43,7 @@ initialize() {
 
 
 	//find RScript (as in my code)
-	setCfgParam("magiccode", "~/OutbackRuns/ODE/ODE_script.r");
+	setCfgParam("magiccode", "~/OutbackRuns/ODE/ODE_SCRIPT.r");
 
 	//seeding
 	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
@@ -133,7 +133,7 @@ initialize() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable(paste0("ODEoutput_", parallelseed, "_", modelindex,".txt"));
+	ODE = readIntTable(asString(paste0("ODEoutput_", seed, "_", modelindex,".txt")));
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;
