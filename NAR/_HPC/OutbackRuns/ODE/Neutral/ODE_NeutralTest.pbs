@@ -13,4 +13,4 @@ module load R/4.1.0+SLiM
 
 R --file=/home/s4471959/OutbackRuns/ODE/Neutral/SUBLAUNCHERTEST.R
 
-cp -rp $TMPDIR /scratch/user/$USER/ODE_Neutral
+cp -rp $TMPDIR /scratch/user/$USER/ODE_Neutral/
