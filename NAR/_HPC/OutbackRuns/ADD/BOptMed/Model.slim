@@ -43,56 +43,52 @@ initialize() {
 	//these distributions are bounded at -1 and 1, hence this scripttextile:
 	script = "x = rnorm(1, 0, 0.5); if (x <= -1) return -0.5; else if (x >= 1) return 0.5; else return x;";
 	//each region has their own mutationtype
-		//Abeta
-		initializeMutationType("m1", 0.5, "s", script);
-		m1.color = "lightblue";
-		m1.convertToSubstitution = T;
-		//Aalpha
-		initializeMutationType("m2", 0.5, "s", script);
-		m2.convertToSubstitution = T;
-		m2.color = "pink";
-		//K
-		initializeMutationType("m3", 0.5, "s", script);
-		m3.convertToSubstitution = T;
-		m3.color = "white";
-		//Bbeta
-		initializeMutationType("m4", 0.5, "s", script);
-		m4.convertToSubstitution = T;
-		m4.color = "pink";
-		//Balpha
-		initializeMutationType("m5", 0.5, "s", script);
-		m5.convertToSubstitution = T;
-		m5.color = "lightblue";
-		//non-coding
-		initializeMutationType("m6", 0.5, "s", script);
-		m6.convertToSubstitution = T;
-		m6.color = "grey";
+	//GeneA1
+	initializeMutationType("m1", 0.5, "s", script);
+	m1.color = "lightblue";
+	m1.convertToSubstitution = T;
+	//GeneA2
+	initializeMutationType("m2", 0.5, "s", script);
+	m2.convertToSubstitution = T;
+	m2.color = "pink";
+	//GeneB1
+	initializeMutationType("m3", 0.5, "s", script);
+	m3.convertToSubstitution = T;
+	m3.color = "pink";
+	//GeneB2
+	initializeMutationType("m4", 0.5, "s", script);
+	m4.convertToSubstitution = T;
+	m4.color = "lightblue";
+	//non-coding
+	initializeMutationType("m5", 0.5, "s", script);
+	m5.convertToSubstitution = T;
+	m5.color = "grey";
 	//section C: genomic elements
-	initializeGenomicElementType("g1", m6, 1.0); //non-coding
-	initializeGenomicElementType("g2", m1, 1.0); //GeneA1
-	initializeGenomicElementType("g3", m2, 1.0); //GeneA2
-	initializeGenomicElementType("g5", m4, 1.0); //GeneB1
-	initializeGenomicElementType("g6", m5, 1.0); //GeneB2
+	initializeGenomicElementType("g5", m5, 1.0); //non-coding
+	initializeGenomicElementType("g1", m1, 1.0); //GeneA1
+	initializeGenomicElementType("g2", m2, 1.0); //GeneA2
+	initializeGenomicElementType("g3", m3, 1.0); //GeneB1
+	initializeGenomicElementType("g4", m4, 1.0); //GeneB2
 
 	//section D: chromosome structure
-	initializeGenomicElement(g1, 0, 99);
-	initializeGenomicElement(g2, 100, 1099);
-	initializeGenomicElement(g1, 1100, 1199); //spacer
-	initializeGenomicElement(g3, 1200, 2199);
-	initializeGenomicElement(g1, 2200, 2299); //spacer
-	initializeGenomicElement(g1, 2300, 3399); //spacer
-	initializeGenomicElement(g5, 3400, 4399);
-	initializeGenomicElement(g1, 4400, 4499); //spacer
-	initializeGenomicElement(g6, 4500, 5499);
-	initializeGenomicElement(g1, 5500, 5599); //end spacer
-
+	initializeGenomicElement(g5, 0, 99);
+	initializeGenomicElement(g1, 100, 1099); //GeneA1
+	initializeGenomicElement(g5, 1100, 1199); //spacer
+	initializeGenomicElement(g2, 1200, 2199); //GeneA2
+	initializeGenomicElement(g5, 2200, 2299); //spacer
+	initializeGenomicElement(g5, 2300, 3299); //spacer
+	initializeGenomicElement(g5, 3300, 3399); //spacer
+	initializeGenomicElement(g3, 3400, 4399); //GeneB1
+	initializeGenomicElement(g5, 4400, 4499); //spacer
+	initializeGenomicElement(g4, 4500, 5499); //GeneB2
+	initializeGenomicElement(g5, 5500, 5599); //end spacer
 
 	//section DD: colorcoding
-	g1.color = "darkgrey";
+	g5.color = "darkgrey";
+	g1.color = "firebrick";
 	g2.color = "firebrick";
-	g3.color = "firebrick";
-	g5.color = "yellow";
-	g6.color = "yellow";
+	g3.color = "yellow";
+	g4.color = "yellow";
 }
 
 
@@ -104,7 +100,7 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 //make non-coding neutral
-fitness(m6) { return 1.0; }
+fitness(m5) { return 1.0; }
 
 // individuals tagged have fitnessScaling = 0, which will cause SLiM to throw a fit;
 // give them either minimal fitness (0.1) to push them beyond extreme bounds, or
@@ -118,7 +114,7 @@ fitness(NULL) {
 }
 
 //late code that calculates the protein concentrations and bases fitness on them
-1:2000 late() {
+1:50000 late() {
 	//all individuals receive an initial tag ( 1= survival)
 	sim.subpopulations.individuals.tag = 1;
 	lines = NULL;
@@ -131,7 +127,7 @@ fitness(NULL) {
 			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
-			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m5));
+			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m3));
 			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4));
 			BGamma = GeneB1T + GeneB2T + GeneATotal;
 			BConc = BGamma * deltaT;
@@ -157,7 +153,6 @@ fitness(NULL) {
 				ind.tag = 0;
 				}
 
-				/* Neutral Model
 						 //the stabilising selection function
 						 fitnessfunction = exp(-((BConc-BOpt)/S)^2);
 
@@ -169,14 +164,13 @@ fitness(NULL) {
 							 }
 						 else
 							 ind.fitnessScaling = fitnessfunction;
-							 */
 
 }
 
 
 				//export section #2: writing one file per generation
 		gen = sim.generation;
-		writeFile(asString(paste0(c("SLiM_Params_" + seed + "_" + modelindex + ".csv"))), lines);
+		writeFile(asString(paste0("SLiM-output_ADD_", seed, "_", modelindex, ".csv")), lines);
 	}
 
 
@@ -206,9 +200,9 @@ fitness(NULL) {
 */
 
 //update plots
-1:2000 late() {
+1:50000 late() {
 	// choose when to update plots below
-	if (sim.generation % 5 != 0) return;
+	if (sim.generation % 50 != 0) return;
 
 	//debug-puposes only: sim.outputFull();
 	//Report mean phenotypes
@@ -277,7 +271,7 @@ fitness(NULL) {
 }
 */
 
-2000 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
-sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
+50000 late() {
+sim.outputFull("SLiMulation_Output_Full_ADD_" + seed + "_" + modelindex + ".txt");
+sim.outputFixedMutations("SLiMulation_Output_FixedMutations_ADD_" + seed + "_" + modelindex + ".txt");
 }
