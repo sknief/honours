@@ -1,0 +1,16 @@
+#!/bin/bash -l
+#PBS -q Special
+#PBS -A qris-uq
+#PBS -N ODE_TEST
+#PBS -J 1-4
+#PBS -l walltime=168:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+
+cd /scratch/user/$USER/ODE_Neutral/TEST2
+
+module load R/4.1.0+SLiM
+
+R --file=/home/s4471959/OutbackRuns/ODE/Neutral/SUBLAUNCHERTEST.R
+
+cp -rp $TMPDIR /scratch/user/$USER/ODE_Neutral/TEST2

@@ -24,7 +24,7 @@ modelindex    <- as.numeric(args[2])
 ###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
-params <- read.csv(paste0("SLiM-output_", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
+params <- read.csv(paste0("/scratch/user/s4471959/ODE_Neutral/TEST2/SLiM-output_", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values
@@ -104,7 +104,7 @@ luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out, dat$A_out), col.names 
 
 luna[is.na(luna)] <- 0
 
-write.table(luna, paste0("ODEoutput_", parallelseed, "_", modelindex,  ".txt"),
+write.table(luna, paste0("/scratch/user/s4471959/ODE_Neutral/TEST2/ODEoutput_", parallelseed, "_", modelindex,  ".txt"),
             append = FALSE,
             row.names = FALSE,
             col.names = FALSE)
@@ -127,7 +127,7 @@ colnames(val) = c("Index",
                   "AConc")
 
 
-valname <- paste("Val_",seed,"_generation_",gen,".txt")
+valname <- paste("/scratch/user/s4471959/ODE_Neutral/TEST2/Val_",seed,"_generation_",gen,".txt")
 
 write.table(val, valname,
             append = FALSE,
