@@ -38,7 +38,7 @@ foreach(i=1:nrow(combos)) %:%
   foreach(j=seeds$Seed) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-    slim_out <- system(sprintf("/home/$USER/SLiM/build/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/BOptMed/Model.slim",
+    slim_out <- system(sprintf("/usr/bin/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/BOptMed/Model.slim",
                                as.character(j), combos[i,]$Aalpha, combos[i,]$Abeta, combos[i,]$Balpha, combos[i,]$Bbeta, i, intern=T))
   }
 
