@@ -8,6 +8,8 @@ library(tibble)
 library(dplyr)
 library(DescTools)
 
+###
+
 
 #for parallel purposes
 args <- commandArgs(trailingOnly = TRUE)
@@ -21,8 +23,6 @@ modelindex    <- as.numeric(args[2])
 
 
 
-###
-
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
 params <- read.csv(paste0("SLiM-output_", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
 
@@ -30,9 +30,11 @@ params <- read.csv(paste0("SLiM-output_", parallelseed, "_", modelindex, ".csv")
 #store as values
 gen <- as.numeric(unique(params[6][1]))
 seed <- as.numeric(unique(params[7][1][1]))
-
+#modelindex <- as.numeric(unique(params[8][1][1]))
+#parallelseed     <- seed
 
 #trim
+#params[8] <- NULL
 params[7] <- NULL
 params[6] <- NULL
 
@@ -127,7 +129,7 @@ colnames(val) = c("Index",
                   "AConc")
 
 
-valname <- paste("Val_",seed,"_generation_",gen,".txt")
+valname <- paste0("Val_",seed,"_generation_",gen, "_", modelindex, ".txt")
 
 write.table(val, valname,
             append = FALSE,

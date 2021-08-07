@@ -184,6 +184,7 @@ fitness(m5) { return 1.0; }
 		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m3));
 		gen = sim.generation;
 
+
 		//export section #1: accumulation of individual data
 		paramstoexport = paste0(ID, ", ",
 										Aalpha,", ",
@@ -191,7 +192,8 @@ fitness(m5) { return 1.0; }
 										Balpha, ", ",
 										Bbeta, ", ",
 										gen, ", ",
-										seed);
+										seed, ", ",
+										modelindex);
 		//print(paramstoexport);
 		lines = c(lines, paramstoexport);
 		}
@@ -201,7 +203,7 @@ fitness(m5) { return 1.0; }
 	writeFile(asString(paste0("SLiM-output_", seed, "_", modelindex, ".csv")), lines);
 
 	//export section #3: sending it to R
-	system(RSCRIPT, magiccode);
+	system(paste("/usr/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
 
 }
 
