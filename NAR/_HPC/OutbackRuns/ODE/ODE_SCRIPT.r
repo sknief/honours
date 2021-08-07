@@ -3,8 +3,6 @@
 #    Author: SMS Knief       Date: 07/07/21          #
 ######################################################
 
-setwd("/scratch/user/s4471959/ODE_Neutral")
-
 library(deSolve)
 library(tibble)
 library(dplyr)
@@ -26,7 +24,7 @@ modelindex    <- as.numeric(args[2])
 ###
 
 #### Part 1. read in filVersVersVersVersVerse, format and potentially clean #################################################################
-params <- read.csv( paste0("/scratch/user/s4471959/ODE_Neutral/SLiM-output", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
+params <- read.csv(paste0("SLiM-output_", parallelseed, "_", modelindex, ".csv"), header = FALSE, sep = ",", dec = ".")
 
 #trim generation + seed out
 #store as values

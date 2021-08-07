@@ -32,7 +32,6 @@ function (void) setCfgParam (s$ name, ifls value) // setup function for automati
 initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 	setCfgParam("modelindex", 1);
-	setwd("/scratch/user/s4471959/ODE_Neutral");
 
 
 // find Rscript (for the functionality)
@@ -138,7 +137,7 @@ initialize() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable(paste0("/scratch/user/s4471959/ODE_Neutral/ODEoutput_", seed, "_", modelindex,".txt"));
+	ODE = readIntTable(asString(paste0("ODEoutput_", seed, "_", modelindex,".txt")));
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;
@@ -199,7 +198,7 @@ fitness(m5) { return 1.0; }
 
 	//export section #2: writing one file per generation
 	gen = sim.generation;
-	writeFile(asString(paste0("/scratch/user/s4471959/ODE_Neutral/SLiM-output", seed, "_", modelindex, ".csv"))), lines);
+	writeFile(asString(paste0("SLiM-output_", seed, "_", modelindex, ".csv")), lines);
 
 	//export section #3: sending it to R
 	system(RSCRIPT, magiccode);
