@@ -22,7 +22,7 @@ combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/combo.csv"), header = 
 
 # Set which runs to do according to node
 
-switch (ARR_INDEX,
+switch (ARRAY_INDEX,
         { combos <- combos[1:25,] },
         { combos <- combos[26:50,] },
         { combos <- combos[51:75,] },
