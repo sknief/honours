@@ -1,6 +1,5 @@
 #!/bin/bash -l
-#PBS -q workq
-#PBS -A qris-uq
+#PBS -A UQ-SCI-BiolSci
 #PBS -N ODE_BOptMed
 #PBS -J 1-4
 #PBS -l walltime=168:00:00
@@ -9,9 +8,7 @@
 
 cd $TMPDIR
 
-module load R/3.6.0+tidyverse+rstan+rtdists
-
-R
+module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ODE/BOptMed/SUBLAUNCHER.R
 
