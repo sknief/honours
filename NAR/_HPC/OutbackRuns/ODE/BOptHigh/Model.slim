@@ -33,24 +33,18 @@ initialize() {
 	initializeSLiMOptions(keepPedigrees=T);
 	setCfgParam("modelindex", 1);
 
-//NOTE: CHANGE FILE PATH
 
-setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
-
-//commented out cause its useless on the HPC
-/*
 	// find Rscript (for the functionality)
- 	if (fileExists("/usr/lib/R/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
- 	else if (fileExists("/usr/local/bin/Rscript"))
-  		setCfgParam("RSCRIPT", "/usr/local/bin/Rscript");
- 	else
-  		stop("Couldn't find Rscript.");
-*/
+	 	if (fileExists("/usr/lib/R/bin/Rscript"))
+	  		setCfgParam("RSCRIPT", "/usr/lib/R/bin/Rscript");
+	 	else if (fileExists("/usr/bin/Rscript"))
+	  		setCfgParam("RSCRIPT", "/usr/bin/Rscript");
+	 	else
+	  		stop("Couldn't find Rscript.");
 
 
 	//find RScript (as in my code)
-	setCfgParam("magiccode", "~/OutbackRuns/ODE/ODE_script.r");
+	setCfgParam("magiccode", "~/OutbackRuns/ODE/ODE_SCRIPT.r");
 
 	//seeding
 	setCfgParam("seed", asInteger(round(runif(1, 1, 2^62 - 1))));	// random seed
@@ -84,57 +78,51 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 		initializeMutationType("m2", 0.5, "s", script);
 		m2.convertToSubstitution = T;
 		m2.color = "pink";
-		//K
+		//Bbeta
 		initializeMutationType("m3", 0.5, "s", script);
 		m3.convertToSubstitution = T;
-		m3.color = "white";
-		//Bbeta
+		m3.color = "pink";
+		//Balpha
 		initializeMutationType("m4", 0.5, "s", script);
 		m4.convertToSubstitution = T;
-		m4.color = "pink";
-		//Balpha
+		m4.color = "lightblue";
+		//non-coding
 		initializeMutationType("m5", 0.5, "s", script);
 		m5.convertToSubstitution = T;
-		m5.color = "lightblue";
-		//non-coding
-		initializeMutationType("m6", 0.5, "s", script);
-		m6.convertToSubstitution = T;
-		m6.color = "grey";
+		m5.color = "grey";
 
 	//section C: genomic elements
-	initializeGenomicElementType("g1", m6, 1.0); //non-coding
-	initializeGenomicElementType("g2", m1, 1.0); //Abeta
-	initializeGenomicElementType("g3", m2, 1.0); //Aalpha
-	initializeGenomicElementType("g4", m3, 1.0); //K
-	initializeGenomicElementType("g5", m4, 1.0); //Bbeta
-	initializeGenomicElementType("g6", m5, 1.0); //Balpha
+	initializeGenomicElementType("g5", m5, 1.0); //non-coding
+	initializeGenomicElementType("g1", m1, 1.0); //Abeta
+	initializeGenomicElementType("g2", m2, 1.0); //Aalpha
+	initializeGenomicElementType("g3", m3, 1.0); //Bbeta
+	initializeGenomicElementType("g4", m4, 1.0); //Balpha
 
 	//section D: chromosome structure
-	initializeGenomicElement(g1, 0, 99);
-	initializeGenomicElement(g2, 100, 1099); //Abeta
-	initializeGenomicElement(g1, 1100, 1199); //spacer
-	initializeGenomicElement(g3, 1200, 2199); //Aalpha
-	initializeGenomicElement(g1, 2200, 2299); //spacer
-	initializeGenomicElement(g4, 2300, 3299); //K
-	initializeGenomicElement(g1, 3300, 3399); //spacer
-	initializeGenomicElement(g5, 3400, 4399); //Bbeta
-	initializeGenomicElement(g1, 4400, 4499); //spacer
-	initializeGenomicElement(g6, 4500, 5499); //Balpha
-	initializeGenomicElement(g1, 5500, 5599); //end spacer
+	initializeGenomicElement(g5, 0, 99);
+	initializeGenomicElement(g1, 100, 1099); //Abeta
+	initializeGenomicElement(g5, 1100, 1199); //spacer
+	initializeGenomicElement(g2, 1200, 2199); //Aalpha
+	initializeGenomicElement(g5, 2200, 2299); //spacer
+	initializeGenomicElement(g5, 2300, 3299); //spacer
+	initializeGenomicElement(g5, 3300, 3399); //spacer
+	initializeGenomicElement(g3, 3400, 4399); //Bbeta
+	initializeGenomicElement(g5, 4400, 4499); //spacer
+	initializeGenomicElement(g4, 4500, 5499); //Balpha
+	initializeGenomicElement(g5, 5500, 5599); //end spacer
 
 	//section DD: colorcoding
-	g1.color = "darkgrey";
+	g5.color = "darkgrey";
+	g1.color = "firebrick";
 	g2.color = "firebrick";
-	g3.color = "firebrick";
-	g4.color = "lightblue";
-	g5.color = "yellow";
-	g6.color = "yellow";
+	g3.color = "yellow";
+	g4.color = "yellow";
 }
 
 
 //POPULATION CODE
 1 early() {
-	sim.addSubpop("p1", 100);
+	sim.addSubpop("p1", 1000);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -147,7 +135,7 @@ setCfgParam("RSCRIPT", "/opt/R/bin/Rscript");
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable(paste0("ODEoutput_", parallelseed, "_", modelindex,".txt"));
+	ODE = readIntTable(asString(paste0("ODEoutput_", seed, "_", modelindex,".txt")));
 
 	for (ind in sim.subpopulations.individuals) {
 		hh = ind.index;
@@ -190,9 +178,8 @@ fitness(m6) { return 1.0; }
 		ID = ind.index;
 		Aalpha = AalphaINI + exp(ind.sumOfMutationsOfType(m2));
 		Abeta = AbetaINI  + exp(ind.sumOfMutationsOfType(m1));
-		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m5));
-		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m4));
-		Hilln = HillnINI + exp(ind.sumOfMutationsOfType(m3));
+		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m4));
+		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m3));
 		gen = sim.generation;
 
 		//export section #1: accumulation of individual data
@@ -201,7 +188,6 @@ fitness(m6) { return 1.0; }
 										Abeta, ", ",
 										Balpha, ", ",
 										Bbeta, ", ",
-										Hilln, ", ",
 										gen, ", ",
 										seed);
 		//print(paramstoexport);
@@ -210,10 +196,10 @@ fitness(m6) { return 1.0; }
 
 	//export section #2: writing one file per generation
 	gen = sim.generation;
-	writeFile(asString(paste0(c("SLiM-output.csv"))), lines);
+	writeFile(asString(paste0("SLiM-output_", seed, "_", modelindex, ".csv")), lines);
 
 	//export section #3: sending it to R
-	system(paste("/opt/R/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
+	system(paste("/usr/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
 
 }
 
