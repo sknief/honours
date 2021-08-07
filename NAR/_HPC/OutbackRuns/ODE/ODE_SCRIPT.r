@@ -125,7 +125,7 @@ colnames(val) = c("Index",
                   "AConc")
 
 
-valname <- paste0("Val_",seed,"_generation_",gen, "_", modelindex, ".txt")
+valname <- paste0("Val_",seed,"_generation_", modelindex, "_", gen, ".txt")
 
 write.table(val, valname,
             append = FALSE,
