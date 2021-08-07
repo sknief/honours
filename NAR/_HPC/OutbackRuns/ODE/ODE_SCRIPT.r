@@ -94,10 +94,6 @@ dat$A_outt = for (h in 1:length(dat$ID)) {
                       absolutearea = TRUE))
 }
 
-#debugfeature
-print("heres the new values apparently")
-print(head(dat))
-
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 #luna is the things to keep and parse to slim
 
