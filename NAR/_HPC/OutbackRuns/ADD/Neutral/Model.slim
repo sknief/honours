@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
 // [ADDITIVE MODEL] Negative Autoregulation Motif code
-// Version: HPC PLS
+// Version: 2.3 [Reworked Additive Version]
 // Author: Stella M. S. Knief
 // "Released" on 11/07/21
 // Created for Honours 2021
@@ -23,14 +23,17 @@ initialize() {
 	setCfgParam("modelindex", 1);
 
 
+
+
 	//section A: constants
 	setCfgParam("BOpt", 150);
-	setCfgParam("GeneA1", 5);
-	setCfgParam("GeneA2", 2);
-	setCfgParam("GeneB1", 11);
-	setCfgParam("GeneB2", 12);
+	setCfgParam("GeneA1", 0.9444444444);
+	setCfgParam("GeneA2", 4.1666666667);
+	setCfgParam("GeneB1", 2.1666666667);
+	setCfgParam("GeneB2", 0.5555555556);
 	setCfgParam("deltaT", 6);
 	setCfgParam("S", 2); //selection coeff
+
 
 	//Section AA: Recombination
 	ends = c(99, 1099, 1199, 2199, 2299, 3299, 3399, 4399, 4499, 5499, 5599);
@@ -97,14 +100,41 @@ initialize() {
 	sim.addSubpop("p1", 1000);
 }
 
+2:50000 early() {
+for (ind in sim.subpopulations.individuals) {
+
+BCONC = ind.getValue("Bconcentration");
+
+
+	if (BCONC < 0) {
+				print("EEK");
+				ind.tag = 0;
+				}
+
+		 //the stabilising selection function
+			fitnessfunction = exp(-((BCONC - BOpt)/S)^2);
+
+		//fitnessScaling callback to avoid SLiM bug
+			if (fitnessfunction == 0) {
+				ind.fitnessScaling = fitnessfunction + 0.1;
+				print("WHOOPSIE");
+				ind.tag = 0;
+					 }
+			 else
+			 ind.fitnessScaling = fitnessfunction;
+
+	}
+}
+
 
 //FITNESS CALLBACKS + CALCULATIONS
-//make non-coding neutral
+
 fitness(m1) { return 1.0; }
 fitness(m2) { return 1.0; }
 fitness(m3) { return 1.0; }
 fitness(m4) { return 1.0; }
 fitness(m5) { return 1.0; }
+
 
 // individuals tagged have fitnessScaling = 0, which will cause SLiM to throw a fit;
 // give them either minimal fitness (0.1) to push them beyond extreme bounds, or
@@ -150,40 +180,19 @@ fitness(NULL) {
 											seed);
 			//print(paramstoexport);
 			lines = c(lines, paramstoexport);
-
-			//negative concentrations should be lethal (impossible!!)
-			if (BConc < 0) {
-				print("EEK");
-				ind.tag = 0;
-				}
-
-				/* Neutral Model
-						 //the stabilising selection function
-						 fitnessfunction = exp(-((BConc-BOpt)/S)^2);
-
-						 //fitnessScaling callback to avoid SLiM bug
-					 if (fitnessfunction == 0) {
-							 ind.fitnessScaling = fitnessfunction + 0.1;
-							 print("WHOOPSIE");
-							 ind.tag = 0;
-							 }
-						 else
-							 ind.fitnessScaling = fitnessfunction;
-							 */
-
 }
 
 
 				//export section #2: writing one file per generation
 		gen = sim.generation;
-		writeFile(asString(paste0("SLiM-output_ADD_", seed, "_", modelindex, "_", gen, ".csv")), lines);
+	writeFile(asString(paste0("SLiM-output_ADD_", seed, "_", modelindex, "_", gen, ".csv")), lines);
 	}
 
 
 
 //HISTORY PLOT CODE + OUTPUT CODE
-//enable plots
 /*
+//enable plots
 1 early() {
 	//[B Conc]/t plot code
 	sim.setValue("history1", matrix(c(0.0, 0.0), nrow=1));
@@ -277,6 +286,7 @@ fitness(NULL) {
 	deleteFile(scriptPath3);
 	*/
 }
+
 
 50000 late() {
 sim.outputFull("SLiMulation_Output_Full_ADD_" + seed + "_" + modelindex + ".txt");
