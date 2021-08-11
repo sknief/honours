@@ -1,0 +1,111 @@
+
+R version 3.5.0 (2018-04-23) -- "Joy in Playing"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##############################################################################################################
+> #  Run SLiM in parallel
+> ##############################################################################################################
+> 
+> #  Parallel script modified from SLiM-Extras example R script, info at
+> #  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.
+> 
+> # Environment variables
+> 
+> USER <- Sys.getenv('USER')
+> ARRAY_INDEX <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
+> 
+> # Parallelisation libraries
+> 
+> library(foreach)
+> library(doParallel)
+> library(future)
+> 
+> 
+> seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/testseeds.csv"), header = T)
+> combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/testcombo.csv"), header = T)
+> 
+> # Set which runs to do according to node
+> 
+> switch (ARRAY_INDEX,
++         { combos <- combos[1:3,] },
++         { combos <- combos[4:5,] },
++         { combos <- combos[6:8,] },
++         { combos <- combos[9:10,] }
++ )
+> 
+> 
+> cl <- makeCluster(future::availableCores())
+> registerDoParallel(cl)
+> 
+> #Run SLiM
+> foreach(i=1:nrow(combos)) %:%
++   foreach(j=seeds$Seed) %dopar% {
++     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
++     # then run SLiM with system(),
++     slim_out <- system(sprintf("/home/$USER/SLiM/build/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/Neutral/Model.slim",
++                                as.character(j), combos[i,]$Aalpha, combos[i,]$Abeta, combos[i,]$Balpha, combos[i,]$Bbeta, i, intern=T))
++   }
+[[1]]
+[[1]][[1]]
+[1] 1
+
+[[1]][[2]]
+[1] 1
+
+[[1]][[3]]
+[1] 1
+
+
+[[2]]
+[[2]][[1]]
+[1] 1
+
+[[2]][[2]]
+[1] 1
+
+[[2]][[3]]
+[1] 1
+
+
+> 
+> stopCluster(cl)
+> 
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmp3X8z4C’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmp3X8z4C’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmplofxYH’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmplofxYH’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpZn234T’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpZn234T’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpmhwNOa’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpmhwNOa’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpjY4IRm’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpjY4IRm’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpsFoMXy’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpsFoMXy’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmp9s56TD’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmp9s56TD’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpE25d3P’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpE25d3P’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpT4eh51’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpT4eh51’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmpa4F7Qi’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmpa4F7Qi’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpQF3kZu’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpQF3kZu’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmp2eeIZG’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmp2eeIZG’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpmxpSIL’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpmxpSIL’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpOfQGNX’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpOfQGNX’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpeWc3X9’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpeWc3X9’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpYxYwDq’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpYxYwDq’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpCZweOO’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpCZweOO’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmpm4yzNU’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmpm4yzNU’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmp3yZcM5’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmp3yZcM5’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpzsPIPh’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpzsPIPh’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpAcjI1u’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpAcjI1u’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/RtmpbNg5KL’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/RtmpbNg5KL’
+‘//state/partition1/pbs/tmpdir/pbs.528193[2].tinmgr2/Rtmp7MeJKX’ -> ‘/scratch/user/s4471959/dump/pbs.528193[2].tinmgr2/Rtmp7MeJKX’
