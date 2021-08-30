@@ -94,3 +94,4 @@ Means$BConc <- rbind(mean(Gen1$BConc), mean(Gen2$AConc), mean(Gen3$AConc), mean(
 colnames(Means) <- c("Gen", "AAlpha", "ABeta", "BAlpha", "BBeta", "AConc", "BConc")
 
 #go back in and look at what you are actually meant to plot and work backwards - automation is an issue for friday onwards!
+#also see if you can quantify variance
