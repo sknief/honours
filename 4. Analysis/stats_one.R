@@ -87,11 +87,220 @@ baseplot4 + geom_point(position = "jitter")
 
 
 #looking at means: 
-Means <- NULL
-Means$AConc <- rbind(mean(Gen1$AConc), mean(Gen2$AConc), mean(Gen3$AConc), mean(Gen4$AConc), mean(Gen5$AConc))
-Means$BConc <- rbind(mean(Gen1$BConc), mean(Gen2$AConc), mean(Gen3$AConc), mean(Gen4$AConc), mean(Gen5$AConc))
+#this can also be parallelized 
 
-colnames(Means) <- c("Gen", "AAlpha", "ABeta", "BAlpha", "BBeta", "AConc", "BConc")
+Means1 <- colMeans(Gen1) 
+Means1 <- Means1[2:8]
+Means1
 
+Means2 <- colMeans(Gen2) 
+Means2 <- Means2[2:8]
+Means2
+
+Means3 <- colMeans(Gen3) 
+Means3 <- Means3[2:8]
+Means3
+
+Means4 <- colMeans(Gen4) 
+Means4 <- Means4[2:8]
+Means4
+
+Means5 <- colMeans(Gen5) 
+Means5 <- Means5[2:8]
+Means5
+
+TETRIS <- as.data.frame(rbind(Means1, Means2, Means3, Means4, Means5))
+
+###  TL;DR: TETRIS is the means, BIGPOPA is the raw data
+
+#Notes: 
 #go back in and look at what you are actually meant to plot and work backwards - automation is an issue for friday onwards!
 #also see if you can quantify variance
+
+#### THE MAGIC 8 BALL ####
+
+## GRAPH 1: Mean Alpha(A) versus time (line plots and violin plots)
+#only points
+graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = AAlpha))
+graph1base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(A)" )
+
+#violin plots
+baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AAlpha))
+baseplot3 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(A)")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph1base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(A)")
+
+## GRAPH 2: Mean Beta(A) versus time (line plots and violin plots)
+
+#only points
+graph2base <- ggplot(data = TETRIS, aes(x = Generation, y = ABeta))
+graph2base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(A)")
+
+#violin plots
+violinplot2 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = ABeta))
+violinplot2 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(A)")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph2base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(A)")
+
+
+## GRAPH 3: Mean Alpha(B) versus time (line plots and violin plots)
+
+#only points
+graph3base <- ggplot(data = TETRIS, aes(x = Generation, y = BAlpha))
+graph3base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(B)" )
+
+#violin plots
+violinplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BAlpha))
+violinplot3 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(B)")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph3base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Alpha(B)")
+
+## GRAPH 4: Mean Beta(B) versus time (line plots and violin plots)
+
+#only points
+graph4base <- ggplot(data = TETRIS, aes(x = Generation, y = BBeta))
+graph4base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(B)")
+
+#violin plots
+violinplot4 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BBeta))
+violinplot4 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(B)")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph4base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean Beta(A)")
+
+
+## GRAPH 5: Mean Integral of A versus time (line plots and violin plots)
+
+#only points
+graph5base <- ggplot(data = TETRIS, aes(x = Generation, y = AConc))
+graph5base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#violin plots
+violinplot5 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
+violinplot5 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph5base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+## GRAPH 6: Mean Integral of B versus time (line plots and violin plots)
+
+#only points
+graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+graph6base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#violin plots
+violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+violinplot6 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph6base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+## GRAPH 7: Mean Population Fitness versus time (line plots and violin plots)
+# this one is a two part deal: 
+# first, calculate fitness: 
+
+# then, do the plots
+#only points
+graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+graph7base + 
+  geom_point(position = "jitter") + 
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#violin plots
+violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+violinplot7 + 
+  geom_violin() +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+#interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+graph7base + 
+  geom_quantile(color = "salmon") + 
+  geom_line(colour = "lightblue") +
+  geom_smooth(colour = "lavender") +
+  theme_classic() + 
+  labs(x = "Generation", y = "Mean ACONC")
+
+
+## GRAPH 8: ODE samples from individual runs @ different time points 
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+  ###left to do
+  # fitness calculations
+  # automation
+  # SEED key (test ADD as well when you're at it)
+  # save code for the graphs
+  # unique save code for the data sets so that they can feed into larger analyses
+  # rebuy a hardrive cord
+
