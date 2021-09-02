@@ -111,6 +111,13 @@ BCONC = ind.getValue("Bconcentration");
 				ind.tag = 0;
 				}
 
+
+					if (ACONC < 0) {
+								print("EEK2");
+								ind.tag = 0;
+											}
+
+
 		 //the stabilising selection function
 			fitnessfunction = exp(-((BCONC - BOpt)/S)^2);
 
@@ -157,13 +164,13 @@ fitness(NULL) {
 			//code for the concentration of A
 			GeneA1T = GeneA1 + exp(ind.sumOfMutationsOfType(m1));
 			GeneA2T = GeneA2  + exp(ind.sumOfMutationsOfType(m2));
-			GeneATotal = GeneA1T + GeneA2T;
+			GeneATotal = GeneA1T - GeneA2T;
 			ind.setValue("ATotals", GeneATotal);
 
 			//code for the concentration of B
 			GeneB1T = GeneB1 + exp(ind.sumOfMutationsOfType(m3));
 			GeneB2T = GeneB2 + exp(ind.sumOfMutationsOfType(m4));
-			BGamma = GeneB1T + GeneB2T + GeneATotal;
+			BGamma = GeneB1T - GeneB2T + GeneATotal;
 			BConc = BGamma * deltaT;
 			ind.setValue("Bconcentration", BConc);
 
@@ -177,6 +184,7 @@ fitness(NULL) {
 											GeneB1T, ", ",
 											GeneB2T, ", ",
 											GeneATotal, ", ",
+											BGamma, ", ",
 											BConc, ", ",
 											gen, ", ",
 											seed);
