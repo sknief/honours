@@ -104,7 +104,7 @@ TETRIS <- BIGPOPA %>%
               AConc = mean(AConc),
               BConc = mean(BConc)
               )
-
+colnames(TETRIS)[1] <- "Generation"
 
 #### THE MAGIC 8 BALL ####
 
@@ -258,15 +258,11 @@ graph6base +
 # first, calculate fitness: 
 
 BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
-#this works but it comes back as 0 with the test data
 
-TETRIS$fitness = rbind(mean(BIGPOPA$fitness[BIGPOPA$Generation == 1]), 
-                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 2]),
-                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 3]),
-                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 4]),
-                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 5]))
-
-#still workin on this!
+TETRIS$fitness <- BIGPOPA %>%
+  group_by(BIGPOPA$Generation, .add = FALSE) %>%
+  summarise(fitness= mean(fitness)) %>%
+  pull(fitness)
 
 # then, do the plots
 #only points
@@ -310,14 +306,10 @@ distancebase +
   xlim(-41, -39) +
   theme(legend.position = "bottom")
 
-  
-#now for the means
-TETRIS$distance = rbind(mean(BIGPOPA$distance[BIGPOPA$Generation == 1]), 
-                       mean(BIGPOPA$distance[BIGPOPA$Generation == 2]),
-                       mean(BIGPOPA$distance[BIGPOPA$Generation == 3]),
-                       mean(BIGPOPA$distance[BIGPOPA$Generation == 4]),
-                       mean(BIGPOPA$distance[BIGPOPA$Generation == 5]))
-
+TETRIS$distance <- BIGPOPA %>%
+  group_by(BIGPOPA$Generation, .add = FALSE) %>%
+  summarise(distance = mean(distance)) %>%
+  pull(distance)
 
 distancebase2 <- ggplot(TETRIS, aes(x =Generation, y = distance, colour = factor(TETRIS$Generation)))
 distancebase2 +
@@ -328,6 +320,8 @@ distancebase2 +
   theme(legend.position = "none")
 
 #SAVE CODE FOR THE DATASETS
+
+
 
 $$$$$$$$$$$$$$$$$$ CODE GRAVEYARD $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 #raw data: BConc
