@@ -9,10 +9,27 @@
 
 #1. Folders
 
+#######################################
 #user input here!
 JOBID <- 530888
 NODE <- 2
+MODELTYPE <- "ODE"
+OPTIMA <- "BOptMed"
+#######################################
 
+#First loop: setting BOpt depending on your input
+
+if (OPTIMA == "BOptHigh") {
+  BOpt = 100 
+  } else if (OPTIMA == "BOptMed") {
+  BOpt = 50 
+  } else if (OPTIMA == "BOptLow") {
+  BOpt = 10 
+  } else if (OPTIMA == "Neutral") {
+    BOpt = 0 
+  } else {
+    print("Invalid Input for the Optima. Would you like to try again?")
+  }
 
 WD <- paste0(JOBID,"[", NODE, "]")
 workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/BOptMed/pbs.", WD , ".tinmgr2")
@@ -39,10 +56,10 @@ combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/combo.cs
 index <- 1:25
 seed <- seeds$Seed[1]
 modelindex <- index[1]
-transseed <- 861922731048828928
-OPTIMA <- "BOptHigh"
 
-#note: seeds need to be transformed to match the actual seed value within slim (manually generate a key)
+#this needs a key
+transseed <- 861922731048828928
+
 
 #read in files using the values obtained above
 
