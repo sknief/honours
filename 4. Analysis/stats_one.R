@@ -247,14 +247,14 @@ graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
 graph6base + 
   geom_point(position = "jitter") + 
   theme_classic() + 
-  labs(x = "Generation", y = "Mean ACONC")
+  labs(x = "Generation", y = "Mean BCONC")
 
 #violin plots
 violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
 violinplot6 + 
   geom_violin() +
   theme_classic() + 
-  labs(x = "Generation", y = "Mean ACONC")
+  labs(x = "Generation", y = "Mean BCONC")
 
 #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
 graph6base + 
@@ -268,20 +268,35 @@ graph6base +
 # this one is a two part deal: 
 # first, calculate fitness: 
 
+#make a little for loop for it to adapt BOpt based on what the OPTIMA is
+BOpt = 50 #look this should be 100 but for the sake of plotting ive gone wih BOptLow values
+S = 2
+
+BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
+#this works but it comes back as 0 with the test data
+
+TETRIS$fitness = rbind(mean(BIGPOPA$fitness[BIGPOPA$Generation == 1]), 
+                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 2]),
+                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 3]),
+                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 4]),
+                       mean(BIGPOPA$fitness[BIGPOPA$Generation == 5]))
+
+#still workin on this!
+
 # then, do the plots
 #only points
-graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = fitness))
 graph7base + 
   geom_point(position = "jitter") + 
   theme_classic() + 
-  labs(x = "Generation", y = "Mean ACONC")
+  labs(x = "Generation", y = "Mean Fitness")
 
 #violin plots
-violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = fitness))
 violinplot7 + 
   geom_violin() +
   theme_classic() + 
-  labs(x = "Generation", y = "Mean ACONC")
+  labs(x = "Generation", y = "Mean Fitness")
 
 #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
 graph7base + 
@@ -295,9 +310,46 @@ graph7base +
 ## GRAPH 8: ODE samples from individual runs @ different time points 
 
 
+#### Beyond the Super 8 Film ####
+
+#distance from the optima: 
+
+BIGPOPA$distance <- BIGPOPA$BConc-BOpt
+
+
+distancebase <- ggplot(BIGPOPA, aes(x = distance, colour = factor(BIGPOPA$Generation)))
+distancebase +
+  geom_density() +
+  theme_classic() + 
+  labs(x = "Distance to the optima", y = "Individuals") +
+  xlim(-41, -39) +
+  theme(legend.position = "bottom")
+
+  
+#now for the means
+TETRIS$distance = rbind(mean(BIGPOPA$distance[BIGPOPA$Generation == 1]), 
+                       mean(BIGPOPA$distance[BIGPOPA$Generation == 2]),
+                       mean(BIGPOPA$distance[BIGPOPA$Generation == 3]),
+                       mean(BIGPOPA$distance[BIGPOPA$Generation == 4]),
+                       mean(BIGPOPA$distance[BIGPOPA$Generation == 5]))
+
+
+distancebase2 <- ggplot(TETRIS, aes(x =Generation, y = distance, colour = factor(TETRIS$Generation)))
+distancebase2 +
+  geom_point() +
+  theme_classic() + 
+  labs(x = "Generations", y = "Distance to the optima") +
+  ylim(-41, -39) +
+  theme(legend.position = "none")
+
+##### SAVE THE BOIS ######
+
+#save code goes here just not now
+
+
+
 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   ###left to do
-  # fitness calculations
   # automation
   # SEED key (test ADD as well when you're at it)
   # save code for the graphs
