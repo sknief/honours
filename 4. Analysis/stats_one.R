@@ -17,19 +17,36 @@ MODELTYPE <- "ODE"
 OPTIMA <- "BOptMed"
 #######################################
 
-#First loop: setting BOpt depending on your input
+#First nested loop: setting BOpt depending on your input and model type
+if (MODELTYPE == "ADD") {
+        if (OPTIMA == "BOptHigh") {
+          BOpt = 200 
+        } else if (OPTIMA == "BOptMed") {
+          BOpt = 150 
+        } else if (OPTIMA == "BOptLow") {
+          BOpt = 100 
+        } else if (OPTIMA == "Neutral") {
+          BOpt = 0 
+        } else {
+          print("Invalid Input for the Optima. Would you like to try again?")
+        }
+} else if (MODELTYPE == "ODE") {
+        if (OPTIMA == "BOptHigh") {
+          BOpt = 100 
+        } else if (OPTIMA == "BOptMed") {
+          BOpt = 50 
+        } else if (OPTIMA == "BOptLow") {
+          BOpt = 10 
+        } else if (OPTIMA == "Neutral") {
+          BOpt = 0 
+        } else {
+          print("Invalid Input for the Optima. Would you like to try again?")
+        }
+} else {
+  print("I do not recognize that model type, did you spell something wrong?")
+}
 
-if (OPTIMA == "BOptHigh") {
-  BOpt = 100 
-  } else if (OPTIMA == "BOptMed") {
-  BOpt = 50 
-  } else if (OPTIMA == "BOptLow") {
-  BOpt = 10 
-  } else if (OPTIMA == "Neutral") {
-    BOpt = 0 
-  } else {
-    print("Invalid Input for the Optima. Would you like to try again?")
-  }
+
 
 WD <- paste0(JOBID,"[", NODE, "]")
 workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/BOptMed/pbs.", WD , ".tinmgr2")
