@@ -7,6 +7,7 @@
 
 #### Amamteur Parallelisation ####
 library(dplyr)
+library(ggplot2)
 
 #######################################
 #user input here!
@@ -14,6 +15,7 @@ JOBID <- 530889
 NODE <- 2
 MODELTYPE <- "ODE"
 OPTIMA <- "BOptMed"
+S <- 2
 #######################################
 
 #First nested loop: setting BOpt depending on your input and model type
@@ -103,57 +105,6 @@ TETRIS <- BIGPOPA %>%
               BConc = mean(BConc)
               )
 
-
-
-#### Rough plots for diagnostics ####
-
-library(ggplot2)
-
-#raw data: BConc
-baseplot <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
-baseplot + geom_violin()
-
-baseplot2 <- ggplot(data = BIGPOPA, aes(x = Generation, y = BConc))
-baseplot2 + geom_point(position = "jitter")
-
-#raw data: AConc
-baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
-baseplot3 + geom_violin()
-
-baseplot4 <- ggplot(data = BIGPOPA, aes(x = Generation, y = AConc))
-baseplot4 + geom_point(position = "jitter")
-
-
-#looking at means: 
-#this can also be parallelized 
-
-Means1 <- colMeans(Gen1) 
-Means1 <- Means1[2:8]
-Means1
-
-Means2 <- colMeans(Gen2) 
-Means2 <- Means2[2:8]
-Means2
-
-Means3 <- colMeans(Gen3) 
-Means3 <- Means3[2:8]
-Means3
-
-Means4 <- colMeans(Gen4) 
-Means4 <- Means4[2:8]
-Means4
-
-Means5 <- colMeans(Gen5) 
-Means5 <- Means5[2:8]
-Means5
-
-TETRIS <- as.data.frame(rbind(Means1, Means2, Means3, Means4, Means5))
-
-###  TL;DR: TETRIS is the means, BIGPOPA is the raw data
-
-#Notes: 
-#go back in and look at what you are actually meant to plot and work backwards - automation is an issue for friday onwards!
-#also see if you can quantify variance
 
 #### THE MAGIC 8 BALL ####
 
@@ -306,10 +257,6 @@ graph6base +
 # this one is a two part deal: 
 # first, calculate fitness: 
 
-#make a little for loop for it to adapt BOpt based on what the OPTIMA is
-BOpt = 50 #look this should be 100 but for the sake of plotting ive gone wih BOptLow values
-S = 2
-
 BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
 #this works but it comes back as 0 with the test data
 
@@ -380,9 +327,23 @@ distancebase2 +
   ylim(-41, -39) +
   theme(legend.position = "none")
 
-##### SAVE THE BOIS ######
+#SAVE CODE FOR THE DATASETS
 
-#save code goes here just not now
+$$$$$$$$$$$$$$$$$$ CODE GRAVEYARD $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+#raw data: BConc
+baseplot <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+baseplot + geom_violin()
+
+baseplot2 <- ggplot(data = BIGPOPA, aes(x = Generation, y = BConc))
+baseplot2 + geom_point(position = "jitter")
+
+#raw data: AConc
+baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
+baseplot3 + geom_violin()
+
+baseplot4 <- ggplot(data = BIGPOPA, aes(x = Generation, y = AConc))
+baseplot4 + geom_point(position = "jitter")
+
 
 
 
