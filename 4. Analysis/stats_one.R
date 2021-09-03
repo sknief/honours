@@ -6,14 +6,13 @@
 ########################################################
 
 #### Amamteur Parallelisation ####
-
-#1. Folders
+library(dplyr)
 
 #######################################
 #user input here!
-JOBID <- 530888
+JOBID <- 530889
 NODE <- 2
-MODELTYPE <- "ADD"
+MODELTYPE <- "ODE"
 OPTIMA <- "BOptMed"
 #######################################
 
@@ -49,7 +48,8 @@ if (MODELTYPE == "ADD") {
 
 #next, get your file locations right & tight
 WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/BOptMed/pbs.", WD , ".tinmgr2")
+workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+setwd(workdirectory)
 
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
@@ -68,6 +68,13 @@ if (MODELTYPE == "ADD") {
 #then let it run from index 1-25 (ie combos 1-25) with each loop going thru each seed (1-20)
 #add this level of automation once the base code sits. but its noted here. 
 
+#okay, remember this is for ONE simulation run, so i need to read in 50,000 generation files
+# these all belong to ONE seed, with ONE Modelindex
+# so the looping would be Seed -> model index -> generations
+# in other words: unique identifier for 20 -> 100 -> 50,000
+# buck it backwards: start with readin in the files
+
+
 index <- 1:25
 seed <- seeds$Seed[1]
 modelindex <- index[1]
@@ -75,29 +82,18 @@ modelindex <- index[1]
 #this needs a key
 transseed <- 861922731048828928
 
+#read in all files based on specifications above for all generations
+myFiles <- lapply(Sys.glob(paste0("Val_", transseed, "_generation_", modelindex, "_*.txt")), read.table)
 
-#read in files using the values obtained above
+#Bigpopa, my hyuge shrimp, says hi
+BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+colnames(BIGPOPA) <- BIGPOPA[1,]
+colnames(BIGPOPA)[1] <- "Generation"
 
-Gen1Name <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/", OPTIMA, "/pbs.", WD, ".tinmgr2/Val_", transseed, "_generation_", modelindex, "_1.txt")
-Gen1 <- read.table(Gen1Name, header = TRUE)
-Gen2Name <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/", OPTIMA, "/pbs.", WD, ".tinmgr2/Val_", transseed, "_generation_", modelindex, "_2.txt")
-Gen2 <- read.table(Gen2Name, header = TRUE)
-Gen3Name <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/", OPTIMA, "/pbs.", WD, ".tinmgr2/Val_", transseed, "_generation_", modelindex, "_3.txt")
-Gen3 <- read.table(Gen3Name, header = TRUE)
-Gen4Name <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/", OPTIMA, "/pbs.", WD, ".tinmgr2/Val_", transseed, "_generation_", modelindex, "_4.txt")
-Gen4 <- read.table(Gen4Name, header = TRUE)
-Gen5Name <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/", OPTIMA, "/pbs.", WD, ".tinmgr2/Val_", transseed, "_generation_", modelindex, "_5.txt")
-Gen5 <- read.table(Gen5Name, header = TRUE)
 
-# expand for the non test ones
+TETRIS <- as.data.frame(NULL)
 
-Gen1$Generation <- 1
-Gen2$Generation <- 2
-Gen3$Generation <- 3
-Gen4$Generation <- 4
-Gen5$Generation <- 5
 
-BIGPOPA <- rbind(Gen1, Gen2, Gen3, Gen4, Gen5)
 
 #### Rough plots for diagnostics ####
 
