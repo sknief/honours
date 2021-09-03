@@ -87,11 +87,21 @@ myFiles <- lapply(Sys.glob(paste0("Val_", transseed, "_generation_", modelindex,
 
 #Bigpopa, my hyuge shrimp, says hi
 BIGPOPA <- bind_rows(myFiles, .id = "Generation")
-colnames(BIGPOPA) <- BIGPOPA[1,]
-colnames(BIGPOPA)[1] <- "Generation"
+colnames(BIGPOPA) <- BIGPOPA[1,] #column names
+colnames(BIGPOPA)[1] <- "Generation" #fix one label
+BIGPOPA <- subset(BIGPOPA, AAlpha!= "AAlpha") #remove the labels
+BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
-
-TETRIS <- as.data.frame(NULL)
+#tetris, my beloved snail, says hi
+TETRIS <- BIGPOPA %>%
+  group_by(BIGPOPA$Generation) %>%
+    summarise(AAlpha = mean(AAlpha),
+              ABeta = mean(ABeta),
+              BAlpha = mean(BAlpha),
+              BBeta = mean(BBeta),
+              AConc = mean(AConc),
+              BConc = mean(BConc)
+              )
 
 
 
