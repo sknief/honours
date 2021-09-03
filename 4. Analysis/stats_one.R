@@ -13,7 +13,7 @@
 #user input here!
 JOBID <- 530888
 NODE <- 2
-MODELTYPE <- "ODE"
+MODELTYPE <- "ADD"
 OPTIMA <- "BOptMed"
 #######################################
 
@@ -47,23 +47,21 @@ if (MODELTYPE == "ADD") {
 }
 
 
-
+#next, get your file locations right & tight
 WD <- paste0(JOBID,"[", NODE, "]")
 workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/ODE/BOptMed/pbs.", WD , ".tinmgr2")
 
-#to test
-#workdirectory
+#second nested loop: get your seed / combo locations right depending on model type
+if (MODELTYPE == "ADD") {
+  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/seeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/combo.csv") 
+} else if (MODELTYPE == "ODE") {
+  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/seeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/combo.csv") 
+} else {
+  print("Could not locate files - check your model type input!")
+}
 
-#working directory
-setwd(workdirectory)
-
-#to test
-#getwd()
-
-#2. Files
-#could put in a for loop to change these depending on the model type, for now ODE
-seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/seeds.csv")
-combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/combo.csv") 
 
 #okay, big brain move is making a for loop where it will read in the files based on the combos here
 #so effectively need to partition the combos section based on node
