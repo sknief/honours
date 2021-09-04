@@ -17,7 +17,7 @@ library(doParallel)
 library(future)
 
 
-seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/seeds.csv"), header = T)
+seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/newseeds.csv"), header = T)
 combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/combo.csv"), header = T)
 
 # Set which runs to do according to node
@@ -35,7 +35,7 @@ registerDoParallel(cl)
 
 #Run SLiM
 foreach(i=1:nrow(combos)) %:%
-  foreach(j=seeds$Seed) %dopar% {
+  foreach(j=seeds$Number) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
     slim_out <- system(sprintf("/usr/bin/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/BOptLow/Model.slim",
