@@ -112,7 +112,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(A)" )
 
-      ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
 
       #violin plots
       baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AAlpha))
@@ -121,7 +121,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(A)")
 
-      ggsave(paste0("Mean_AlphaA_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_AlphaA_violin_onerun",j, "_", i, ".png"), device = "png")
 
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
@@ -132,7 +132,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(A)")
 
-      ggsave(paste0("Mean_AlphaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_AlphaA_IQR_onerun",j, "_", i, ".png"), device = "png")
 
 
       ## GRAPH 2: Mean Beta(A) versus time (line plots and violin plots)
@@ -144,7 +144,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(A)")
 
-      ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
 
       #violin plots
       violinplot2 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = ABeta))
@@ -153,7 +153,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(A)")
 
-      ggsave(paste0("Mean_BetaA_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaA_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph2base +
@@ -163,7 +163,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(A)")
 
-      ggsave(paste0("Mean_BetaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaA_IQR_onerun",j, "_", i, ".png"), device = "png")
 
       ## GRAPH 3: Mean Alpha(B) versus time (line plots and violin plots)
 
@@ -174,7 +174,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(B)" )
 
-      ggsave(paste0("Mean_AlphaB_jitter_onerun",j, "_", i), ".png", device = "png")
+      #ggsave(paste0("Mean_AlphaB_jitter_onerun",j, "_", i), ".png", device = "png")
 
       #violin plots
       violinplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BAlpha))
@@ -183,7 +183,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(B)")
 
-      ggsave(paste0("Mean_AlphaB_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_AlphaB_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph3base +
@@ -193,7 +193,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Alpha(B)")
 
-      ggsave(paste0("Mean_AlphaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_AlphaB_IQR_onerun",j, "_", i, ".png"), device = "png")
 
       ## GRAPH 4: Mean Beta(B) versus time (line plots and violin plots)
 
@@ -204,7 +204,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(B)")
 
-      ggsave(paste0("Mean_BetaB_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaB_jitter_onerun",j, "_", i, ".png"), device = "png")
 
       #violin plots
       violinplot4 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BBeta))
@@ -213,7 +213,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(B)")
 
-      ggsave(paste0("Mean_BetaB_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaB_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph4base +
@@ -223,7 +223,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Beta(A)")
 
-      ggsave(paste0("Mean_BetaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Mean_BetaB_IQR_onerun",j, "_", i, ".png"), device = "png")
 
       ## GRAPH 5: Mean Integral of A versus time (line plots and violin plots)
 
@@ -234,7 +234,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean ACONC")
 
-      ggsave(paste0("AConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("AConc_jitter_onerun",j, "_", i, ".png"), device = "png")
 
 
       #---stops working after here for some reason ----?
@@ -247,7 +247,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean ACONC")
 
-      ggsave(paste0("AConc_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("AConc_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph5base +
@@ -257,7 +257,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean ACONC")
 
-      ggsave(paste0("AConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("AConc_IQR_onerun",j, "_", i, ".png"), device = "png")
 
       ## GRAPH 6: Mean Integral of B versus time (line plots and violin plots)
 
@@ -268,7 +268,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean BCONC")
 
-      ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
 
       #violin plots
       violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
@@ -277,7 +277,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean BCONC")
 
-      ggsave(paste0("BConc_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("BConc_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph6base +
@@ -287,7 +287,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean ACONC")
 
-      ggsave(paste0("BConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("BConc_IQR_onerun",j, "_", i, ".png"), device = "png")
 
       ## GRAPH 7: Mean Population Fitness versus time (line plots and violin plots)
       # this one is a two part deal:
@@ -308,7 +308,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Fitness")
 
-      ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
 
       #violin plots
       violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = fitness))
@@ -317,7 +317,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean Fitness")
 
-      ggsave(paste0("Fitness_violin_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Fitness_violin_onerun",j, "_", i, ".png"), device = "png")
 
       #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
       graph7base +
@@ -327,7 +327,7 @@ foreach(i=1:2) %:%
         theme_classic() +
         labs(x = "Generation", y = "Mean ACONC")
 
-      ggsave(paste0("Fitness_IQR_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Fitness_IQR_onerun",j, "_", i, ".png"), device = "png")
 
 
       ## GRAPH 8: ODE samples from individual runs @ different time points
@@ -348,7 +348,7 @@ foreach(i=1:2) %:%
         xlim(-41, -39) +
         theme(legend.position = "bottom")
 
-      ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
 
       #mean density?
       TETRIS$distance <- BIGPOPA %>%
@@ -367,7 +367,7 @@ foreach(i=1:2) %:%
         ylim(-41, -39) +
         theme(legend.position = "none")
 
-      ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
 
 
 #SAVE CODE
