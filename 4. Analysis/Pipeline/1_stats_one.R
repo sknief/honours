@@ -13,7 +13,7 @@ library(foreach)
 #######################################
 #user input here!
 JOBID <- 530889
-NODE <- 2
+NODE <- 4
 MODELTYPE <- "ODE"
 OPTIMA <- "BOptMed"
 S <- 2
@@ -77,7 +77,7 @@ seed <- transseeds$ï..Old.Seeds
 #gonna make one loop for graphs and one loop for the new file sets i reckon
 
 #FILES
-foreach(i=1:2) %:%
+foreach(i=1:3) %:%
   foreach(j= transseeds$Transseed) %do% {
     
     #read in all files based on specifications above for all generations
