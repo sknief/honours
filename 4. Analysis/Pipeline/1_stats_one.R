@@ -72,36 +72,109 @@ modelindex <- index[1]
 
 transseeds <- read.csv("C:/Users/sknie/github/honours/4. Analysis/transseeds.csv")
 transseeds <- transseeds[,1:2] #trim extra columns
-seed <- transseeds$Ã¯..Old.Seeds
+seed <- transseeds$ï..Old.Seeds
 
+#gonna make one loop for graphs and one loop for the new file sets i reckon
+
+#FILES
 foreach(i=1:2) %:%
   foreach(j= transseeds$Transseed) %do% {
+    
+    #read in all files based on specifications above for all generations
+    myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "_*.txt")), read.table)
+    
+    #Bigpopa, my hyuge shrimp, says hi
+    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+    colnames(BIGPOPA) <- BIGPOPA[1,] #column names
+    colnames(BIGPOPA)[1] <- "Generation" #fix one label
+    BIGPOPA <- subset(BIGPOPA, AAlpha!= "AAlpha") #remove the labels
+    BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
+    
+    #tetris, my beloved snail, says hi
+    TETRIS <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation) %>%
+      summarise(AAlpha = mean(AAlpha),
+                ABeta = mean(ABeta),
+                BAlpha = mean(BAlpha),
+                BBeta = mean(BBeta),
+                AConc = mean(AConc),
+                BConc = mean(BConc)
+      )
+    colnames(TETRIS)[1] <- "Generation"
+    TETRIS$SEED <- j
+    TETRIS$Index <- i
+    
+    
+    #for the datasets
+    
+    #fitness
+    BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
+    
+    TETRIS$fitness <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(fitness= mean(fitness)) %>%
+      pull(fitness)
+    
+    #distance
+    BIGPOPA$distance <- BIGPOPA$BConc-BOpt
+    
+    TETRIS$distance <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(distance = mean(distance)) %>%
+      pull(distance)
+    
+    
+    #Tetris
+    teddy <- as.character(paste0("Tetris_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
+    
+    Tetris <- as.data.frame(TETRIS)
+    
+    write.table(Tetris, teddy,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
+    
+    #BigPopa
+    BigPop <- as.character(paste0("BigPopa_onerun_", j, "_", i, "_node_", NODE,  ".csv"))
+    
+    write.table(BIGPOPA, BigPop,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
+    
+}
 
-      #read in all files based on specifications above for all generations
-      myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "_*.txt")), read.table)
 
-      #Bigpopa, my hyuge shrimp, says hi
-      BIGPOPA <- bind_rows(myFiles, .id = "Generation")
-      colnames(BIGPOPA) <- BIGPOPA[1,] #column names
-      colnames(BIGPOPA)[1] <- "Generation" #fix one label
-      BIGPOPA <- subset(BIGPOPA, AAlpha!= "AAlpha") #remove the labels
-      BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
-      #tetris, my beloved snail, says hi
-      TETRIS <- BIGPOPA %>%
-        group_by(BIGPOPA$Generation) %>%
-          summarise(AAlpha = mean(AAlpha),
-                    ABeta = mean(ABeta),
-                    BAlpha = mean(BAlpha),
-                    BBeta = mean(BBeta),
-                    AConc = mean(AConc),
-                    BConc = mean(BConc)
-                    )
-      colnames(TETRIS)[1] <- "Generation"
-      TETRIS$SEED <- j
-      TETRIS$Index <- i
+#GRAPHS
+foreach(i=1:2) %:%
+  foreach(j= transseeds$Transseed) %do% {
+    
+    #read in all files based on specifications above for all generations
+    myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "_*.txt")), read.table)
+    
+    #Bigpopa, my hyuge shrimp, says hi
+    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+    colnames(BIGPOPA) <- BIGPOPA[1,] #column names
+    colnames(BIGPOPA)[1] <- "Generation" #fix one label
+    BIGPOPA <- subset(BIGPOPA, AAlpha!= "AAlpha") #remove the labels
+    BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
+    
+    #tetris, my beloved snail, says hi
+    TETRIS <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation) %>%
+      summarise(AAlpha = mean(AAlpha),
+                ABeta = mean(ABeta),
+                BAlpha = mean(BAlpha),
+                BBeta = mean(BBeta),
+                AConc = mean(AConc),
+                BConc = mean(BConc)
+      )
+    colnames(TETRIS)[1] <- "Generation"
+    TETRIS$SEED <- j
+    TETRIS$Index <- i
 
-      #### THE MAGIC 8 BALL ####
+      #### THE MAGIC 8 BALL of GRAPHS ####
 
 
       ## GRAPH 1: Mean Alpha(A) versus time (line plots and violin plots)
@@ -371,26 +444,7 @@ foreach(i=1:2) %:%
 
 
 #SAVE CODE
-  #for the datasets
-      #Tetris
-      teddy <- as.character(paste0("Tetris_onerun_", j, "_", i, ".csv"))
-
-      Tetris <- as.data.frame(TETRIS)
-
-      write.table(Tetris, teddy,
-                  append = FALSE,
-                  row.names = FALSE,
-                  col.names = TRUE)
-
-      #BigPopa
-      BigPop <- as.character(paste0("BigPopa_onerun_", j, "_", i, ".csv"))
-
-      write.table(BIGPOPA, BigPop,
-                  append = FALSE,
-                  row.names = FALSE,
-                  col.names = TRUE)
 
   #for the graphs is under the actual graph code
-
 
 } #foreach closing bracket
