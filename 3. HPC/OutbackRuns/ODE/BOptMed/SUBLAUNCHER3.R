@@ -1,0 +1,46 @@
+##############################################################################################################
+#  Run SLiM in parallel
+##############################################################################################################
+
+#  Parallel script modified from SLiM-Extras example R script, info at
+#  the SLiM-Extras repository at https://github.com/MesserLab/SLiM-Extras.
+
+# Environment variables
+
+USER <- Sys.getenv('USER')
+ARRAY_INDEX <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
+
+# Parallelisation libraries
+
+library(foreach)
+library(doParallel)
+library(future)
+
+
+seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ODE/newseeds.csv"), header = T)
+combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ODE/combo3.csv"), header = T)
+
+# Set which runs to do according to node
+
+switch (ARRAY_INDEX,
+        { combos <- combos[1:5,] },
+        { combos <- combos[6:10,] },
+        { combos <- combos[11:15,] },
+        { combos <- combos[16:20,] }
+)
+
+
+
+cl <- makeCluster(future::availableCores())
+registerDoParallel(cl)
+
+#Run SLiM
+foreach(i=1:nrow(combos)) %:%
+  foreach(j=seeds$Number) %dopar% {
+    # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
+    # then run SLiM with system(),
+    slim_out <- system(sprintf("/usr/bin/slim -s %s -d AalphaINI=%f -d AbetaINI=%f -d BalphaINI=%f -d BbetaINI=%f -d modelindex=%i ~/OutbackRuns/ODE/BOptMed/Model.slim",
+                               as.character(j), combos[i,]$Aalpha, combos[i,]$Abeta, combos[i,]$Balpha, combos[i,]$Bbeta, i, intern=T))
+  }
+
+stopCluster(cl)
