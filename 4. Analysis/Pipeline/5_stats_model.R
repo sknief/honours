@@ -7,10 +7,8 @@
 
 #######################################
 #user input here!
-JOBID <- 530889
 MODELTYPE <- "ODE"
 OPTIMA <- "BOptMed"
-S <- 2
 #######################################
 
 #set up the model we are looking at, no need for nodes anymore
