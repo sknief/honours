@@ -52,11 +52,9 @@ if (MODELTYPE == "ADD") {
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
   seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/combo.csv")
   index <- 1:25
 } else if (MODELTYPE == "ODE") {
   seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/combo.csv")
   index <- 1:5
 } else {
   print("Could not locate files - check your model type input!")
@@ -121,7 +119,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
     #summary statistics go here!!!!!!!!!!!
 
     #Save code for all three datasets, regardless of use
-    pognood <- as.character(paste0("PogNoodle_(reps_for_unique_combo)_", i, "_node_", l,  ".csv"))
+    pognood <- as.character(paste0("PogNoodle_(reps_for_unique_combo)_",OPTIMA, "_", i, "_node_", l,  ".csv"))
 
     PogNoodle <- as.data.frame(POGNOODLE)
 
@@ -130,7 +128,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 row.names = FALSE,
                 col.names = TRUE)
 
-    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", i, "_node_", l,  ".csv"))
+    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", OPTIMA, "_",i, "_node_", l,  ".csv"))
 
     PogNoodled <- as.data.frame(POGNOODLED)
 
@@ -139,7 +137,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 row.names = FALSE,
                 col.names = TRUE)
 
-    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", i, "_node_", l,  ".csv"))
+    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", OPTIMA, "_",i, "_node_", l,  ".csv"))
 
     ShrimpMoult <- as.data.frame(SHRIMPMOULT)
 
