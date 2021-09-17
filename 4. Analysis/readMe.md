@@ -1,9 +1,8 @@
-![Funnel](https://github.com/sknief/honours/blob/master/4.%20Analysis/Data%20funnel%20Infographics.png)
+# Step Four: Statistical Analysis #
 
+I have created two infographics about my statisitical pipeline, which are in the pipeline folder above, as well as the bottom of this read me :)
 
-
-
-# File Inventory #
+## File Inventory ##
 
 My models generate a LOT of data, so a file inventory helps me stay on top of what these files are and what they are called! View this as a guide to how I have been writing my R code.
 
@@ -112,3 +111,10 @@ All `Val_[seed]_generation_[index]_[gen].txt` files need to be read into one R s
 These can then be combined to create a big master set. From that point onwards, analysis can be conducted.
 
 No clue how to handle the txt files yet but I am sure the SLiM manual has some pointers.
+
+
+# Infographics #
+
+![Funnel](https://github.com/sknief/honours/blob/master/4.%20Analysis/Data%20funnel%20Infographics.png)
+
+![Tank](https://github.com/sknief/honours/blob/master/4.%20Analysis/TANK.png)
