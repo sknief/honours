@@ -72,7 +72,6 @@ modelindex <- index[1]
 
 transseeds <- read.csv("C:/Users/sknie/github/honours/4. Analysis/transseeds.csv")
 transseeds <- transseeds[,1:2] #trim extra columns
-seed <- transseeds$�..Old.Seeds
 
 #gonna make one loop for graphs and one loop for the new file sets i reckon
 
@@ -440,7 +439,21 @@ foreach(i=1:2) %:%
         ylim(-41, -39) +
         theme(legend.position = "none")
 
-      #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+      #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
+      
+      
+      #facet code
+      library(gridExtra)
+
+      
+     
+      lay <- rbind(c(1,1,1,2,2,2,3,3,3,4,4,4),
+                   c(5,5,5,5,6,6,6,6,7,7,7,7),
+                   c(5,5,5,5,6,6,6,6,7,7,7,7))
+      grid.arrange(stuff, layout_matrix = lay)
+      
+      ggsave(paste0("Facet_graphs_onerun",j, "_", i, ".png"), device = "png")
+      
 
 
 #SAVE CODE
