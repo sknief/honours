@@ -1,6 +1,11 @@
+![Funnel](https://github.com/sknief/honours/blob/master/4.%20Analysis/Data%20funnel%20Infographics.png)
+
+
+
+
 # File Inventory #
 
-My models generate a LOT of data, so a file inventory helps me stay on top of what these files are and what they are called! View this as a guide to how I have been writing my R code. 
+My models generate a LOT of data, so a file inventory helps me stay on top of what these files are and what they are called! View this as a guide to how I have been writing my R code.
 
 ## File and Folder Structure ##
 
