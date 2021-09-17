@@ -17,6 +17,7 @@ MODELTYPE <- "ODE"
 library(dplyr)
 library(ggplot2)
 library(foreach)
+library(gridExtra)
 
 ####  set WD to aquarium #####
 workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/", MODELTYPE, "/aquarium")
@@ -394,22 +395,68 @@ foreach(m=1:4) %do% {
     
     
     #facet code
-    library(gridExtra)
-    #lets say we want AConc and BConc // these can be changed super easily
-    #AConc Points
-    p1 <- graph5base +
-      geom_point(color = "grey") +
-      geom_line(data = RICHARD, color = "red") +
+    g1 <-      
+      graph1base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
       theme_classic() +
-      labs(x = "Generation", y = "Mean AConc" )
-    #BConc Points
-    p2 <- graph6base +
-      geom_point(color = "grey") +
-      geom_line(data = RICHARD, color = "red") +
+      labs(x = "Generation", y = "Mean Alpha(A)" )
+    g2 <- 
+      graph2base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
       theme_classic() +
-      labs(x = "Generation", y = "Mean BConc" )
-    #the arrange code
-    grid.arrange(p1, p2, nrow = 1)
+      labs(x = "Generation", y = "Mean Beta(A)")
+    g3 <-       
+      graph3base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Alpha(B)" )
+    g4 <- 
+      graph4base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Beta(B)")
+    g5 <- 
+      graph5base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean ACONC")
+    g6 <- 
+      graph6base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean BCONC")
+    g7 <-      
+      graph7base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Fitness")
+    g8 <- 
+      distancebase2 +
+      geom_point(color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generations", y = "Distance to the optima") +
+      ylim(-41, -39) +
+      theme(legend.position = "none")
+    
+    lay <- rbind(c(1,1,1,2,2,2,3,3,3,4,4,4),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7))
+    
+    #to plot
+    grid.arrange(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
+    
+    #to save
+    g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
+    ggsave(file = paste0("Facet_graphs_acrossreps_",j, "_", i, ".png"), g, device = "png")
+    
     
     
     #nice adaptive walk graph
@@ -427,8 +474,32 @@ foreach(m=1:4) %do% {
 } #foreach loop ends here 
 
    
-  
-#summary statistics too?
-#scatter around final generation, variation, what else
+## mutation data ##
 
-#save the new collated data sets
+mutations <- read_table2(paste0("SLiMulation_Output_Full_", j, "_", i ,".txt"), 
+                         col_names = FALSE, skip = 5)
+#take out non mutation data 
+mutations <- na.omit(mutations)
+colnames(mutations) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
+mutations <- mutations[c(2:5, 8:9)] #take out unnecessary columns
+
+#these will need to be collated and averaged
+
+#fixed mutations (no test data for that yet)
+fixed <- read_table2(paste0("SLiMulation_Output_FixedMutations_", j, "_", i ,".txt"), 
+                     col_names = FALSE, skip = 2)
+#take out non mutation data 
+fixed <- na.omit(fixed)
+colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "FixedinGen")
+fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
+
+#graphs
+
+#histogram of mutational effect sizes (stacked for polymorphs and fixed)
+
+#distribution of effect sizes (half violin plots)
+
+#subset by region plot mean prevalence by region histograms or boxplots
+
+#subset by region plot selection coefficients x prevalance with color for regions (histogram!)
+
