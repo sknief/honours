@@ -412,6 +412,17 @@ foreach(m=1:4) %do% {
     grid.arrange(p1, p2, nrow = 1)
     
     
+    #nice adaptive walk graph
+    adaptivewalkbase <- ggplot()
+    adaptivewalkbase + 
+      geom_line(data = SHELLDON, aes(x = Generation, y = BConc, group = UniqueCombo, color = UniqueCombo), color = "grey") +
+      geom_line(data = RICHARD, aes( x = Generation, y = BConc), color = "red") +
+      theme_classic() +
+      guides(fill = "none") +
+      labs(x = "Generation", y = "Mean BConc" )
+      
+    #ggsave(paste0("Adaptive Walk_", MODELTYPE, "_", OPTIMA,".png"), device = "png")
+    
     
 } #foreach loop ends here 
 

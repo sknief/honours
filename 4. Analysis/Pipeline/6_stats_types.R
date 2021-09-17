@@ -7,10 +7,10 @@
 
 #######################################
 #user input here!
-JOBID <- 530889
-MODELTYPE <- "ODE"
-OPTIMA <- "BOptMed"
-S <- 2
 #######################################
 
 # for comparing model types and results
+
+# feeed in ALL Shelldon and Richard FIles
+
+# compare how the different optima compare? make a graph with inidivudal lines to the optima and all lines lead to the different optima? 
