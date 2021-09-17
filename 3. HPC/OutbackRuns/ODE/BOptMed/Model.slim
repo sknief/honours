@@ -228,10 +228,9 @@ fitness(m5) { return 1.0; }
 }
 */
 
-//update plots
 1:50000 late() {
 	// choose when to update plots below
-	if (sim.generation % 50 != 0) return;
+	if (sim.generation % 500 != 0) return;
 
 	//debug-puposes only: sim.outputFull();
 
@@ -249,6 +248,11 @@ fitness(m5) { return 1.0; }
 	catn("Mean correlation " + meandivision);
 	catn();
 	catn();
+
+	gen = sim.generation;
+	sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
+
+
 
 /*
 	//[B Conc]/t plot code
