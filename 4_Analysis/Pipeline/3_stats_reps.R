@@ -5,17 +5,18 @@
 ##       CITE WHAT YOU USE, KO-FI IF YOU'RE NICE      ##
 ########################################################
 
-#######################################
-#user input here!
-MODELTYPE <- "ODE"
-OPTIMA <- "BOptMed"
-#######################################
-
 #### Amamteur Parallelisation ####
 library(dplyr)
 library(ggplot2)
 library(foreach)
 library(gridExtra)
+
+#######################################
+#user input here!
+MODELTYPE <- "ODE"
+OPTIMA <- "Neutral"
+#######################################
+
 
 ##### the two loops to set up the params for the rest of the code #####
 
@@ -51,10 +52,10 @@ if (MODELTYPE == "ADD") {
 
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/seeds.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/seeds.csv")
   index <- 1:25
 } else if (MODELTYPE == "ODE") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/seeds.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/seeds.csv")
   index <- 1:5
 } else {
   print("Could not locate files - check your model type input!")
@@ -62,14 +63,14 @@ if (MODELTYPE == "ADD") {
 
 
 ####  set WD to tank #####
-workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/", MODELTYPE, "/", OPTIMA, "/tank")
+workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/tank")
 setwd(workdirectory)
 
 #### foreach loops ####
 
 
 #fix for test files
-transseeds <- read.csv("C:/Users/sknie/github/honours/4. Analysis/transseeds.csv")
+transseeds <- read.csv("C:/Users/sknie/github/honours/4_Analysis/transseeds.csv")
 transseeds <- transseeds[,1:2] #trim extra columns
 seed <- transseeds$Transseed
 

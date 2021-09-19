@@ -1,7 +1,10 @@
 #for test files, location needs to be updated later on
 
 # go in and make aquarium
-cd C:\Users\sknie\github\honours\4_Analysis\
+cd C:\Users\sknie\github\honours\4_Analysis\ODE
+mkdir aquarium
+
+cd C:\Users\sknie\github\honours\4_Analysis\ADD
 mkdir aquarium
 
 #files come from the tanks:
