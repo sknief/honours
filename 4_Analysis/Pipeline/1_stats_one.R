@@ -14,9 +14,9 @@ library(gridExtra)
 
 #######################################
 #user input here!
-JOBID <- 531140
+JOBID <- 530888
 NODE <- 2
-MODELTYPE <- "ADD"
+MODELTYPE <- "ODE"
 OPTIMA <- "BOptHigh"
 S <- 2
 #######################################
@@ -83,8 +83,8 @@ foreach(i=1:3) %:%
   foreach(j= transseeds$Transseed) %do% {
 
     #read in all files based on specifications above for all generations
-    #myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.csv")), read.table) #ODE
-    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, ".csv")), read.csv) #ADD
+    myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.txt")), read.table) #ODE
+    #myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, ".csv")), read.csv) #ADD
     
     #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
     BIGPOPA <- bind_rows(myFiles, .id = "Generation")
@@ -425,7 +425,6 @@ foreach(i=1:2) %:%
         geom_density() +
         theme_classic() +
         labs(x = "Distance to the optima", y = "Individuals") +
-        xlim(-41, -39) +
         theme(legend.position = "bottom")
 
       #ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
@@ -439,12 +438,11 @@ foreach(i=1:2) %:%
 
       ###potential interfering for save data
 
-      distancebase2 <- ggplot(TETRIS, aes(x =Generation, y = distance, colour = factor(TETRIS$Generation)))
+      distancebase2 <- ggplot(TETRIS, aes(x = Generation, y = distance))
       distancebase2 +
         geom_point() +
         theme_classic() +
         labs(x = "Generations", y = "Distance to the optima") +
-        ylim(-41, -39) +
         theme(legend.position = "none")
 
       #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
@@ -512,6 +510,8 @@ foreach(i=1:2) %:%
       #to save
       g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
       ggsave(file = paste0("Facet_graphs_onerun_",j, "_", i, ".png"), g, device = "png")
+      
+  
       
 
 

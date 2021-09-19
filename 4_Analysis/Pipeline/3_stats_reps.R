@@ -460,49 +460,49 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
     g1 <-      
       graph1base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean Alpha(A)" )
     g2 <- 
       graph2base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean Beta(A)")
     g3 <-       
       graph3base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean Alpha(B)" )
     g4 <- 
       graph4base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean Beta(B)")
     g5 <- 
       graph5base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean ACONC")
     g6 <- 
       graph6base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean BCONC")
     g7 <-      
       graph7base +
       geom_point(position = "jitter", color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generation", y = "Mean Fitness")
     g8 <- 
-      distancebase2 +
+      graph8base +
       geom_point(color = "orchid2") +
-      geom_line(color = "skyblue1") +
+      geom_line(data = POGNOODLED, color = "skyblue1") +
       theme_classic() +
       labs(x = "Generations", y = "Distance to the optima") +
       ylim(-41, -39) +
@@ -519,7 +519,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
     g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
     ggsave(file = paste0("Facet_graphs_acrossreps_",j, "_", i, ".png"), g, device = "png")
 
-    
+   g8
     
     #Save code for all three datasets, regardless of use
     #PogNoodle

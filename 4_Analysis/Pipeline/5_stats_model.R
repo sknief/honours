@@ -565,8 +565,7 @@ foreach(m=1:4) %do% {
     #to save
     g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
     ggsave(file = paste0("Facet_graphs_acrossreps_",j, "_", i, ".png"), g, device = "png")
-    
-    
+    ggsave("Facetted_graphs_acrossreps_test.png")
     
     #nice adaptive walk graph
     adaptivewalkbase <- ggplot()

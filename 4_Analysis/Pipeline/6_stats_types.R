@@ -52,17 +52,19 @@ adaptivewalkbase +
   geom_point(data = Richard_ODE_BOptLow, aes( x = Generation, y = BConc), color = "yellow2") +
   geom_point(data = Richard_ODE_Neutral, aes( x = Generation, y = BConc), color = "yellowgreen") +
   #add
-  geom_line(data = Richard_ADD_BOptHigh, aes( x = Generation, y = BConc), color = "limegreen") +
-  geom_line(data = Richard_ADD_BOptMed, aes( x = Generation, y = BConc), color = "turquoise2") +
-  geom_line(data = Richard_ADD_BOptLow, aes( x = Generation, y = BConc), color = "royalblue2") +
-  geom_line(data = Richard_ADD_Neutral, aes( x = Generation, y = BConc), color = "darkorchid4") +
-  geom_point(data = Richard_ADD_BOptHigh, aes( x = Generation, y = BConc), color = "limegreen") +
-  geom_point(data = Richard_ADD_BOptMed, aes( x = Generation, y = BConc), color = "turquoise2") +
-  geom_point(data = Richard_ADD_BOptLow, aes( x = Generation, y = BConc), color = "royalblue2") +
-  geom_point(data = Richard_ADD_Neutral, aes( x = Generation, y = BConc), color = "darkorchid4") +
+  #geom_line(data = Richard_ADD_BOptHigh, aes( x = Generation, y = BConc), color = "limegreen") +
+  #geom_line(data = Richard_ADD_BOptMed, aes( x = Generation, y = BConc), color = "turquoise2") +
+  #geom_line(data = Richard_ADD_BOptLow, aes( x = Generation, y = BConc), color = "royalblue2") +
+  #geom_line(data = Richard_ADD_Neutral, aes( x = Generation, y = BConc), color = "darkorchid4") +
+  #geom_point(data = Richard_ADD_BOptHigh, aes( x = Generation, y = BConc), color = "limegreen") +
+  #geom_point(data = Richard_ADD_BOptMed, aes( x = Generation, y = BConc), color = "turquoise2") +
+  #geom_point(data = Richard_ADD_BOptLow, aes( x = Generation, y = BConc), color = "royalblue2") +
+  #geom_point(data = Richard_ADD_Neutral, aes( x = Generation, y = BConc), color = "darkorchid4") +
   theme_classic() +
   guides(fill = "none") +
   labs(x = "Generation", y = "Mean BConc" )
+
+  #add in code to put a line or dot to where the optima is !
 
 ggsave(paste0("Comparative Walks.png"), device = "png")
 
@@ -128,14 +130,21 @@ ADDNeutral <- adaptivewalkbase +
   labs(x = "Generation", y = "Mean BConc" )
 
 lay <- rbind(c(1,2),
-             c(3, 4),
-             c(5,6,),
-             c(7, 8))
+             c(3, 4)
+            # c(5,6,),
+             #c(7, 8)
+            )
 
 
-grid.arrange(ODEHigh, ODEMed, ODELow, ODENeutral, ADDHigh, ADDMed, ADDLow, ADDNeutral, layout_matrix = lay)
+grid.arrange(ODEHigh, ODEMed, ODELow, ODENeutral, 
+             #ADDHigh, ADDMed, ADDLow, ADDNeutral, 
+             layout_matrix = lay)
 
-ggsave(paste0("Adaptive Walks.png"), device = "png")
+gg <- arrangeGrob(ODEHigh, ODEMed, ODELow, ODENeutral, 
+                             #ADDHigh, ADDMed, ADDLow, ADDNeutral, 
+                             layout_matrix = lay)
+ggsave(file = paste0("Adaptive Walks.png"), gg, device = "png")
+
 
 
 
