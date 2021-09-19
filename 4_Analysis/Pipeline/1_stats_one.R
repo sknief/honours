@@ -1,27 +1,31 @@
 ########################################################
 ##      HONOURS ANALYIS CODE (ONE SIMULATION VERS)    ##
 ##           AUTHOR: STELLA MS KNIEF                  ##
-##      START DATE: 29/08/2021 PUBLISH: TBD           ##
+##      START DATE: 29/08/2021 PUBLISH: 20/09/21      ##
 ##       CITE WHAT YOU USE, KO-FI IF YOU'RE NICE      ##
 ########################################################
 
-#### Amamteur Parallelisation ####
+#### Amateur Parallelisation ####
 library(dplyr)
 library(ggplot2)
 library(foreach)
 library(readr)
 library(gridExtra)
 
-#######################################
-#user input here!
+############### user input here!#########################
 JOBID <- 530888
 NODE <- 2
 MODELTYPE <- "ODE"
 OPTIMA <- "BOptHigh"
 S <- 2
-#######################################
+########################################################
 
-#First nested loop: setting BOpt depending on your input and model type
+### Set WD ####
+WD <- paste0(JOBID,"[", NODE, "]")
+workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+setwd(workdirectory)
+
+### Nested loops to set up this script ####
 if (MODELTYPE == "ADD") {
         if (OPTIMA == "BOptHigh") {
           BOpt = 200
@@ -50,12 +54,6 @@ if (MODELTYPE == "ADD") {
   print("I do not recognize that model type, did you spell something wrong?")
 }
 
-
-#next, get your file locations right & tight
-WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
-setwd(workdirectory)
-
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
   seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/seeds.csv")
@@ -68,25 +66,18 @@ if (MODELTYPE == "ADD") {
 }
 
 
-#set da thing up
-index <- 1:25
-modelindex <- index[1]
-i <- 2
+# ODE FILES ####
 
-transseeds <- read.csv("C:/Users/sknie/github/honours/4_Analysis/transseeds.csv")
-transseeds <- transseeds[,1:2] #trim extra columns
+#test code only
+#transseeds <- read.csv("C:/Users/sknie/github/honours/4_Analysis/transseeds.csv")
+#transseeds <- transseeds[,1:2] #trim extra columns
 
-#gonna make one loop for graphs and one loop for the new file sets i reckon
-
-#FILES
-foreach(i=1:3) %:%
+## FILE ONLY LOOP ##
+foreach(i=1:5) %:%
   foreach(j= transseeds$Transseed) %do% {
-
-    #read in all files based on specifications above for all generations
     myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.txt")), read.table) #ODE
-    #myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, ".csv")), read.csv) #ADD
-    
-    #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
+
+    #Bigpopa, my hyuge shrimp, says hi
     BIGPOPA <- bind_rows(myFiles, .id = "Generation")
     colnames(BIGPOPA) <- BIGPOPA[1,] #column names
     colnames(BIGPOPA)[1] <- "Generation" #fix one label
@@ -146,15 +137,11 @@ foreach(i=1:3) %:%
                 col.names = TRUE)
 
     #mutation data stuff would go here
-    
 }
 
 
-# SLOW DOWN
-# STOP
-#GRAPHS
-
-foreach(i=1:2) %:%
+## Full Loop with Graphs ##
+foreach(i=1:5) %:%
   foreach(j= transseeds$Transseed) %do% {
 
     #read in all files based on specifications above for all generations
@@ -181,338 +168,756 @@ foreach(i=1:2) %:%
     TETRIS$SEED <- j
     TETRIS$Index <- i
 
-      #### THE MAGIC 8 BALL of GRAPHS ####
+    ## GRAPH 1: Mean Alpha(A) versus time (line plots and violin plots)
+    graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = AAlpha))
+
+    # graph1base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(A)" )
+
+    #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AAlpha))
+    # baseplot3 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(A)")
+
+    #ggsave(paste0("Mean_AlphaA_violin_onerun",j, "_", i, ".png"), device = "png")
 
 
-      ## GRAPH 1: Mean Alpha(A) versus time (line plots and violin plots)
-      #only points
-      graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = AAlpha))
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph1base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(A)")
+
+    #ggsave(paste0("Mean_AlphaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+
+    ## GRAPH 2: Mean Beta(A) versus time (line plots and violin plots)
+    #only points
+    graph2base <- ggplot(data = TETRIS, aes(x = Generation, y = ABeta))
+    # graph2base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(A)")
+
+    #ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot2 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = ABeta))
+    # violinplot2 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(A)")
+
+    #ggsave(paste0("Mean_BetaA_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph2base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(A)")
+
+    #ggsave(paste0("Mean_BetaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 3: Mean Alpha(B) versus time (line plots and violin plots)
+
+    #only points
+    graph3base <- ggplot(data = TETRIS, aes(x = Generation, y = BAlpha))
+    # graph3base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(B)" )
+
+    #ggsave(paste0("Mean_AlphaB_jitter_onerun",j, "_", i), ".png", device = "png")
+
+    #violin plots
+    # violinplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BAlpha))
+    # violinplot3 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(B)")
+
+    #ggsave(paste0("Mean_AlphaB_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph3base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Alpha(B)")
+
+    #ggsave(paste0("Mean_AlphaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 4: Mean Beta(B) versus time (line plots and violin plots)
+
+    #only points
+    graph4base <- ggplot(data = TETRIS, aes(x = Generation, y = BBeta))
+    # graph4base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(B)")
+
+    #ggsave(paste0("Mean_BetaB_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot4 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BBeta))
+    # violinplot4 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(B)")
+
+    #ggsave(paste0("Mean_BetaB_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph4base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Beta(A)")
+
+    #ggsave(paste0("Mean_BetaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 5: Mean Integral of A versus time (line plots and violin plots)
+
+    #only points
+    graph5base <- ggplot(data = TETRIS, aes(x = Generation, y = AConc))
+    # graph5base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+
+    #violin plots
+    violinplot5 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
+    # violinplot5 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph5base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 6: Mean Integral of B versus time (line plots and violin plots)
+
+    #only points
+    graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+    # graph6base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean BCONC")
+
+    #ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+    # violinplot6 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean BCONC")
+
+    #ggsave(paste0("BConc_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph6base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("BConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 7: Mean Population Fitness versus time (line plots and violin plots)
+    # this one is a two part deal:
+    # first, calculate fitness:
+
+    BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
+
+    TETRIS$fitness <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(fitness= mean(fitness)) %>%
+      pull(fitness)
+
+    # then, do the plots
+    #only points
+    graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = fitness))
+    # graph7base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Fitness")
+
+    #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = fitness))
+    # violinplot7 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Fitness")
+
+    #ggsave(paste0("Fitness_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph7base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("Fitness_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+
+    ## GRAPH 8: ODE samples from individual runs @ different time points
+
+
+    #### Beyond the Super 8 Film ####
+
+    #distance from the optima:
+
+    BIGPOPA$distance <- BIGPOPA$BConc-BOpt
+
+    #density plot
+    distancebase <- ggplot(BIGPOPA, aes(x = distance, colour = factor(BIGPOPA$Generation)))
+    # distancebase +
+    #   geom_density() +
+    #   theme_classic() +
+    #   labs(x = "Distance to the optima", y = "Individuals") +
+    #   theme(legend.position = "bottom")
+
+    #ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
+
+    #mean density?
+    TETRIS$distance <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(distance = mean(distance)) %>%
+      pull(distance)
+
+
+    ###potential interfering for save data
+
+    distancebase2 <- ggplot(TETRIS, aes(x = Generation, y = distance))
+    # distancebase2 +
+    #   geom_point() +
+    #   theme_classic() +
+    #   labs(x = "Generations", y = "Distance to the optima") +
+    #   theme(legend.position = "none")
+
+    #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+
+    #facet code cfor nice graphs
+    g1 <-
       graph1base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(A)" )
-
-      #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
-
-      #violin plots
-      baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AAlpha))
-      baseplot3 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(A)")
-
-      #ggsave(paste0("Mean_AlphaA_violin_onerun",j, "_", i, ".png"), device = "png")
-
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph1base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(A)")
-
-      #ggsave(paste0("Mean_AlphaA_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-
-      ## GRAPH 2: Mean Beta(A) versus time (line plots and violin plots)
-
-      #only points
-      graph2base <- ggplot(data = TETRIS, aes(x = Generation, y = ABeta))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Alpha(A)" )
+    g2 <-
       graph2base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(A)")
-
-      #ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
-
-      #violin plots
-      violinplot2 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = ABeta))
-      violinplot2 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(A)")
-
-      #ggsave(paste0("Mean_BetaA_violin_onerun",j, "_", i, ".png"), device = "png")
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph2base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(A)")
-
-      #ggsave(paste0("Mean_BetaA_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-      ## GRAPH 3: Mean Alpha(B) versus time (line plots and violin plots)
-
-      #only points
-      graph3base <- ggplot(data = TETRIS, aes(x = Generation, y = BAlpha))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Beta(A)")
+    g3 <-
       graph3base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(B)" )
-
-      #ggsave(paste0("Mean_AlphaB_jitter_onerun",j, "_", i), ".png", device = "png")
-
-      #violin plots
-      violinplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BAlpha))
-      violinplot3 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(B)")
-
-      #ggsave(paste0("Mean_AlphaB_violin_onerun",j, "_", i, ".png"), device = "png")
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph3base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(B)")
-
-      #ggsave(paste0("Mean_AlphaB_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-      ## GRAPH 4: Mean Beta(B) versus time (line plots and violin plots)
-
-      #only points
-      graph4base <- ggplot(data = TETRIS, aes(x = Generation, y = BBeta))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Alpha(B)" )
+    g4 <-
       graph4base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(B)")
-
-      #ggsave(paste0("Mean_BetaB_jitter_onerun",j, "_", i, ".png"), device = "png")
-
-      #violin plots
-      violinplot4 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BBeta))
-      violinplot4 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(B)")
-
-      #ggsave(paste0("Mean_BetaB_violin_onerun",j, "_", i, ".png"), device = "png")
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph4base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(A)")
-
-      #ggsave(paste0("Mean_BetaB_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-      ## GRAPH 5: Mean Integral of A versus time (line plots and violin plots)
-
-      #only points
-      graph5base <- ggplot(data = TETRIS, aes(x = Generation, y = AConc))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Beta(B)")
+    g5 <-
       graph5base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-
-      #ggsave(paste0("AConc_jitter_onerun",j, "_", i, ".png"), device = "png")
-
-
-      #---stops working after here for some reason ----?
-
-
-      #violin plots
-      violinplot5 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
-      violinplot5 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-
-      #ggsave(paste0("AConc_violin_onerun",j, "_", i, ".png"), device = "png")
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph5base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-
-      #ggsave(paste0("AConc_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-      ## GRAPH 6: Mean Integral of B versus time (line plots and violin plots)
-
-      #only points
-      graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean ACONC")
+    g6 <-
       graph6base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean BCONC")
-
-      #ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
-
-      #violin plots
-      violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
-      violinplot6 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean BCONC")
-
-      #ggsave(paste0("BConc_violin_onerun",j, "_", i, ".png"), device = "png")
-
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph6base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-
-      #ggsave(paste0("BConc_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-      ## GRAPH 7: Mean Population Fitness versus time (line plots and violin plots)
-      # this one is a two part deal:
-      # first, calculate fitness:
-
-      BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
-
-      TETRIS$fitness <- BIGPOPA %>%
-        group_by(BIGPOPA$Generation, .add = FALSE) %>%
-        summarise(fitness= mean(fitness)) %>%
-        pull(fitness)
-
-      # then, do the plots
-      #only points
-      graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = fitness))
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean BCONC")
+    g7 <-
       graph7base +
-        geom_point(position = "jitter") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Fitness")
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Fitness")
+    # g8 <-
+    #   distancebase2 +
+    #   geom_point(color = "orchid2") +
+    #   geom_line(color = "skyblue1") +
+    #   theme_classic() +
+    #   labs(x = "Generations", y = "Distance to the optima") +
+    #   ylim(-41, -39) +
+    #   theme(legend.position = "none")
 
-      #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+    lay <- rbind(c(1,1,1,2,2,2,3,3,3,4,4,4),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7))
 
-      #violin plots
-      violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = fitness))
-      violinplot7 +
-        geom_violin() +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Fitness")
+    #to plot
+    grid.arrange(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
 
-      #ggsave(paste0("Fitness_violin_onerun",j, "_", i, ".png"), device = "png")
+    #to save
+    g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
+    ggsave(file = paste0("Facet_graphs_onerun_",j, "_", i, ".png"), g, device = "png")
 
-      #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
-      graph7base +
-        geom_quantile(color = "salmon") +
-        geom_line(colour = "lightblue") +
-        geom_smooth(colour = "lavender") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-
-      #ggsave(paste0("Fitness_IQR_onerun",j, "_", i, ".png"), device = "png")
-
-
-      ## GRAPH 8: ODE samples from individual runs @ different time points
+  } #foreach closing bracket
 
 
-      #### Beyond the Super 8 Film ####
-
-      #distance from the optima:
-
-      BIGPOPA$distance <- BIGPOPA$BConc-BOpt
-
-      #density plot
-      distancebase <- ggplot(BIGPOPA, aes(x = distance, colour = factor(BIGPOPA$Generation)))
-      distancebase +
-        geom_density() +
-        theme_classic() +
-        labs(x = "Distance to the optima", y = "Individuals") +
-        theme(legend.position = "bottom")
-
-      #ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
-
-      #mean density?
-      TETRIS$distance <- BIGPOPA %>%
-        group_by(BIGPOPA$Generation, .add = FALSE) %>%
-        summarise(distance = mean(distance)) %>%
-        pull(distance)
 
 
-      ###potential interfering for save data
+# ADD FILES ONLY (experimental) ####
+foreach(i=1:25) %:%
+  foreach(j= transseeds$Transseed) %do% {
+    #read in all files based on specifications above for all generations
+    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_generation_", i, "*.csv")), read.table)
 
-      distancebase2 <- ggplot(TETRIS, aes(x = Generation, y = distance))
-      distancebase2 +
-        geom_point() +
-        theme_classic() +
-        labs(x = "Generations", y = "Distance to the optima") +
-        theme(legend.position = "none")
+    #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
+    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+    colnames(BIGPOPA) <- c("ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
+    BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
-      #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
-      
-      
-      #facet code
-      g1 <-      
+    #Tetris, my beloved snail, says hi
+    TETRIS <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation) %>%
+      summarise(GeneA1 = mean(GeneA1),
+                GeneA2 = mean(GeneA2),
+                GeneB1 = mean(GeneB1),
+                GeneB2 = mean(GeneB2),
+                AConc = mean(AConc),
+                BGamma = mean(BGamma),
+                BConc = mean(BConc))
+
+    colnames(TETRIS)[1] <- "Generation"
+    TETRIS$SEED <- j
+    TETRIS$Index <- i
+
+
+    #for the datasets
+
+    #fitness
+    BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
+
+    TETRIS$fitness <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(fitness= mean(fitness)) %>%
+      pull(fitness)
+
+    #distance
+    BIGPOPA$distance <- BIGPOPA$BConc-BOpt
+
+    TETRIS$distance <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(distance = mean(distance)) %>%
+      pull(distance)
+
+
+    #Tetris
+    teddy <- as.character(paste0("Tetris_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
+
+    Tetris <- as.data.frame(TETRIS)
+
+    write.table(Tetris, teddy,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
+
+    #BigPopa
+    BigPop <- as.character(paste0("BigPopa_onerun_", j, "_", i, "_node_", NODE,  ".csv"))
+
+    write.table(BIGPOPA, BigPop,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
+
+    #mutation data stuff would go here
+}
+
+
+## Full Loop featuring graphs for ADD ##
+foreach(i=1:2) %:%
+  foreach(j= transseeds$Transseed) %do% {
+
+    #read in all files based on specifications above for all generations
+    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_generation_", i, "*.csv")), read.table)
+
+    #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
+    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+    colnames(BIGPOPA) <- c("ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
+    BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
+
+    #Tetris, my beloved snail, says hi
+    TETRIS <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation) %>%
+      summarise(GeneA1 = mean(GeneA1),
+                GeneA2 = mean(GeneA2),
+                GeneB1 = mean(GeneB1),
+                GeneB2 = mean(GeneB2),
+                AConc = mean(AConc),
+                BGamma = mean(BGamma),
+                BConc = mean(BConc))
+
+    colnames(TETRIS)[1] <- "Generation"
+    TETRIS$SEED <- j
+    TETRIS$Index <- i
+
+
+    #mutation data stuff would go here
+
+    ## GRAPH 1: Mean Gene A1 versus time (line plots and violin plots)
+    graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneA1))
+
+    # graph1base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A1" )
+
+    #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # baseplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = GeneA1))
+    # baseplot3 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A1")
+
+    #ggsave(paste0("Mean_AlphaA_violin_onerun",j, "_", i, ".png"), device = "png")
+
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph1base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A1")
+
+    #ggsave(paste0("Mean_AlphaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+
+    ## GRAPH 2: Mean Gene A2 versus time (line plots and violin plots)
+    #only points
+    graph2base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneA2))
+    # graph2base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A2")
+
+    #ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot2 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = GeneA2))
+    # violinplot2 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A2")
+
+    #ggsave(paste0("Mean_BetaA_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph2base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A2")
+
+    #ggsave(paste0("Mean_BetaA_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 3: Mean Gene B1 versus time (line plots and violin plots)
+
+    #only points
+    graph3base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneB1))
+    # graph3base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene B1" )
+
+    #ggsave(paste0("Mean_AlphaB_jitter_onerun",j, "_", i), ".png", device = "png")
+
+    #violin plots
+    # violinplot3 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = GeneB1))
+    # violinplot3 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene B1")
+
+    #ggsave(paste0("Mean_AlphaB_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph3base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene B1")
+
+    #ggsave(paste0("Mean_AlphaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 4: Mean Gene B2 versus time (line plots and violin plots)
+
+    #only points
+    graph4base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneB2))
+    # graph4base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene B2")
+
+    #ggsave(paste0("Mean_BetaB_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot4 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = GeneB2))
+    # violinplot4 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene B2")
+
+    #ggsave(paste0("Mean_BetaB_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph4base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Gene A2")
+
+    #ggsave(paste0("Mean_BetaB_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 5: Mean Integral of A versus time (line plots and violin plots)
+
+    #only points
+    graph5base <- ggplot(data = TETRIS, aes(x = Generation, y = AConc))
+    # graph5base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+
+    #violin plots
+    violinplot5 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = AConc))
+    # violinplot5 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph5base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("AConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 6: Mean Integral of B versus time (line plots and violin plots)
+
+    #only points
+    graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
+    # graph6base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean BCONC")
+
+    #ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot6 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = BConc))
+    # violinplot6 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean BCONC")
+
+    #ggsave(paste0("BConc_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph6base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("BConc_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+    ## GRAPH 7: Mean Population Fitness versus time (line plots and violin plots)
+    # this one is a two part deal:
+    # first, calculate fitness:
+
+    BIGPOPA$fitness = exp(-((BIGPOPA$BConc-BOpt)/S)^2);
+
+    TETRIS$fitness <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(fitness= mean(fitness)) %>%
+      pull(fitness)
+
+    # then, do the plots
+    #only points
+    graph7base <- ggplot(data = TETRIS, aes(x = Generation, y = fitness))
+    # graph7base +
+    #   geom_point(position = "jitter") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Fitness")
+
+    #ggsave(paste0("Fitness_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+    #violin plots
+    # violinplot7 <- ggplot(data = BIGPOPA, aes(x = factor(Generation), y = fitness))
+    # violinplot7 +
+    #   geom_violin() +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean Fitness")
+
+    #ggsave(paste0("Fitness_violin_onerun",j, "_", i, ".png"), device = "png")
+
+    #interquartile range and lines (NOTE: i think this only makes sense with more data / on many model runs)
+    # graph7base +
+    #   geom_quantile(color = "salmon") +
+    #   geom_line(colour = "lightblue") +
+    #   geom_smooth(colour = "lavender") +
+    #   theme_classic() +
+    #   labs(x = "Generation", y = "Mean ACONC")
+
+    #ggsave(paste0("Fitness_IQR_onerun",j, "_", i, ".png"), device = "png")
+
+
+    ## GRAPH 8: ODE samples from individual runs @ different time points
+
+
+    #### Beyond the Super 8 Film ####
+
+    #distance from the optima:
+
+    BIGPOPA$distance <- BIGPOPA$BConc-BOpt
+
+    #density plot
+    distancebase <- ggplot(BIGPOPA, aes(x = distance, colour = factor(BIGPOPA$Generation)))
+    # distancebase +
+    #   geom_density() +
+    #   theme_classic() +
+    #   labs(x = "Distance to the optima", y = "Individuals") +
+    #   theme(legend.position = "bottom")
+
+    #ggsave(paste0("Distance_density_onerun",j, "_", i, ".png"), device = "png")
+
+    #mean density?
+    TETRIS$distance <- BIGPOPA %>%
+      group_by(BIGPOPA$Generation, .add = FALSE) %>%
+      summarise(distance = mean(distance)) %>%
+      pull(distance)
+
+
+    ###potential interfering for save data
+
+    distancebase2 <- ggplot(TETRIS, aes(x = Generation, y = distance))
+    # distancebase2 +
+    #   geom_point() +
+    #   theme_classic() +
+    #   labs(x = "Generations", y = "Distance to the optima") +
+    #   theme(legend.position = "none")
+
+    #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
+
+
+    #facet code cfor nice graphs
+    g1 <-
       graph1base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(A)" )
-      g2 <- 
-        graph2base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(A)")
-      g3 <-       
-        graph3base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Alpha(B)" )
-      g4 <- 
-        graph4base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Beta(B)")
-      g5 <- 
-        graph5base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean ACONC")
-      g6 <- 
-        graph6base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean BCONC")
-      g7 <-      
-        graph7base +
-        geom_point(position = "jitter", color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generation", y = "Mean Fitness")
-      g8 <- 
-        distancebase2 +
-        geom_point(color = "orchid2") +
-        geom_line(color = "skyblue1") +
-        theme_classic() +
-        labs(x = "Generations", y = "Distance to the optima") +
-        ylim(-41, -39) +
-        theme(legend.position = "none")
-      
-      lay <- rbind(c(1,1,1,2,2,2,3,3,3,4,4,4),
-                   c(5,5,5,5,6,6,6,6,7,7,7,7),
-                   c(5,5,5,5,6,6,6,6,7,7,7,7))
-      
-      #to plot
-      grid.arrange(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
-      
-      #to save
-      g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
-      ggsave(file = paste0("Facet_graphs_onerun_",j, "_", i, ".png"), g, device = "png")
-      
-  
-      
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Gene A1" )
+    g2 <-
+      graph2base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Gene A2")
+    g3 <-
+      graph3base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Gene B1" )
+    g4 <-
+      graph4base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Gene B2")
+    g5 <-
+      graph5base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean ACONC")
+    g6 <-
+      graph6base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean BCONC")
+    g7 <-
+      graph7base +
+      geom_point(position = "jitter", color = "orchid2") +
+      geom_line(color = "skyblue1") +
+      theme_classic() +
+      labs(x = "Generation", y = "Mean Fitness")
+    # g8 <-
+    #   distancebase2 +
+    #   geom_point(color = "orchid2") +
+    #   geom_line(color = "skyblue1") +
+    #   theme_classic() +
+    #   labs(x = "Generations", y = "Distance to the optima") +
+    #   ylim(-41, -39) +
+    #   theme(legend.position = "none")
+
+    lay <- rbind(c(1,1,1,2,2,2,3,3,3,4,4,4),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7),
+                 c(5,5,5,5,6,6,6,6,7,7,7,7))
+
+    #to plot
+    grid.arrange(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
+
+    #to save
+    g <- arrangeGrob(g1, g2, g3, g4, g5, g6, g7, layout_matrix = lay)
+    ggsave(file = paste0("Facet_graphs_onerun_",j, "_", i, ".png"), g, device = "png")
+
+
 
 
 #SAVE CODE
@@ -522,12 +927,11 @@ foreach(i=1:2) %:%
 } #foreach closing bracket
 
 
-### mutation code ####
-## mutation data ##
+### mutation code in the making ####
 
-mutations <- read_table2(paste0("SLiMulation_Output_Full_", j, "_", i ,".txt"), 
+mutations <- read_table2(paste0("SLiMulation_Output_Full_", j, "_", i ,".txt"),
                          col_names = FALSE, skip = 5)
-#take out non mutation data 
+#take out non mutation data
 mutations <- na.omit(mutations)
 colnames(mutations) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
 mutations <- mutations[c(2:5, 8:9)] #take out unnecessary columns
@@ -535,9 +939,9 @@ mutations <- mutations[c(2:5, 8:9)] #take out unnecessary columns
 #these will need to be collated and averaged
 
 #fixed mutations (no test data for that yet)
-fixed <- read_table2(paste0("SLiMulation_Output_FixedMutations_", j, "_", i ,".txt"), 
+fixed <- read_table2(paste0("SLiMulation_Output_FixedMutations_", j, "_", i ,".txt"),
                      col_names = FALSE, skip = 2)
-#take out non mutation data 
+#take out non mutation data
 fixed <- na.omit(fixed)
 colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "FixedinGen")
 fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
@@ -550,8 +954,4 @@ fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
 
 #subset by region plot mean prevalence by region histograms or boxplots
 
-#subset by region plot selection coefficients x prevalance with color for regions (histogram!)
-
-
-
-
+#subset by region plot selection coefficients x prevalence with color for regions (histogram!)
