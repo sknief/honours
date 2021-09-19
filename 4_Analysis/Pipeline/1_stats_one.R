@@ -14,10 +14,10 @@ library(gridExtra)
 
 #######################################
 #user input here!
-JOBID <- 530889
-NODE <- 4
-MODELTYPE <- "ODE"
-OPTIMA <- "BOptMed"
+JOBID <- 531140
+NODE <- 2
+MODELTYPE <- "ADD"
+OPTIMA <- "BOptHigh"
 S <- 2
 #######################################
 
@@ -53,16 +53,16 @@ if (MODELTYPE == "ADD") {
 
 #next, get your file locations right & tight
 WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("C:/Users/sknie/github/honours/4. Analysis/Test_files/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
 setwd(workdirectory)
 
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ADD/combo.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/seeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/combo.csv")
 } else if (MODELTYPE == "ODE") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3. HPC/OutbackRuns/ODE/combo.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/seeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/combo.csv")
 } else {
   print("Could not locate files - check your model type input!")
 }
@@ -71,8 +71,9 @@ if (MODELTYPE == "ADD") {
 #set da thing up
 index <- 1:25
 modelindex <- index[1]
+i <- 2
 
-transseeds <- read.csv("C:/Users/sknie/github/honours/4. Analysis/transseeds.csv")
+transseeds <- read.csv("C:/Users/sknie/github/honours/4_Analysis/transseeds.csv")
 transseeds <- transseeds[,1:2] #trim extra columns
 
 #gonna make one loop for graphs and one loop for the new file sets i reckon
@@ -82,9 +83,10 @@ foreach(i=1:3) %:%
   foreach(j= transseeds$Transseed) %do% {
 
     #read in all files based on specifications above for all generations
-    myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "_*.txt")), read.table)
-
-    #Bigpopa, my hyuge shrimp, says hi
+    #myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.csv")), read.table) #ODE
+    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, ".csv")), read.csv) #ADD
+    
+    #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
     BIGPOPA <- bind_rows(myFiles, .id = "Generation")
     colnames(BIGPOPA) <- BIGPOPA[1,] #column names
     colnames(BIGPOPA)[1] <- "Generation" #fix one label
@@ -148,8 +150,10 @@ foreach(i=1:3) %:%
 }
 
 
-
+# SLOW DOWN
+# STOP
 #GRAPHS
+
 foreach(i=1:2) %:%
   foreach(j= transseeds$Transseed) %do% {
 
