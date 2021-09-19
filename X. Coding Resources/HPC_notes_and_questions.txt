@@ -4,5 +4,5 @@ sapply vs cbind
 best loop for values and getting that into files
 setcfgparams? should i copy that?
 
-
+ddd
 how to get HPC ready
