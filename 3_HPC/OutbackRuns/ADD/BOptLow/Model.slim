@@ -223,7 +223,7 @@ fitness(NULL) {
 //update plots
 1:50000 late() {
 	// choose when to update plots below
-	if (sim.generation % 50 != 0) return;
+	if (sim.generation % 500 != 0) return;
 
 	//debug-puposes only: sim.outputFull();
 	//Report mean phenotypes
@@ -240,6 +240,9 @@ fitness(NULL) {
 	catn("Mean correlation " + meandivision);
 	catn();
 	catn();
+
+	gen = sim.generation;
+	sim.outputFull("SLiMulation_Output_Full_ADD_" + seed + "_" + modelindex + "_" + gen + ".txt");
 
 /*
 	//[B Conc]/t plot code
@@ -294,6 +297,6 @@ fitness(NULL) {
 
 
 50000 late() {
-sim.outputFull("SLiMulation_Output_Full_ADD_" + seed + "_" + modelindex + ".txt");
+sim.outputFull("SLiMulation_Output_Full_ADD_" + seed + "_" + modelindex + "50000.txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_ADD_" + seed + "_" + modelindex + ".txt");
 }
