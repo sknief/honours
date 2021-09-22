@@ -13,4 +13,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHER.R
 
-cp -rp $TMPDIR /scratch/user/$USER/ADD_Neutral
+zip -r ADD_Neutral_$PBS_ARRAY_INDEX.zip $TMPDIR/
+
+cp -p ADD_Neutral_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_Neutral/

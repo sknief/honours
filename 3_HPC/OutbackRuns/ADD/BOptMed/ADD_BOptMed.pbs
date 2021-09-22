@@ -13,4 +13,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ADD/BOptMed/SUBLAUNCHER.R
 
-cp -rp $TMPDIR /scratch/user/$USER/ADD_BOptMed
+zip -r ADD_BOptMed_$PBS_ARRAY_INDEX.zip $TMPDIR/
+
+cp -p ADD_BOptMed_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptMed/

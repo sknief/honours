@@ -12,4 +12,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ODE/BOptLow/SUBLAUNCHER.R
 
-cp -rp $TMPDIR /scratch/user/$USER/ODE_BOptLow
+zip -r ODE_BOptLow_1.zip $TMPDIR
+
+cp $TMPDIR/ODE_BOptLow_1.zip /scratch/user/$USER/ODE_BOptLow/

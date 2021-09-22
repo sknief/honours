@@ -12,4 +12,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/s4471959/OutbackRuns/ODE/Neutral/SUBLAUNCHER1.R
 
-cp -rp $TMPDIR /scratch/user/$USER/ODE_Neutral
+zip -r ODE_Neutral_1_$PBS_ARRAY_INDEX.zip $TMPDIR/
+
+cp -p ODE_Neutral_1_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_Neutral/

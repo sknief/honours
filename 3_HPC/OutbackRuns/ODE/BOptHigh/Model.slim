@@ -166,7 +166,7 @@ initialize() {
 
 
 //make non-coding neutral
-fitness(m6) { return 1.0; }
+fitness(m5) { return 1.0; }
 
 
 1:50000 late() {
@@ -235,25 +235,8 @@ fitness(m6) { return 1.0; }
 	// choose when to update plots below
 	if (sim.generation % 500 != 0) return;
 
-	//debug-puposes only: sim.outputFull();
-
-	//Report mean phenotypes
-	inds = sim.subpopulations.individuals;
-	meanNetwork = mean(inds.getValue("ODEVAL"));
-	meanACONC = mean(inds.getValue("AConc"));
-	meandivision = meanACONC/meanNetwork;
-	//Actual Output Code
-	catn();
-	catn();
-	catn("Generation: " + sim.generation);
-	catn("Mean A CONC: " + meanACONC);
-	catn("Mean B CONC: " + meanNetwork);
-	catn("Mean correlation " + meandivision);
-	catn();
-	catn();
-
 	gen = sim.generation;
-	sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
+	sim.outputFull("SLiMulation_Output_Mutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
 
 
 
@@ -310,6 +293,6 @@ fitness(m6) { return 1.0; }
 
 //detailed output code
 50000 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "50000.txt");
+sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "_50000.txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
