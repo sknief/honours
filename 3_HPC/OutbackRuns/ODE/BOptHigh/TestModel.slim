@@ -131,7 +131,7 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:5 early() {
+2:10 early() {
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -169,7 +169,7 @@ initialize() {
 fitness(m6) { return 1.0; }
 
 
-1:5 late() {
+1:10 late() {
 
 	lines = NULL;
 
@@ -231,9 +231,9 @@ fitness(m6) { return 1.0; }
 */
 
 //update plots
-1:5 late() {
+1:10 late() {
 	// choose when to update plots below
-	if (sim.generation % 5 != 0) return;
+	if (sim.generation % 2 != 0) return;
 
 	//debug-puposes only: sim.outputFull();
 
@@ -251,6 +251,11 @@ fitness(m6) { return 1.0; }
 	catn("Mean correlation " + meandivision);
 	catn();
 	catn();
+
+	gen = sim.generation;
+	sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
+
+
 
 /*
 	//[B Conc]/t plot code
@@ -304,7 +309,7 @@ fitness(m6) { return 1.0; }
 }
 
 //detailed output code
-5 late() {
-sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + ".txt");
+10 late() {
+sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "10.txt");
 sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }
