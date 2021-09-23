@@ -176,10 +176,10 @@ fitness(m5) { return 1.0; }
 	for (ind in sim.subpopulations.individuals) {
 
 		ID = ind.index;
-		Aalpha = AalphaINI + exp(ind.sumOfMutationsOfType(m2));
-		Abeta = AbetaINI  + exp(ind.sumOfMutationsOfType(m1));
-		Balpha = BalphaINI + exp(ind.sumOfMutationsOfType(m4));
-		Bbeta = BbetaINI + exp(ind.sumOfMutationsOfType(m3));
+		Aalpha = AalphaINI * exp(ind.sumOfMutationsOfType(m2));
+		Abeta = AbetaINI  * exp(ind.sumOfMutationsOfType(m1));
+		Balpha = BalphaINI * exp(ind.sumOfMutationsOfType(m4));
+		Bbeta = BbetaINI * exp(ind.sumOfMutationsOfType(m3));
 		gen = sim.generation;
 
 		//export section #1: accumulation of individual data
