@@ -1,9 +1,9 @@
 #!/bin/bash -l
-#PBS -q Special
 #PBS -A UQ-SCI-BiolSci
-#PBS -N ADD_LOWTEST
+#PBS -q Special
+#PBS -N ADD_BoptLow_TEST
 #PBS -J 1-4
-#PBS -l walltime=168:00:00
+#PBS -l walltime=336:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
 
@@ -13,4 +13,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ADD/BOptLow/SUBLAUNCHERTEST.R
 
-cp -rp $TMPDIR /scratch/user/$USER/dump
+zip -r ADD_BOptLow_$PBS_ARRAY_INDEX.zip $TMPDIR/
+
+cp -p ADD_BOptLow_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptLow/
