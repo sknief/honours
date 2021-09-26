@@ -150,7 +150,7 @@ initialize() {
 		//fitnessScaling callback to avoid SLiM bug
 		if (fitnessfunction == 0) {
 			ind.fitnessScaling = fitnessfunction + 0.1;
-					print("WHOOPSIE");
+					//print("WHOOPSIE");
 			ind.tag = 0; }
 		else
 			ind.fitnessScaling = fitnessfunction;
@@ -158,9 +158,9 @@ initialize() {
 
 
 	inds = sim.subpopulations.individuals;
-	print("Here's the mean ODEVAL!");
-	print(mean(inds.getValue("ODEVAL")));
-	print("Success!");
+	//print("Here's the mean ODEVAL!");
+	//print(mean(inds.getValue("ODEVAL")));
+	//print("Success!");
 
 	}
 

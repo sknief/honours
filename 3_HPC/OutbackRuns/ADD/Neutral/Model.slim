@@ -104,19 +104,17 @@ initialize() {
 for (ind in sim.subpopulations.individuals) {
 
 BCONC = ind.getValue("Bconcentration");
-
+ACONC = ind.getValue("ATotals");
 
 	if (BCONC < 0) {
-				print("EEK");
+				//print("EEK");
 				ind.tag = 0;
 				}
 
-
-					if (ACONC < 0) {
-								print("EEK2");
-								ind.tag = 0;
-											}
-
+	if (ACONC < 0) {
+			//	print("EEK2");
+				ind.tag = 0;
+							}
 
 		 //the stabilising selection function
 			fitnessfunction = exp(-((BCONC - BOpt)/S)^2);
@@ -124,7 +122,7 @@ BCONC = ind.getValue("Bconcentration");
 		//fitnessScaling callback to avoid SLiM bug
 			if (fitnessfunction == 0) {
 				ind.fitnessScaling = fitnessfunction + 0.1;
-				print("WHOOPSIE");
+				//print("WHOOPSIE");
 				ind.tag = 0;
 					 }
 			 else

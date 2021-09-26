@@ -107,12 +107,12 @@ BCONC = ind.getValue("Bconcentration");
 ACONC = ind.getValue("ATotals");
 
 	if (BCONC < 0) {
-				print("EEK");
+				//print("EEK");
 				ind.tag = 0;
 				}
 
 				if (ACONC < 0) {
-							print("EEK2");
+						//	print("EEK2");
 							ind.tag = 0;
 										}
 
@@ -124,7 +124,7 @@ ACONC = ind.getValue("ATotals");
 		//fitnessScaling callback to avoid SLiM bug
 			if (fitnessfunction == 0) {
 				ind.fitnessScaling = fitnessfunction + 0.1;
-				print("WHOOPSIE");
+				//print("WHOOPSIE");
 				ind.tag = 0;
 					 }
 			 else
