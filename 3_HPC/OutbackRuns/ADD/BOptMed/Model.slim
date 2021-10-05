@@ -187,6 +187,7 @@ fitness(NULL) {
 
 
 				//export section #2: writing one file per generation
+		if (sim.generation % 100 != 0) return;
 		gen = sim.generation;
 		writeFile(asString(paste0("SLiM-output_ADD_", seed, "_", modelindex, "_", gen, ".csv")), lines);
 	}

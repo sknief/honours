@@ -107,6 +107,7 @@ write.table(luna, paste0("ODEoutput_", parallelseed, "_", modelindex,  ".txt"),
             row.names = FALSE,
             col.names = FALSE)
 
+if (gen %% 100 == 0) {
 #val is the savepoint of all data for the records
 
 val <- as.data.frame(x = cbind(dat$ID,
@@ -131,3 +132,5 @@ write.table(val, valname,
             append = FALSE,
             row.names = FALSE,
             col.names = TRUE)
+
+}
