@@ -1,0 +1,10 @@
+#!/bin/bash -l
+#PBS -A UQ-SCI-BiolSci
+#PBS -q Special
+#PBS -N ADD_BoptMed_1
+#PBS -J 1-4
+#PBS -l walltime=1:00:00
+#PBS -l select=1:ncpus=1:mem=8G
+
+df -i /state/partition1
+df -hi /state/partition1
