@@ -115,6 +115,6 @@ No clue how to handle the txt files yet but I am sure the SLiM manual has some p
 
 # Infographics #
 
-![Funnel](https://github.com/sknief/honours/blob/master/4.%20Analysis/Data%20funnel%20Infographics.png)
+![Funnel](https://github.com/sknief/honours/blob/master/4_Analysis/Data%20funnel%20Infographics.png)
 
-![Tank](https://github.com/sknief/honours/blob/master/4.%20Analysis/TANK.png)
+![Tank](https://github.com/sknief/honours/blob/master/4_Analysis/TANK.png)
