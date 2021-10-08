@@ -7,7 +7,7 @@ SLiM, while brilliant in its own right, is not capable of solving ODEs, which me
 
 While this sounds simple in principle, it has been a journey trying to get this workflow to work. In total, I have worked through 6 different methods in order to obtain my ODE results:
 
-![Flowchart of the six options](https://github.com/sknief/honours/blob/master/SLiM_R_Intergration/sixoptions.png)
+![Flowchart of the six options](https://github.com/sknief/honours/blob/master/1_SLiM-R%20Intergration/sixoptions.png)
 
 Method | Description | Outcome
 ------------- | ------------- | -------------
@@ -38,7 +38,7 @@ While most of these six approaches are not viable for my project, there are thre
 
 Lateral integration, in my books at least, refers to the fact that SLiM and R are running in parallel for the entirety of these SLiM simulation. Each generation, SLiM writes to a file which is read by R, R then writes to another file and this file is read in by SLiM and acted upon by SLiM. ***This is an incredibly powerful approach to working with SLiM and can be extended to any software that can write to .txt, not just R.***
 
-![lateral integration workflow](https://github.com/sknief/honours/blob/master/SLiM_R_Intergration/WOrkflow%201.png)
+![lateral integration workflow](https://github.com/sknief/honours/blob/master/1_SLiM-R%20Intergration/WOrkflow%201.png)
 
 There are some basic ground rules, but essentially, as long as you can create a text file with the numeric output that you need, you can use lateral integration to work with any other supplementary programme. It is important to note that only singleton files may be read in (ie a file that contains one row of "1 2 3 4 5" and not a file with two rows in the format of
 "1: 1 2 3 4 5, 2: 6 7 8 9 10"). Similarly, these text files have to be space-separated and must not contain whitespace after the last number, otherwise SLiM will throw an error message.
