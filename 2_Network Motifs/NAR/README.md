@@ -4,7 +4,7 @@
 
 The negative autoregulation motif (NAR) is the simplest motif structure that exists within Pygmalion. It consists of only one node, node A, that is connected to one node of the following motif, node B. Whilst this motif is characterized by only one node, the succeeding node is included in this model as to demonstrate the effect of changes in node A and how these cascade through succeeding nodes. Node A is activated by a signal, here shown as signal X.
 
-![NAR motif diagram](https://github.com/sknief/honours/blob/master/NAR/NAR.png)
+![NAR motif diagram](https://github.com/sknief/honours/blob/master/2_Network%20Motifs/NAR/NAR.png)
 
 In this model, it will be assumed that the activation signal (node X) is an environmental input such as the length of the observed photoperiod, and that node A represents a transcription factor (TF) that directly causes flowering in a hypothetical plant. The start of the activation signal (Xstart) will be a variable to be set before the simulation begins and the end point of that signal (Xstop) will be handled as a constant. The observed phenotype is here defined as the amount of protein B produced within a set time period.
 
@@ -12,7 +12,7 @@ This is the first out of four motif models to be developed this year, and the NA
 
 ## The Model Workflow ##
 
-![Model workflow diagram](https://github.com/sknief/honours/blob/master/NAR/Workflow2.png)
+![Model workflow diagram](https://github.com/sknief/honours/blob/master/2_Network%20Motifs/NAR/Workflow2.png)
 
 Within each generation, eight processes occur:
 1.	Generation of mutations
@@ -26,13 +26,4 @@ Within each generation, eight processes occur:
 
 This cycle then begins anew.
 
-Ultimately, I will create two versions of this model, one with the NAR motif ODE functions and one that operates on a purely additive genetic architecture, which then serves as the null model (i.e. control model). The null model is also an ideal way to test that all underlying genetic principles operate as they should. For the ODE models, I will rely on lateral integration with R (see my [SLiM/R Integration works](https://github.com/sknief/honours/tree/master/SLiM_R_Intergration)).
-
-## Version Log ##
-### Null Models ###
-
-**Version 1**
-Distribution Type: Null Distributions (mean: 0, st. dev: 1)
-WF or nonWF: WF Model
-Fitness Model: Mating-based
-Ratio of Beneficial-Deleterious-Neutral: 0.25/0.25/0.5
+Ultimately, I will create two versions of this model, one with the NAR motif ODE functions and one that operates on a purely additive genetic architecture, which then serves as the null model (i.e. control model). The null model is also an ideal way to test that all underlying genetic principles operate as they should. For the ODE models, I will rely on lateral integration with R (see my [SLiM/R Integration works](https://github.com/sknief/honours/tree/master/1_SLiM-R%20Intergration)).
