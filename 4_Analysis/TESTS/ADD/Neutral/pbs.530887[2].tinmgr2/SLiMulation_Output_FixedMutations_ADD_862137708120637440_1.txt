@@ -1,2 +1,0 @@
-#OUT: 5 F SLiMulation_Output_FixedMutations_ADD_862137708120637440_1.txt
-Mutations:

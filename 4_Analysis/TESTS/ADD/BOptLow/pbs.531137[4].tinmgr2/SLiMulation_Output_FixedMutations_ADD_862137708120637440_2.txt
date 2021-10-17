@@ -1,4 +1,0 @@
-#OUT: 5 F SLiMulation_Output_FixedMutations_ADD_862137708120637440_2.txt
-Mutations:
-0 310 m2 2164 -0.545571 0.5 p1 1 4
-1 309 m3 3400 -0.594582 0.5 p1 1 5
