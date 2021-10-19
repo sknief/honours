@@ -13,16 +13,16 @@ library(readr)
 library(gridExtra)
 
 ############### user input here!#########################
-JOBID <- 530888
-NODE <- 2
-MODELTYPE <- "ODE"
-OPTIMA <- "BOptHigh"
+JOBID <- 609710
+NODE <- 1
+MODELTYPE <- "ADD"
+OPTIMA <- "Neutral"
 S <- 2
 ########################################################
 
 ### Set WD ####
 WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+workdirectory <- paste0("D:/_HONOURS_DATA/RESULTS/Working_folder/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
 setwd(workdirectory)
 
 ### Nested loops to set up this script ####
@@ -56,11 +56,11 @@ if (MODELTYPE == "ADD") {
 
 #second nested loop: get your seed / combo locations right depending on model type
 if (MODELTYPE == "ADD") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/combo.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/miniseeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ADD/minicombo.csv")
 } else if (MODELTYPE == "ODE") {
-  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/seeds.csv")
-  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/combo.csv")
+  seeds <- read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/miniseeds.csv")
+  combos <-read.csv("C:/Users/sknie/github/honours/3_HPC/OutbackRuns/ODE/minicombo.csv")
 } else {
   print("Could not locate files - check your model type input!")
 }
@@ -73,8 +73,8 @@ if (MODELTYPE == "ADD") {
 #transseeds <- transseeds[,1:2] #trim extra columns
 
 ## FILE ONLY LOOP ##
-foreach(i=1:5) %:%
-  foreach(j= transseeds$Transseed) %do% {
+foreach(i=1: (length(combos))) %:%
+  foreach(j= seeds$Seed) %do% {
     myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.txt")), read.table) #ODE
 
     #Bigpopa, my hyuge shrimp, says hi
@@ -493,18 +493,20 @@ foreach(i=1:5) %:%
 
   } #foreach closing bracket
 
+i <- 1
+j <- seeds$Seed[1]
 
 
 
 # ADD FILES ONLY (experimental) ####
-foreach(i=1:25) %:%
-  foreach(j= transseeds$Transseed) %do% {
+foreach(i=1:4) %:%
+  foreach(j= seeds$Seed) %do% {
     #read in all files based on specifications above for all generations
-    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_generation_", i, "*.csv")), read.table)
+    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, "*.csv")), read.csv)
 
     #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
-    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
-    colnames(BIGPOPA) <- c("ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
+    BIGPOPA <- bind_rows(myFiles, .id = "File")
+    colnames(BIGPOPA) <- c("File", "ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
     BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
     #Tetris, my beloved snail, says hi
