@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #PBS -A UQ-SCI-BiolSci
 #PBS -q Special
-#PBS -N ADD_BoptMed_MINI2
+#PBS -N ADD_BoptMed_MINI3
 #PBS -J 1-4
 #PBS -l walltime=36:00:00
 #PBS -l select=1:ncpus=24:mem=120G
@@ -13,6 +13,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ADD/BOptMed/SUBLAUNCHERMINI.R
 
-zip -r ADD_BOptMed_MINI2_$PBS_ARRAY_INDEX.zip $TMPDIR/
+zip -r ADD_BOptMed_MINI3_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
-cp -p ADD_BOptMed_MINI2_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptMed/
+cp -p ADD_BOptMed_MINI3_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptMed/

@@ -50,8 +50,8 @@ foreach(i=1:4) %:%
     myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, "*.csv")), read.csv, header = FALSE)
 
     #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
-    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
-    colnames(BIGPOPA) <- c("ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
+    BIGPOPA <- bind_rows(myFiles, .id = "File")
+    colnames(BIGPOPA) <- c("File", "ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
     BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
     #Tetris, my beloved snail, says hi
