@@ -18,11 +18,12 @@ NODE <- 1
 MODELTYPE <- "ADD"
 OPTIMA <- "Neutral"
 S <- 2
+REP <- 1
 ########################################################
 
 ### Set WD ####
 WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("D:/_HONOURS_DATA/RESULTS/Working_folder/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+workdirectory <- paste0("/scratch/user/s4471959/", MODELTYPE, "_", OPTIMA, "/Mini", REP , "/state/partition1/pbs/tmpdir/pbs.", WD, ".tinmgr2")
 setwd(workdirectory)
 
 ### Nested loops to set up this script ####
