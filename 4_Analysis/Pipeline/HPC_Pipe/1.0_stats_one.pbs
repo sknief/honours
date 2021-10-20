@@ -9,4 +9,4 @@
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/Analysis/1.1_stats_one_ADD.R
+R --file=/home/$USER/Analysis/1.1_stats_one_ADD_FULL.R
