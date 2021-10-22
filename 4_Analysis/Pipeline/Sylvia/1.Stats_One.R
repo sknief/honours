@@ -22,7 +22,7 @@ S <- 2
 
 ### Set WD ####
 WD <- paste0(JOBID,"[", NODE, "]")
-workdirectory <- paste0("I:/_HONOURS_DATA/RESULTS/Working_folder/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
+workdirectory <- paste0("I:/_HONOURS_DATA/COOKED DATA (at least partially thru analysis)/X_Othert/Working_folder/", MODELTYPE, "/", OPTIMA, "/pbs.", WD , ".tinmgr2")
 setwd(workdirectory)
 
 ### Nested loops to set up this script ####
@@ -932,12 +932,54 @@ foreach(i=1:2) %:%
 
 ### mutation code in the making ####
 
-mutations <- read_table2(paste0("SLiMulation_Output_Full_", j, "_", i ,".txt"),
-                         col_names = FALSE, skip = 5)
+i <- 1
+
+
+foreach(i=1:1)) %:%
+  foreach(j= seeds$Seed) %do% {
+    myMutants <- lapply(Sys.glob(paste0("SLiMulation_Output_Mutations_", j, "_", i , "_*.txt")), read_table2,  col_names = FALSE, skip = 5) #ODE
+
+    mutations <- bind_rows(myMutants, .id = "Sample")
+    mutations <- na.omit(mutations)
+    colnames(mutations) <- c("Sample", "WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
+    mutations <- mutations[c(1, 3:6, 9:10)] #take out unnecessary columns
+
+    muts <- as.character(paste0("Mutations_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
+
+    mutations <- as.data.frame(mutations)
+
+    write.table(mutations, muts,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
+
+    #ideas for collapsing
+    #mean selec cofeff per sample
+    #multiply sample by 500 for gen
+    #number of mutations in gen
+    #histogram of effect size bins by generation and distribution? subset here?
+    #same loop for fixed gens
+    #plot mean effect size for polymorphs and fixed as a line over gens?
+
+    #histogram of mutational effect sizes (stacked for polymorphs and fixed)
+
+    #distribution of effect sizes (half violin plots)
+
+    #subset by region plot mean prevalence by region histograms or boxplots
+
+    #subset by region plot selection coefficients x prevalence with color for regions (histogram!)
+
+
+  }
+
+
+
+
+
+
+
+
 #take out non mutation data
-mutations <- na.omit(mutations)
-colnames(mutations) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
-mutations <- mutations[c(2:5, 8:9)] #take out unnecessary columns
 
 #these will need to be collated and averaged
 
@@ -950,11 +992,3 @@ colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "Selectio
 fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
 
 #graphs
-
-#histogram of mutational effect sizes (stacked for polymorphs and fixed)
-
-#distribution of effect sizes (half violin plots)
-
-#subset by region plot mean prevalence by region histograms or boxplots
-
-#subset by region plot selection coefficients x prevalence with color for regions (histogram!)
