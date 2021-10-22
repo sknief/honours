@@ -11,10 +11,10 @@ library(foreach)
 library(readr)
 
 ############### user input here!#########################
-JOBID <- 609710
+JOBID <- 609704
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
-OPTIMA <- "Neutral"
+OPTIMA <- "BOptHigh"
 S <- 2
 REP <- 1
 ########################################################
