@@ -17,7 +17,7 @@ OPTIMA <- "Neutral"
 #########################################################
 
 ####  set WD to tank #####
-workdirectory <- paste0("I:/_HONOURS_DATA/COOKED DATA (at least partially thru analysis)/", MODELTYPE, "_", OPTIMA, "/Tank/Mini1/")
+workdirectory <- paste0("I:/_HONOURS_DATA/COOKED DATA (at least partially thru analysis)/", MODELTYPE, "_", OPTIMA, "/Mini1/Tank")
 setwd(workdirectory)
 
 ##### the two loops to set up the params for the rest of the code #####
