@@ -4,4 +4,14 @@
 #PBS -l walltime=2:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
-cd $location
+cd /scratch/user/s4471959/
+
+#!/bin/bash
+for dir in */     # or use: subdirectory*/
+do
+    cd "$dir"
+    mkdir Tank
+    mv - v Tetris*.csv Tank/
+    mv - v BigPopa.csv Tank/
+    cd ..
+done
