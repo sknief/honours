@@ -6,9 +6,11 @@
 ########################################################
 
 #### Amateur Parallelisation ####
+library(plyr)
 library(dplyr)
 library(foreach)
 library(readr)
+library(ggplot2)
 
 ############### user input here!#########################
 JOBID <- 609704

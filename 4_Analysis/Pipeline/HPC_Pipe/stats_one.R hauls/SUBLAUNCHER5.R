@@ -32,8 +32,8 @@ cl <- makeCluster(future::availableCores())
 registerDoParallel(cl)
 
 #Run SLiM
-foreach(i=1:nrow(combos))
-  %dopar% {
+foreach(i=1:nrow(combos)) %:%
+  foreach(j=seeds$Number) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
     R_out <- system(sprintf(R -f "/home/s4471959/Analysis/stats1_ADDHigh5.R")
