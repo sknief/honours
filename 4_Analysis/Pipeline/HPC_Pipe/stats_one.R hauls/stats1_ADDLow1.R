@@ -12,7 +12,7 @@ library(readr)
 
 ############### user input here!#########################
 JOBID <- 609704
-NODE <- 4
+NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptLow"
 S <- 2

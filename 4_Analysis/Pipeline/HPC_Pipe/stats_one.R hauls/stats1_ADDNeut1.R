@@ -14,7 +14,7 @@ library(readr)
 JOBID <- 609704
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
-OPTIMA <- "BOptMed"
+OPTIMA <- "Neutral"
 S <- 2
 REP <- 1
 ########################################################
