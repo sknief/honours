@@ -933,29 +933,83 @@ foreach(i=1:2) %:%
 ### mutation code in the making ####
 
 i <- 1
+j<- seeds$Seed[1]
 
 
 foreach(i=1:1)) %:%
   foreach(j= seeds$Seed) %do% {
+    ##DATA COLLATION
+    #first the polymorphs
     myMutants <- lapply(Sys.glob(paste0("SLiMulation_Output_Mutations_", j, "_", i , "_*.txt")), read_table2,  col_names = FALSE, skip = 5) #ODE
-
-    mutations <- bind_rows(myMutants, .id = "Sample")
+    mutations <- bind_rows(myMutants, .id = "Gen")
     mutations <- na.omit(mutations)
-    colnames(mutations) <- c("Sample", "WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
+    colnames(mutations) <- c("Gen", "WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Prevalence1000")
     mutations <- mutations[c(1, 3:6, 9:10)] #take out unnecessary columns
+    mutations$Gen <- as.numeric(mutations$Gen)
+    mutations$Gen <- mutations$Gen * 500
+    mutations$MutType <- "P"
 
-    muts <- as.character(paste0("Mutations_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
 
-    mutations <- as.data.frame(mutations)
+    #next the fixed mutations
+    fixed <- read_table2(paste0("SLiMulation_Output_FixedMutations_", j, "_", i ,".txt"),
+                         col_names = FALSE, skip = 2)
+    fixed <- na.omit(fixed)
+    colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Gen")
+    fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
+    fixed$MutType <- "F"
 
-    write.table(mutations, muts,
+    #make a monster data set
+    ALLMUTATIONS <- bind_rows(mutations, fixed)
+    ALLMUTATIONS[is.na(ALLMUTATIONS)] = 1000 #replace NAs for prevalence with 1000
+
+
+    #MEANS
+    #time for means?
+    MEANIE <- mutations %>%
+      group_by(mutations$Gen, mutations$Type) %>%
+      summarise(SelectionCoeff = mean(SelectionCoeff),
+                Position = mean(Position),
+                Prevalence = mean(Prevalence1000)
+      )
+    colnames(MEANIE) <- c("Gen", "Type", "SelectionCoeff", "Position", "Prevalence")
+
+
+    #time for MORE means?
+    BIGMEANIE <- ALLMUTATIONS %>%
+      group_by(ALLMUTATIONS$Gen, ALLMUTATIONS$MutType, ALLMUTATIONS$Type) %>%
+      summarise(SelectionCoeff = mean(SelectionCoeff),
+                Position = mean(Position),
+                Prevalence = mean(Prevalence1000)
+      )
+    colnames(BIGMEANIE) <- c("Gen","MutType", "Type", "SelectionCoeff", "Position", "Prevalence")
+
+
+    #GRAPHS
+    #historgram of mean polymorphs by type
+    base <- ggplot(MEANIE, aes(x = Gen, y = SelectionCoeff, fill = MEANIE$Type))
+    base + geom_col(position = "stack")
+
+
+
+
+    #DATA EXPORT
+    #writing the files code
+    #1 (collated sets for rep x combo of ALL mutations)
+    muts <- as.character(paste0("ALLMutations_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
+    ALLMUTATIONS <- as.data.frame(ALLMUTATIONS)
+    write.table(ALLMUTATIONS, muts,
                 append = FALSE,
                 row.names = FALSE,
                 col.names = TRUE)
 
-    #ideas for collapsing
-    #mean selec cofeff per sample
-    #multiply sample by 500 for gen
+    #2 (means)
+
+
+
+  }
+
+ #ideas for collapsing
+
     #number of mutations in gen
     #histogram of effect size bins by generation and distribution? subset here?
     #same loop for fixed gens
@@ -968,27 +1022,3 @@ foreach(i=1:1)) %:%
     #subset by region plot mean prevalence by region histograms or boxplots
 
     #subset by region plot selection coefficients x prevalence with color for regions (histogram!)
-
-
-  }
-
-
-
-
-
-
-
-
-#take out non mutation data
-
-#these will need to be collated and averaged
-
-#fixed mutations (no test data for that yet)
-fixed <- read_table2(paste0("SLiMulation_Output_FixedMutations_", j, "_", i ,".txt"),
-                     col_names = FALSE, skip = 2)
-#take out non mutation data
-fixed <- na.omit(fixed)
-colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "FixedinGen")
-fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
-
-#graphs
