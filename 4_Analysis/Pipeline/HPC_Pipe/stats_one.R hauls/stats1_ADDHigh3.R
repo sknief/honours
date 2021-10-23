@@ -16,7 +16,7 @@ NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptHigh"
 S <- 2
-REP <- 1
+REP <- 3
 ########################################################
 
 ### Set WD ####
