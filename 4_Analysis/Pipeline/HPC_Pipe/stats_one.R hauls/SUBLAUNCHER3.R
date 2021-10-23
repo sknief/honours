@@ -20,7 +20,7 @@ combos <- read.csv(paste0("/home/",USER,"/Analysis/numbers.csv"), header = T)
 
 # Set which runs to do according to node
 
-switch (ARR_INDEX,
+switch (ARRAY_INDEX,
         { combos <- combos[1,] },
         { combos <- combos[2,] },
         { combos <- combos[3,] },
