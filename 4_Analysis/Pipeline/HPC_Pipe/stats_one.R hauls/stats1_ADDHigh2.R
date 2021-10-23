@@ -108,14 +108,6 @@ foreach(i=1:4) %:%
                 col.names = TRUE)
 
     #mutation data stuff would go here
-}
-
-
-
-#MUTATIONS
-
-foreach(i=1:1)) %:%
-  foreach(j= seeds$Seed) %do% {
     ##DATA COLLATION
     #first the polymorphs
     myMutants <- lapply(Sys.glob(paste0("SLiMulation_Output_Mutations_", j, "_", i , "_*.txt")), read_table2,  col_names = FALSE, skip = 5) #ODE
@@ -208,4 +200,4 @@ foreach(i=1:1)) %:%
                 col.names = TRUE)
 
 
-  }
+}
