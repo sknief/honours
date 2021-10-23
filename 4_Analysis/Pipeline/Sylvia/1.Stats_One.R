@@ -6,11 +6,13 @@
 ########################################################
 
 #### Amateur Parallelisation ####
+library(plyr)
 library(dplyr)
 library(ggplot2)
 library(foreach)
 library(readr)
 library(gridExtra)
+
 
 ############### user input here!#########################
 JOBID <- 609710
@@ -930,7 +932,7 @@ foreach(i=1:2) %:%
   } #foreach closing bracket
 
 
-### mutation code in the making ####
+### mutation code ####
 
 i <- 1
 j<- seeds$Seed[1]
@@ -957,6 +959,9 @@ foreach(i=1:1)) %:%
     colnames(fixed) <- c("WithinFileID", "MutationID", "Type", "Position", "SelectionCoeff", "DomCoeff", "Population", "GenOrigin", "Gen")
     fixed <- fixed[c(2:5, 8:9)] #take out unnecessary columns
     fixed$MutType <- "F"
+    #need to round up the fixed mutation gens:
+    fixed$Gen <- round_any((fixed$Gen), 500, f= ceiling)
+
 
     #make a monster data set
     ALLMUTATIONS <- bind_rows(mutations, fixed)
@@ -989,8 +994,16 @@ foreach(i=1:1)) %:%
     base <- ggplot(MEANIE, aes(x = Gen, y = SelectionCoeff, fill = MEANIE$Type))
     base + geom_col(position = "stack")
 
+    #historgram of polymorphs vs fixed
+    base2 <- ggplot(BIGMEANIE, aes(x = Gen, y = SelectionCoeff, fill = BIGMEANIE$MutType))
+    base2 + geom_col(position = "stack")
 
-
+    #distribution of effect sizes (half violin plots)
+    violinplotm<- ggplot(data = BIGMEANIE, aes(x = factor(Gen), y = SelectionCoeff))
+    violinplotm+
+      geom_violin() +
+      theme_classic() +
+    labs(x = "Generation", y = "Mean Fitness")
 
     #DATA EXPORT
     #writing the files code
@@ -1003,21 +1016,24 @@ foreach(i=1:1)) %:%
                 col.names = TRUE)
 
     #2 (means)
-
+    mut <- as.character(paste0("BIGMEANIE_onerun_", j, "_", i,  "_node_", NODE,  ".csv"))
+    BIGMEANIE <- as.data.frame(BIGMEANIE)
+    write.table(BIGMEANIE, mut,
+                append = FALSE,
+                row.names = FALSE,
+                col.names = TRUE)
 
 
   }
 
- #ideas for collapsing
+
 
     #number of mutations in gen
+
     #histogram of effect size bins by generation and distribution? subset here?
-    #same loop for fixed gens
+
     #plot mean effect size for polymorphs and fixed as a line over gens?
 
-    #histogram of mutational effect sizes (stacked for polymorphs and fixed)
-
-    #distribution of effect sizes (half violin plots)
 
     #subset by region plot mean prevalence by region histograms or boxplots
 
