@@ -11,12 +11,12 @@ library(foreach)
 library(readr)
 
 ############### user input here!#########################
-JOBID <- 619898
+JOBID <- 619899
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
-OPTIMA <- "BOptHigh"
+OPTIMA <- "BOptMed"
 S <- 2
-REP <- 4
+REP <- 5
 ########################################################
 
 ### Set WD ####
@@ -106,6 +106,7 @@ foreach(i=1:4) %:%
 
     #mutation data stuff would go here
 }
+
 
 
 #MUTATIONS
