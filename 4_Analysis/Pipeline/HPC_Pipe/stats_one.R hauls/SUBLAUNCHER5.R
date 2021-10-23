@@ -32,11 +32,10 @@ cl <- makeCluster(future::availableCores())
 registerDoParallel(cl)
 
 #Run SLiM
-foreach(i=1:nrow(combos)) %:%
-  foreach(j=seeds$Seed) %dopar% {
+foreach(i=1:nrow(combos))
+  %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-    slim_out <- system(sprintf("/home/$USER/SLiM/slim -s %s -d param1=%f -d param2=%f -d modelindex=%i /home/$USER/SLiM/Scripts/Tests/Example/slim/slim_example.slim",
-                               as.character(j), combos[i,]$param1, combos[i,]$param2, i, intern=T))
+    R_out <- system(sprintf(R -f "/home/s4471959/Analysis/stats1_ADDHigh5.R")
   }
 stopCluster(cl)
