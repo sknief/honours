@@ -992,11 +992,13 @@ foreach(i=1:1)) %:%
     #GRAPHS
     #historgram of mean polymorphs by type
     base <- ggplot(MEANIE, aes(x = Gen, y = SelectionCoeff, fill = MEANIE$Type))
-    base + geom_col(position = "stack")
+    base + geom_col(position = "stack") +
+      theme_classic()
 
     #historgram of polymorphs vs fixed
     base2 <- ggplot(BIGMEANIE, aes(x = Gen, y = SelectionCoeff, fill = BIGMEANIE$MutType))
-    base2 + geom_col(position = "stack")
+    base2 + geom_col(position = "stack") +
+      theme_classic()
 
     #distribution of effect sizes (half violin plots)
     violinplotm<- ggplot(data = BIGMEANIE, aes(x = factor(Gen), y = SelectionCoeff))
