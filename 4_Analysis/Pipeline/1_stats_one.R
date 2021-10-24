@@ -171,10 +171,10 @@ foreach(i=1:5) %:%
     ## GRAPH 1: Mean Alpha(A) versus time (line plots and violin plots)
     graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = AAlpha))
 
-    # graph1base +
-    #   geom_point(position = "jitter") +
-    #   theme_classic() +
-    #   labs(x = "Generation", y = "Mean Alpha(A)" )
+    graph1base +
+      geom_point(position = "jitter") +
+       theme_classic() +
+       labs(x = "Generation", y = "Mean Alpha(A)" )
 
     #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
 
@@ -599,10 +599,11 @@ foreach(i=1:2) %:%
     ## GRAPH 1: Mean Gene A1 versus time (line plots and violin plots)
     graph1base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneA1))
 
-    # graph1base +
-    #   geom_point(position = "jitter") +
-    #   theme_classic() +
-    #   labs(x = "Generation", y = "Mean Gene A1" )
+    graph1base +
+       geom_point(position = "jitter") +
+       theme_classic() +
+      ylim(100000, 1000000000) +
+       labs(x = "Generation", y = "Mean Gene A1" )
 
     #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
 
@@ -630,10 +631,10 @@ foreach(i=1:2) %:%
     ## GRAPH 2: Mean Gene A2 versus time (line plots and violin plots)
     #only points
     graph2base <- ggplot(data = TETRIS, aes(x = Generation, y = GeneA2))
-    # graph2base +
-    #   geom_point(position = "jitter") +
-    #   theme_classic() +
-    #   labs(x = "Generation", y = "Mean Gene A2")
+     graph2base +
+       geom_point(position = "jitter") +
+       theme_classic() +
+       labs(x = "Generation", y = "Mean Gene A2")
 
     #ggsave(paste0("Mean_BetaA_jitter_onerun",j, "_", i, ".png"), device = "png")
 
@@ -751,10 +752,10 @@ foreach(i=1:2) %:%
 
     #only points
     graph6base <- ggplot(data = TETRIS, aes(x = Generation, y = BConc))
-    # graph6base +
-    #   geom_point(position = "jitter") +
-    #   theme_classic() +
-    #   labs(x = "Generation", y = "Mean BCONC")
+     graph6base +
+       geom_point(position = "jitter") +
+       theme_classic() +
+       labs(x = "Generation", y = "Mean BCONC")
 
     #ggsave(paste0("BConc_jitter_onerun",j, "_", i, ".png"), device = "png")
 

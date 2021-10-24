@@ -9,4 +9,4 @@
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/Analysis/stats1_ADDLow1.R
+R --file=/home/$USER/Analysis/SUBLAUNCHER2.R
