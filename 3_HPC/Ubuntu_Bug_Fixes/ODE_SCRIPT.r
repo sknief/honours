@@ -88,6 +88,7 @@ dat$A_outt = for (h in 1:length(dat$ID)) {
 ### Part 3. save that into MULTIPLE singleton files ####################################################################################
 #luna is the things to keep and parse to slim
 
+dat[is.na(dat)] = 0
 
 luna <- as.data.frame(x = cbind(dat$ID, dat$integral_out, dat$A_out), col.names = names(c("Index", "BConc", "Aconc")))
 
