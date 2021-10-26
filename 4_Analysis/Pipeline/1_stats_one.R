@@ -602,7 +602,6 @@ foreach(i=1:2) %:%
     graph1base +
        geom_point(position = "jitter") +
        theme_classic() +
-      ylim(100000, 1000000000) +
        labs(x = "Generation", y = "Mean Gene A1" )
 
     #ggsave(paste0("Mean_AlphaA_jitter_onerun",j, "_", i, ".png"), device = "png")
@@ -848,11 +847,11 @@ foreach(i=1:2) %:%
     ###potential interfering for save data
 
     distancebase2 <- ggplot(TETRIS, aes(x = Generation, y = distance))
-    # distancebase2 +
-    #   geom_point() +
-    #   theme_classic() +
-    #   labs(x = "Generations", y = "Distance to the optima") +
-    #   theme(legend.position = "none")
+     distancebase2 +
+       geom_point() +
+       theme_classic() +
+       labs(x = "Generations", y = "Distance to the optima") +
+       theme(legend.position = "none")
 
     #ggsave(paste0("Distance_jitter_onerun",j, "_", i, ".png"), device = "png")
 
