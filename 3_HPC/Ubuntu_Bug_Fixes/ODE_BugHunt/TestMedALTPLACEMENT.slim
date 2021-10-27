@@ -150,15 +150,6 @@ initialize() {
 
 	}
 
-
-//make non-coding neutral
-fitness(m5) { return 1.0; }
-
-fitness(NULL) {
-	if (individual.tag == 0)
-		return 0.0;
-	else
-		return relFitness;
 }
 
 
