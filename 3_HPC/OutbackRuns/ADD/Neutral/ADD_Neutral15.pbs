@@ -16,4 +16,3 @@ R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHER15.R
 zip -r ADD_Neutral_15_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
 cp -p ADD_Neutral_15_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_Neutral/
-ADD_Neutral
