@@ -18,7 +18,7 @@ library(future)
 
 
 seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/miniseeds.csv"), header = T)
-combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/minicombo3.csv"), header = T)
+combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ADD/minicombo1.csv"), header = T)
 
 # Set which runs to do according to node
 
@@ -39,7 +39,7 @@ foreach(i=1:nrow(combos)) %:%
   foreach(j=seeds$Number) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-    slim_out <- system(sprintf("/usr/bin/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/Neutral/Model.slim",
+    slim_out <- system(sprintf("/usr/bin/slim -s %s -d GeneA1=%f -d GeneA2=%f -d GeneB1=%f -d GeneB2=%f -d modelindex=%i ~/OutbackRuns/ADD/BOptHigh/Model.slim",
                                as.character(j), combos[i,]$Aalpha, combos[i,]$Abeta, combos[i,]$Balpha, combos[i,]$Bbeta, i, intern=T))
   }
 
