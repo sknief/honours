@@ -1,9 +1,9 @@
 #!/bin/bash -l
 #PBS -A UQ-SCI-BiolSci
 #PBS -q Special
-#PBS -N ADD_BoptHigh_4
+#PBS -N ADD_BoptHigh_15
 #PBS -J 1-4
-#PBS -l walltime=336:00:00
+#PBS -l walltime=36:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
 
@@ -11,8 +11,8 @@ cd $TMPDIR
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/OutbackRuns/ADD/BOptHigh/SUBLAUNCHER4.R
+R --file=/home/$USER/OutbackRuns/ADD/BOptHigh/SUBLAUNCHER15.R
 
-zip -r ADD_BOptHigh_4_$PBS_ARRAY_INDEX.zip $TMPDIR/
+zip -r ADD_BOptHigh_15_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
-cp -p ADD_BOptHigh_4_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptHigh/
+cp -p ADD_BOptHigh_15_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ADD_BOptHigh/
