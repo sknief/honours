@@ -11,7 +11,7 @@ cd $TMPDIR
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/OutbackRuns/ADD/BOptLow/SUBLAUNCHER23.R
+R --file=/home/$USER/OutbackRuns/ADD/BOptLow/SUBLAUNCHERMINI23.R
 
 zip -r ADD_BOptLow_23_$PBS_ARRAY_INDEX.zip $TMPDIR/
 

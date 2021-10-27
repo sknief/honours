@@ -11,7 +11,7 @@ cd $TMPDIR
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHER17.R
+R --file=/home/$USER/OutbackRuns/ADD/Neutral/SUBLAUNCHERMINI17.R
 
 zip -r ADD_Neutral_17_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
