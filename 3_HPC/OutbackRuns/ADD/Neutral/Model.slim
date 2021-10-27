@@ -100,38 +100,6 @@ initialize() {
 	sim.addSubpop("p1", 1000);
 }
 
-2:50000 early() {
-for (ind in sim.subpopulations.individuals) {
-
-BCONC = ind.getValue("Bconcentration");
-ACONC = ind.getValue("ATotals");
-
-	if (BCONC < 0) {
-				//print("EEK");
-				ind.tag = 0;
-				}
-
-	if (ACONC < 0) {
-			//	print("EEK2");
-				ind.tag = 0;
-							}
-
-		 //the stabilising selection function
-			fitnessfunction = exp(-((BCONC - BOpt)/S)^2);
-
-		//fitnessScaling callback to avoid SLiM bug
-			if (fitnessfunction == 0) {
-				ind.fitnessScaling = fitnessfunction + 0.1;
-				//print("WHOOPSIE");
-				ind.tag = 0;
-					 }
-			 else
-			 ind.fitnessScaling = fitnessfunction;
-
-	}
-}
-
-
 //FITNESS CALLBACKS + CALCULATIONS
 
 fitness(m1) { return 1.0; }
@@ -141,19 +109,8 @@ fitness(m4) { return 1.0; }
 fitness(m5) { return 1.0; }
 
 
-// individuals tagged have fitnessScaling = 0, which will cause SLiM to throw a fit;
-// give them either minimal fitness (0.1) to push them beyond extreme bounds, or
-// give them lethal fitness (0), to make sure that anything beyond the fitness function counts as lethal
-// biologically speaking i'd prefer lethal ftiness, but ask Jan which one is better
-fitness(NULL) {
-	if (individual.tag == 0)
-		return 0.0;
-	else
-		return relFitness;
-}
-
 //late code that calculates the protein concentrations and bases fitness on them
-1:50000 late() {
+1:5000 late() {
 	//all individuals receive an initial tag ( 1= survival)
 	sim.subpopulations.individuals.tag = 1;
 	lines = NULL;
@@ -198,7 +155,7 @@ fitness(NULL) {
 
 
 
-	1:50000 late() {
+	1:5000 late() {
 		// choose when to print mutation data
 		if (sim.generation % 500 != 0) return;
 
@@ -206,7 +163,7 @@ fitness(NULL) {
 		sim.outputFull("SLiMulation_Output_Mutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
 	}
 
-	50000 late() {
-	sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "50000_.txt");
+	5000 late() {
+	sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "5000_.txt");
 	sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 	}
