@@ -101,14 +101,14 @@ write.table(luna, paste0("ODEoutput.txt"),
 
 #val is the savepoint of all data for the records
 
-val <- as.data.frame(x = cbind(dat$ID,
+#val <- as.data.frame(x = cbind(dat$ID,
                                dat$Aalpha,
                                dat$Abeta,
                                dat$Balpha,
                                dat$Bbeta,
                                dat$integral_out,
                                dat$A_out))
-colnames(val) = c("Index",
+#colnames(val) = c("Index",
                   "AAlpha",
                   "ABeta",
                   "BAlpha",
@@ -117,9 +117,9 @@ colnames(val) = c("Index",
                   "AConc")
 
 
-valname <- paste0("Val_",seed,"_generation_", modelindex, "_", gen, ".txt")
+#valname <- paste0("Val_",seed,"_generation_", modelindex, "_", gen, ".txt")
 
-write.table(val, valname,
+#write.table(val, valname,
             append = FALSE,
             row.names = FALSE,
             col.names = TRUE)
