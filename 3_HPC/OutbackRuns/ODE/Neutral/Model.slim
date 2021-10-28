@@ -124,53 +124,20 @@ initialize() {
 	sim.addSubpop("p1", 1000);
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////
 //the code above is not to be changed! (Apart from params for models)
 ///////////////////////////////////////////////////////////////////////////////
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:50000 early() {
-
-	//read in files:
-	//remember files need to contain generation 0 info for this to work
-	ODE = readIntTable(paste0("ODEoutput_", seed, "_", modelindex,".txt"));
-
-	for (ind in sim.subpopulations.individuals) {
-		hh = ind.index;
-		ind.setValue("ODEVAL", ODE[hh,1]);
-		ind.setValue("AConc", ODE[hh, 2]);
-		ODEVAL = ind.getValue("ODEVAL");
-		AConc = ind.getValue("AConc");
-		//print("Individual value: " + ODEVAL);
-
-/* NEUTRAL MODEL
-		fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
-
-		//fitnessScaling callback to avoid SLiM bug
-		if (fitnessfunction == 0) {
-			ind.fitnessScaling = fitnessfunction + 0.1;
-					//print("WHOOPSIE");
-			ind.tag = 0; }
-		else
-			ind.fitnessScaling = fitnessfunction;
-*/
-		}
 
 
-	inds = sim.subpopulations.individuals;
-	//print("Here's the mean ODEVAL!");
-	//print(mean(inds.getValue("ODEVAL")));
-	//print("Success!");
-
-	}
 
 
-//make non-coding neutral
-fitness(m5) { return 1.0; }
+1:5000 late() {
+		sim.subpopulations.individuals.tag = 1;
 
-
-1:50000 late() {
 
 	lines = NULL;
 
@@ -183,17 +150,22 @@ fitness(m5) { return 1.0; }
 		Bbeta = BbetaINI * exp(ind.sumOfMutationsOfType(m3));
 		gen = sim.generation;
 
+		ind.setValue("Aalpha", Aalpha);
+		ind.setValue("Balpha", Balpha);
+		ind.setValue("Abeta", Abeta);
+		ind.setValue("Bbeta", Bbeta);
+
 		//export section #1: accumulation of individual data
 		paramstoexport = paste0(ID, ", ",
-										Aalpha,", ",
-										Abeta, ", ",
-										Balpha, ", ",
-										Bbeta, ", ",
-										gen, ", ",
-										seed);
+			Aalpha,", ",
+			Abeta, ", ",
+			Balpha, ", ",
+			Bbeta, ", ",
+			gen, ", ",
+			seed);
 		//print(paramstoexport);
 		lines = c(lines, paramstoexport);
-		}
+	}
 
 	//export section #2: writing one file per generation
 	gen = sim.generation;
@@ -202,11 +174,78 @@ fitness(m5) { return 1.0; }
 	//export section #3: sending it to R
 	system(paste("/usr/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
 
+	//read in files:
+	//remember files need to contain generation 0 info for this to work
+	ODE = readIntTable(asString(paste0("ODEoutput_", seed, "_", modelindex,".txt")));
 
-}
+	for (ind in sim.subpopulations.individuals) {
+		hh = ind.index;
+		ind.setValue("ODEVAL", ODE[hh,1]);
+		ind.setValue("AConc", ODE[hh, 2]);
+		ODEVAL = ind.getValue("ODEVAL");
+		AConc = ind.getValue("AConc");
+		//print("Individual value: " + ODEVAL);
 
+		//fitnessfunction = exp(-((ODEVAL-BOpt)/S)^2);
+
+		//fitnessScaling callback to avoid SLiM bug
+	//	if (fitnessfunction == 0) {
+		//	ind.fitnessScaling = fitnessfunction + 0.1;
+					//print("WHOOPSIE");
+	//	ind.tag = 0; }
+	//	else
+		//	ind.fitnessScaling = fitnessfunction;
+	//	}
+
+
+	inds = sim.subpopulations.individuals;
+	//print("Here's the mean ODEVAL!");
+	//print(mean(inds.getValue("ODEVAL")));
+	//print("Success!");
+
+	}
+
+
+//make all noncoding
+fitness(m1) { return 1.0; }
+fitness(m2) { return 1.0; }
+fitness(m3) { return 1.0; }
+fitness(m4) { return 1.0; }
+fitness(m5) { return 1.0; }
 
 /////////////////////////////////////////////////////////
+
+//update plots
+
+2:5000 late() {
+	// choose when to update plots below
+
+	//debug-puposes only: sim.outputFull();
+	//Report mean phenotypes
+	inds = sim.subpopulations.individuals;
+	meanNetwork = mean(inds.getValue("ODEVAL"));
+	meanACONC = mean(inds.getValue("AConc"));
+	meanGene1 = mean(inds.getValue("Aalpha"));
+	meanGene2 = mean(inds.getValue("Abeta"));
+	meanGene3 = mean(inds.getValue("Balpha"));
+	meanGene4 = mean(inds.getValue("Bbeta"));
+	meandivision = meanACONC/meanNetwork;
+	//Actual Output Code
+	catn();
+	catn();
+	catn("Generation: " + sim.generation);
+	catn("Mean A Totals: " + meanACONC);
+	catn("Mean Aalpha: " + meanGene1);
+		catn("Mean Abeta: " + meanGene2);
+			catn("Mean Balpha: " + meanGene3);
+				catn("Mean Bbeta: " + meanGene4);
+	catn("Mean B CONC: " + meanNetwork);
+	catn("Mean correlation " + meandivision);
+
+	catn();
+	catn();
+}
+
 
 1:50000 late() {
 	// choose when to print mutation data

@@ -141,7 +141,7 @@ fitness(NULL) {
 
 
 
-1:50000 late() {
+1:5000 late() {
 		sim.subpopulations.individuals.tag = 1;
 
 
@@ -226,7 +226,7 @@ fitness(m5) { return 1.0; }
 
 //update plots
 
-2:50000 late() {
+2:5000 late() {
 	// choose when to update plots below
 
 	//debug-puposes only: sim.outputFull();
@@ -256,7 +256,7 @@ fitness(m5) { return 1.0; }
 }
 
 
-1:50000 late() {
+1:5000 late() {
 	// choose when to print mutation data
 	if (sim.generation % 500 != 0) return;
 
@@ -264,7 +264,7 @@ fitness(m5) { return 1.0; }
 	sim.outputFull("SLiMulation_Output_Mutations_" + seed + "_" + modelindex + "_" + gen + ".txt");
 }
 
-50000 late() {
-	sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "50000_.txt");
+5000 late() {
+	sim.outputFull("SLiMulation_Output_Full_" + seed + "_" + modelindex + "5000_.txt");
 	sim.outputFixedMutations("SLiMulation_Output_FixedMutations_" + seed + "_" + modelindex + ".txt");
 }

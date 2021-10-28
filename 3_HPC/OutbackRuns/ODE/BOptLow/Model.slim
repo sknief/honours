@@ -51,7 +51,7 @@ initialize() {
 	setSeed(asInteger(seed));
 
 	//section A: constants
-	setCfgParam("BOpt", 10); //test value: 250
+	setCfgParam("BOpt", 5); //test value: 250
 	setCfgParam("AbetaINI", 50); //test value: 50; some limits in terms of values this can take
 	setCfgParam("AalphaINI", 20); //test value: 20
 	setCfgParam("HillnINI", 10); //test value: 10
@@ -131,7 +131,54 @@ initialize() {
 
 //FITNESS CALLBACKS + CALCULATIONS
 
-2:50000 early() {
+
+fitness(NULL) {
+	if (individual.tag == 0) {
+		print("EEK");
+		return 0.0; }
+	else
+		return relFitness;
+}
+
+
+1:5000 late() {
+		sim.subpopulations.individuals.tag = 1;
+
+
+	lines = NULL;
+
+	for (ind in sim.subpopulations.individuals) {
+
+		ID = ind.index;
+		Aalpha = AalphaINI * exp(ind.sumOfMutationsOfType(m2));
+		Abeta = AbetaINI  * exp(ind.sumOfMutationsOfType(m1));
+		Balpha = BalphaINI * exp(ind.sumOfMutationsOfType(m4));
+		Bbeta = BbetaINI * exp(ind.sumOfMutationsOfType(m3));
+		gen = sim.generation;
+
+		ind.setValue("Aalpha", Aalpha);
+		ind.setValue("Balpha", Balpha);
+		ind.setValue("Abeta", Abeta);
+		ind.setValue("Bbeta", Bbeta);
+
+		//export section #1: accumulation of individual data
+		paramstoexport = paste0(ID, ", ",
+			Aalpha,", ",
+			Abeta, ", ",
+			Balpha, ", ",
+			Bbeta, ", ",
+			gen, ", ",
+			seed);
+		//print(paramstoexport);
+		lines = c(lines, paramstoexport);
+	}
+
+	//export section #2: writing one file per generation
+	gen = sim.generation;
+	writeFile(asString(paste0("SLiM-output_", seed, "_", modelindex, ".csv")), lines);
+
+	//export section #3: sending it to R
+	system(paste("/usr/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
 
 	//read in files:
 	//remember files need to contain generation 0 info for this to work
@@ -169,44 +216,39 @@ initialize() {
 fitness(m5) { return 1.0; }
 
 
-1:50000 late() {
-
-	lines = NULL;
-
-	for (ind in sim.subpopulations.individuals) {
-
-		ID = ind.index;
-		Aalpha = AalphaINI * exp(ind.sumOfMutationsOfType(m2));
-		Abeta = AbetaINI  * exp(ind.sumOfMutationsOfType(m1));
-		Balpha = BalphaINI * exp(ind.sumOfMutationsOfType(m4));
-		Bbeta = BbetaINI * exp(ind.sumOfMutationsOfType(m3));
-		gen = sim.generation;
-
-		//export section #1: accumulation of individual data
-		paramstoexport = paste0(ID, ", ",
-										Aalpha,", ",
-										Abeta, ", ",
-										Balpha, ", ",
-										Bbeta, ", ",
-										gen, ", ",
-										seed);
-		//print(paramstoexport);
-		lines = c(lines, paramstoexport);
-		}
-
-	//export section #2: writing one file per generation
-	gen = sim.generation;
-	writeFile(asString(paste0("SLiM-output_", seed, "_", modelindex, ".csv")), lines);
-
-	//export section #3: sending it to R
-	system(paste("/usr/bin/Rscript ~/OutbackRuns/ODE/ODE_SCRIPT.r", asString(seed), modelindex));
-
-}
-
-
 /////////////////////////////////////////////////////////
 
 //update plots
+
+2:5000 late() {
+	// choose when to update plots below
+
+	//debug-puposes only: sim.outputFull();
+	//Report mean phenotypes
+	inds = sim.subpopulations.individuals;
+	meanNetwork = mean(inds.getValue("ODEVAL"));
+	meanACONC = mean(inds.getValue("AConc"));
+	meanGene1 = mean(inds.getValue("Aalpha"));
+	meanGene2 = mean(inds.getValue("Abeta"));
+	meanGene3 = mean(inds.getValue("Balpha"));
+	meanGene4 = mean(inds.getValue("Bbeta"));
+	meandivision = meanACONC/meanNetwork;
+	//Actual Output Code
+	catn();
+	catn();
+	catn("Generation: " + sim.generation);
+	catn("Mean A Totals: " + meanACONC);
+	catn("Mean Aalpha: " + meanGene1);
+		catn("Mean Abeta: " + meanGene2);
+			catn("Mean Balpha: " + meanGene3);
+				catn("Mean Bbeta: " + meanGene4);
+	catn("Mean B CONC: " + meanNetwork);
+	catn("Mean correlation " + meandivision);
+
+	catn();
+	catn();
+}
+
 
 1:50000 late() {
 	// choose when to print mutation data
