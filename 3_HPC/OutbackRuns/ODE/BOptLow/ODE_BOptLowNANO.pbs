@@ -3,7 +3,7 @@
 #PBS -q Special
 #PBS -N ODE_Low_NANO
 #PBS -J 1-4
-#PBS -l walltime=206:00:00
+#PBS -l walltime=72:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
 
@@ -13,6 +13,6 @@ module load R/4.1.0+SLiM
 
 R --file=/home/$USER/OutbackRuns/ODE/BOptLow/SUBLAUNCHERNANO.R
 
-zip -r ODE_BOptLow_NANO1_$PBS_ARRAY_INDEX.zip $TMPDIR/
+zip -r ODE_BOptLow_NewTest_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
-cp -p ODE_BOptLow_NANO1_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_BOptLow/
+cp -p ODE_BOptLow_NewTest_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_BOptLow/
