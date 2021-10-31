@@ -12,12 +12,12 @@ library(foreach)
 library(gridExtra)
 
 ############### user input here!#########################
-MODELTYPE <- "ODE"
-OPTIMA <- "Neutral"
+MODELTYPE <- "ADD"
+OPTIMA <- "BOptHigh"
 #########################################################
 
 ####  set WD to tank #####
-workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/", OPTIMA, "/tank")
+workdirectory <- paste0("/scratch/user/s4471959/", MODELTYPE, "_", OPTIMA, "/Mini", REP , "/Tank")
 setwd(workdirectory)
 
 ##### the two loops to set up the params for the rest of the code #####
