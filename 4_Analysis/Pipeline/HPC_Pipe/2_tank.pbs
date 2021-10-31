@@ -12,7 +12,7 @@ do
     cd "$dir"
     mkdir Tank
     shopt -s globstar
-    mv **/Tetris*.csv /Tank/
+    mv **/Tetris*.csv ./Tank/
     mv **/BigPopa*.csv ./Tank/
     cd ..
 done
