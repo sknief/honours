@@ -438,7 +438,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
 
     #Save code for all three datasets, regardless of use
     #PogNoodle
-    pognood <- as.character(paste0("PogNoodle_(reps_for_unique_combo)_", i, "_node_", l,  ".csv"))
+    pognood <- as.character(paste0("PogNoodle_(reps_for_unique_combo)_", i, "_node_", l, "_Mini_", REP, ".csv"))
 
     PogNoodle <- as.data.frame(POGNOODLE)
 
@@ -448,7 +448,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 col.names = TRUE)
 
     #PogNoodled
-    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", i, "_node_", l,  ".csv"))
+    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", i, "_node_", l, "_Mini_", REP, ".csv"))
 
     PogNoodled <- as.data.frame(POGNOODLED)
 
@@ -458,7 +458,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 col.names = TRUE)
 
     #ShrimpMoult
-    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", i, "_node_", l,  ".csv"))
+    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", i, "_node_", l, "_Mini_", REP, ".csv"))
 
     ShrimpMoult <- as.data.frame(SHRIMPMOULT)
 
