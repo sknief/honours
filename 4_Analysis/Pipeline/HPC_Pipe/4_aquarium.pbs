@@ -1,1 +1,17 @@
-move data from tank folder to aquarium folder
+#!/bin/bash -l
+#PBS -A UQ-SCI-BiolSci
+#PBS -N aquarium
+#PBS -l walltime=2:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+cd /scratch/user/s4471959/ADD_BOptHigh/
+mkdir Aquarium
+
+#!/bin/bash
+for dir in */     # or use: subdirectory*/
+do
+    shopt -s globstar
+    mv **/Pog*.csv /scratch/user/s4471959/ADD_BOptHigh/Aquarium
+    mv **/Shrimp*.csv /scratch/user/s4471959/ADD_BOptHigh/Aquarium
+    cd ..
+done
