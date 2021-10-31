@@ -11,7 +11,7 @@ for dir in */     # or use: subdirectory*/
 do
     cd "$dir"
     mkdir Tank
-    find . -name 'TETRIS*.zip' -exec cp {} /scratch/user/s4471959/ADD_BOptHigh/$dir/Tank \;
-    find . -name 'BIGPOPA*.zip' -exec cp {} /scratch/user/s4471959/ADD_BOptHigh/$dir/Tank \;
+    find . -name 'TETRIS*.csv' -exec cp {} /scratch/user/s4471959/ADD_BOptHigh/$dir/Tank \;
+    find . -name 'BIGPOPA*.csv' -exec cp {} /scratch/user/s4471959/ADD_BOptHigh/$dir/Tank \;
     cd ..
 done
