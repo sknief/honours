@@ -12,13 +12,14 @@ library(foreach)
 library(readr)
 library(ggplot2)
 
+
 ############### user input here!#########################
-JOBID <- 626485
+JOBID <- 626506
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptHigh"
 S <- 2
-REP <- 3
+REP <- 24
 ########################################################
 
 ### Set WD ####
@@ -105,4 +106,8 @@ foreach(i=1:4) %:%
                 append = FALSE,
                 row.names = FALSE,
                 col.names = TRUE)
+
+    #mutation data stuff would go here
+
+  
 }

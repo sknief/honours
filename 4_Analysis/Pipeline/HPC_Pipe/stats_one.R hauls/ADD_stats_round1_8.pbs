@@ -2,11 +2,11 @@
 #PBS -A UQ-SCI-BiolSci
 #PBS -q Special
 #PBS -J 1-4
-#PBS -N ADDMed2
+#PBS -N ADDHigh8
 #PBS -l walltime=6:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/Analysis/stats1_ADDMed2.R
+R --file=/home/$USER/Analysis/SUBLAUNCHER8.R
