@@ -12,11 +12,11 @@ library(foreach)
 library(gridExtra)
 
 ############### user input here!#########################
-MODELTYPE <- "ODE"
+MODELTYPE <- "ADD"
 #########################################################
 
 ####  set WD to aquarium #####
-workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/aquarium")
+workdirectory <- paste0("/scratch/user/s4471959/", MODELTYPE, "/Aquarium")
 setwd(workdirectory)
 
 ## THE FILES LOOP ##
