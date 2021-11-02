@@ -1,0 +1,18 @@
+#!/bin/bash -l
+#PBS -A UQ-SCI-BiolSci
+#PBS -q Special
+#PBS -N ODE_BoptHigh_10
+#PBS -J 1-4
+#PBS -l walltime=100:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+
+cd $TMPDIR
+
+module load R/4.1.0+SLiM
+
+R --file=/home/$USER/OutbackRuns/ODE/BOptHigh/SUBLAUNCHERMINI10.R
+
+zip -r ODE_BOptHigh_10_$PBS_ARRAY_INDEX.zip $TMPDIR/
+
+cp -p ODE_BOptHigh_10_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_BOptHigh/
