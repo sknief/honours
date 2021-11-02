@@ -1,6 +1,5 @@
 #!/bin/bash -l
 #PBS -A UQ-SCI-BiolSci
-#PBS -q Special
 #PBS -N ODE_BoptHigh_9
 #PBS -J 1-4
 #PBS -l walltime=100:00:00
