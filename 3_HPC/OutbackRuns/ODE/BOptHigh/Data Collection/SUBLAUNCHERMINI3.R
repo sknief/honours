@@ -17,7 +17,7 @@ library(doParallel)
 library(future)
 
 
-seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ODE/miniseeds.csv"), header = T)
+seeds <- read.csv(paste0("/home/",USER,"/OutbackRuns/ODE/nanoseeds.csv"), header = T)
 combos <- read.csv(paste0("/home/",USER,"/OutbackRuns/ODE/minicombo3.csv"), header = T)
 
 # Set which runs to do according to node
