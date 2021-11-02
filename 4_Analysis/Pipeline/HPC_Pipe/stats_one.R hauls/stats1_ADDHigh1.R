@@ -13,12 +13,12 @@ library(readr)
 library(ggplot2)
 
 ############### user input here!#########################
-JOBID <- 626468
+JOBID <- 626469
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptLow"
 S <- 2
-REP <- 11
+REP <- 12
 ########################################################
 
 ### Set WD ####
