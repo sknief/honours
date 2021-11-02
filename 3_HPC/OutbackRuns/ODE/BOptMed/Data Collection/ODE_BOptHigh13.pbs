@@ -1,6 +1,6 @@
 #!/bin/bash -l
 #PBS -A UQ-SCI-BiolSci
-#PBS -N ODE_BoptHigh_13
+#PBS -N ODE_BoptMed_13
 #PBS -J 1-4
 #PBS -l walltime=100:00:00
 #PBS -l select=1:ncpus=24:mem=120G
@@ -10,8 +10,8 @@ cd $TMPDIR
 
 module load R/4.1.0+SLiM
 
-R --file=/home/$USER/OutbackRuns/ODE/BOptHigh/SUBLAUNCHERMINI13.R
+R --file=/home/$USER/OutbackRuns/ODE/BOptMed/SUBLAUNCHERMINI13.R
 
-zip -r ODE_BOptHigh_13_$PBS_ARRAY_INDEX.zip $TMPDIR/
+zip -r ODE_BOptMed_13_$PBS_ARRAY_INDEX.zip $TMPDIR/
 
-cp -p ODE_BOptHigh_13_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_BOptHigh/
+cp -p ODE_BOptMed_13_$PBS_ARRAY_INDEX.zip /scratch/user/$USER/ODE_BOptMed/
