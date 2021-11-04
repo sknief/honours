@@ -1,17 +1,16 @@
 #!/bin/bash -l
 #PBS -A UQ-SCI-BiolSci
+#PBS -q Special
 #PBS -N aquarium
 #PBS -l walltime=2:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
-cd /scratch/user/s4471959/
-mkdir ADD
-cd ADD
-mkdir Aquarium
+cd /scratch/user/s4471959/ADD_BOptLow
 
 #!/bin/bash
 for dir in */     # or use: subdirectory*/
 do
+    cd "$dir"
     shopt -s globstar
     mv **/Pog*.csv /scratch/user/s4471959/ADD/Aquarium
     mv **/Shrimp*.csv /scratch/user/s4471959/ADD/Aquarium

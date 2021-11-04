@@ -5,11 +5,7 @@
 #PBS -l walltime=2:00:00
 #PBS -l select=1:ncpus=24:mem=120G
 
-<<<<<<< HEAD
 cd /scratch/user/s4471959/ADD_BOptLow/
-=======
-cd /scratch/user/s4471959/ADD_BOptMed/
->>>>>>> b5d2d2548058dad3caddf83d4b59a2d6f2ba8c40
 
 #!/bin/bash
 for dir in */     # or use: subdirectory*/
