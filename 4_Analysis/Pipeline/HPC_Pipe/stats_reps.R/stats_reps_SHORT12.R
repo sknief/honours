@@ -14,7 +14,7 @@ library(gridExtra)
 ############### user input here!#########################
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptLow"
-REP <- 5
+REP <- 12
 #########################################################
 
 ####  set WD to tank #####
@@ -159,7 +159,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 row.names = FALSE,
                 col.names = TRUE)
 
-    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", OPTIMA, "_",i, "_node_", l, "_Mini_", REP, ".csv"))
+    moultyshrimp <- as.character(paste0("ShrimpMoult_(all_individuals)_", OPTIMA, "_",i, "_node_", l, "_Mini_", REP,  ".csv"))
 
     ShrimpMoult <- as.data.frame(SHRIMPMOULT)
 

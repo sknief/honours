@@ -14,7 +14,7 @@ library(gridExtra)
 ############### user input here!#########################
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptLow"
-REP <- 5
+REP <- 22
 #########################################################
 
 ####  set WD to tank #####
@@ -150,7 +150,7 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
                 row.names = FALSE,
                 col.names = TRUE)
 
-    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", OPTIMA, "_",i, "_node_", l, "_Mini_", REP,  ".csv"))
+    pognoodled <- as.character(paste0("PogNoodled_(mean_across_seeds)_", OPTIMA, "_",i, "_node_", l, "_Mini_", REP, ".csv"))
 
     PogNoodled <- as.data.frame(POGNOODLED)
 

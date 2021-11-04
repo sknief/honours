@@ -14,7 +14,7 @@ library(gridExtra)
 ############### user input here!#########################
 MODELTYPE <- "ADD"
 OPTIMA <- "BOptLow"
-REP <- 5
+REP <- 15
 #########################################################
 
 ####  set WD to tank #####
