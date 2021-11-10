@@ -12,9 +12,9 @@ library(foreach)
 library(gridExtra)
 
 ############### user input here!#########################
-MODELTYPE <- "ADD"
-OPTIMA <- "BOptMed"
-REP <- 1
+MODELTYPE <- "ODE"
+OPTIMA <- "Neutral"
+REP <- 2
 #########################################################
 
 ####  set WD to tank #####
@@ -38,11 +38,11 @@ if (MODELTYPE == "ADD") {
   }
 } else if (MODELTYPE == "ODE") {
   if (OPTIMA == "BOptHigh") {
-    BOpt = 100
-  } else if (OPTIMA == "BOptMed") {
     BOpt = 50
+  } else if (OPTIMA == "BOptMed") {
+    BOpt = 25
   } else if (OPTIMA == "BOptLow") {
-    BOpt = 10
+    BOpt = 5
   } else if (OPTIMA == "Neutral") {
     BOpt = 0
   } else {
@@ -82,23 +82,23 @@ foreach(i=1:length(index)) %:% #modelindex, should be 1-5 in the ODE and 1:25 in
     SHRIMPMOULT <- bind_rows(myBigPopas, .id = "File") #all individuals all reps for combinations
     colnames(SHRIMPMOULT) <- SHRIMPMOULT[1,] #column names
     colnames(SHRIMPMOULT)[1] <- "File" #fix one label
-    SHRIMPMOULT <- subset(SHRIMPMOULT, GeneA1!= "GeneA1") #remove the labels
+    SHRIMPMOULT <- subset(SHRIMPMOULT, AAlpha!= "AAlpha") #remove the labels
     SHRIMPMOULT <-   mutate_all(SHRIMPMOULT, .funs = as.numeric) #turns characters into numerics
 
     #pognoodle
     POGNOODLE <- bind_rows(myTetri, .id = "Rep") #all reps for a node x index combination (params comb), one entry per generation
     colnames(POGNOODLE) <- POGNOODLE[1,] #column names
     colnames(POGNOODLE)[1] <- "Rep" #fix one label
-    POGNOODLE <- subset(POGNOODLE, GeneA1!= "GeneA1") #remove the labels
+    POGNOODLE <- subset(POGNOODLE,  AAlpha!= "AAlpha") #remove the labels
     POGNOODLE <-   mutate_all(POGNOODLE, .funs = as.numeric) #turns characters into numerics
 
     #take the means across replicates (seeds) of the means across individuals (but via generation? yeah, cause each time point is unique data, and if i only want the end i still need to do it by generation)
     POGNOODLED <- POGNOODLE %>%
       group_by(POGNOODLE$Generation) %>%
-      summarise(GeneA1 = mean(GeneA1),
-                GeneA2 = mean(GeneA2),
-                GeneB1 = mean(GeneB1),
-                GeneB2 = mean(GeneB2),
+      summarise(AAlpha = mean(AAlpha),
+                ABeta = mean(ABeta),
+                BAlpha = mean(BAlpha),
+                BBeta = mean(BBeta),
                 AConc = mean(AConc),
                 BConc = mean(BConc),
                 fitness = mean(fitness),

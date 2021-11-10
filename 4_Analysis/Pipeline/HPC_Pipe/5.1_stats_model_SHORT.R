@@ -12,11 +12,11 @@ library(foreach)
 library(gridExtra)
 
 ############### user input here!#########################
-MODELTYPE <- "ADD"
+MODELTYPE <- "ODE"
 #########################################################
 
 ####  set WD to aquarium #####
-workdirectory <- paste0("C:/Users/sknie/github/honours/4_Analysis/", MODELTYPE, "/aquarium")
+workdirectory <- paste0("/scratch/user/s4471959/", MODELTYPE, "/Aquarium")
 setwd(workdirectory)
 
 ## THE FILES LOOP ##
@@ -42,11 +42,11 @@ foreach(m=1:4) %do% {
   #Second nested loop: setting BOpt depending on your input and model type
   if (MODELTYPE == "ADD") {
     if (OPTIMA == "BOptHigh") {
-      BOpt = 200
-    } else if (OPTIMA == "BOptMed") {
       BOpt = 150
-    } else if (OPTIMA == "BOptLow") {
+    } else if (OPTIMA == "BOptMed") {
       BOpt = 100
+    } else if (OPTIMA == "BOptLow") {
+      BOpt = 50
     } else if (OPTIMA == "Neutral") {
       BOpt = 0
     } else {
@@ -78,23 +78,23 @@ foreach(m=1:4) %do% {
       ELODEA <- bind_rows(myElodea, .id = "UniqueCombo") #all params comb, one entry per generation
       colnames(ELODEA) <- ELODEA[1,] #column names
       colnames(ELODEA)[1] <- "UniqueCombo" #fix one label
-      ELODEA <- subset(ELODEA, GeneA1!= "GeneA1") #remove the labels
+      ELODEA <- subset(ELODEA, AAlpha!= "AAlpha") #remove the labels
       ELODEA <-   mutate_all(ELODEA, .funs = as.numeric) #turns characters into numerics
 
       #Sheldon : the dataset with the means for all combos
       SHELLDON <- bind_rows(myShelldon, .id = "UniqueCombo") #all params comb, one entry per generation
       colnames(SHELLDON) <- SHELLDON[1,] #column names
       colnames(SHELLDON)[1] <- "UniqueCombo" #fix one label
-      SHELLDON <- subset(SHELLDON, GeneA1!= "GeneA1") #remove the labels
+      SHELLDON <- subset(SHELLDON, AAlpha!= "AAlpha") #remove the labels
       SHELLDON <-   mutate_all(SHELLDON, .funs = as.numeric) #turns characters into numerics
 
       #take the means across replicates (seeds) of the means across individuals (but via generation? yeah, cause each time point is unique data, and if i only want the end i still need to do it by generation)
       RICHARD <- SHELLDON %>%
         group_by(SHELLDON$Generation) %>%
-        summarise(GeneA1 = mean(GeneA1),
-                  GeneA2 = mean(GeneA2),
-                  GeneB1 = mean(GeneB1),
-                  GeneB2 = mean(GeneB2),
+        summarise(AAlpha = mean(AAlpha),
+                  ABeta = mean(ABeta),
+                  BAlpha = mean(BAlpha),
+                  BBeta = mean(BBeta),
                   AConc = mean(AConc),
                   BConc = mean(BConc),
                   fitness = mean(fitness),

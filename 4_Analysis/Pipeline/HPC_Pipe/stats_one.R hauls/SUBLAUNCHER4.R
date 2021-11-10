@@ -35,6 +35,6 @@ registerDoParallel(cl)
 foreach(i=1:nrow(combos)) %dopar% {
     # Use string manipulation functions to configure the command line args, feeding from a data frame of seeds
     # then run SLiM with system(),
-    R_out <- system(sprintf("R -f /home/s4471959/Analysis/stats1_ADDHigh4.R"))
+    R_out <- system(sprintf("R -f /home/s4471959/Analysis/stats1_ODENeutral3.R"))
   }
 stopCluster(cl)

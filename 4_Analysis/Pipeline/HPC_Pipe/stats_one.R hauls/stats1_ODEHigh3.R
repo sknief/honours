@@ -6,19 +6,19 @@
 ########################################################
 
 #### Amateur Parallelisation ####
-library(plyr)
 library(dplyr)
+library(ggplot2)
 library(foreach)
 library(readr)
-library(ggplot2)
+library(gridExtra)
 
 ############### user input here!#########################
-JOBID <- 626512
+JOBID <- 626845
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
-MODELTYPE <- "ADD"
-OPTIMA <- "Neutral"
+MODELTYPE <- "ODE"
+OPTIMA <- "BOptHigh"
 S <- 2
-REP <- 4
+REP <- 2
 ########################################################
 
 ### Set WD ####
@@ -26,44 +26,68 @@ WD <- paste0(JOBID,"[", NODE, "]")
 workdirectory <- paste0("/scratch/user/s4471959/", MODELTYPE, "_", OPTIMA, "/Mini", REP , "/state/partition1/pbs/tmpdir/pbs.", WD, ".tinmgr2")
 setwd(workdirectory)
 
-      if (OPTIMA == "BOptHigh") {
-          BOpt = 150
+### Nested loops to set up this script ####
+if (MODELTYPE == "ADD") {
+        if (OPTIMA == "BOptHigh") {
+          BOpt = 200
         } else if (OPTIMA == "BOptMed") {
-          BOpt = 100
+          BOpt = 150
         } else if (OPTIMA == "BOptLow") {
-          BOpt = 50
+          BOpt = 100
         } else if (OPTIMA == "Neutral") {
           BOpt = 0
         } else {
           print("Invalid Input for the Optima. Would you like to try again?")
         }
+} else if (MODELTYPE == "ODE") {
+        if (OPTIMA == "BOptHigh") {
+          BOpt = 50
+        } else if (OPTIMA == "BOptMed") {
+          BOpt = 25
+        } else if (OPTIMA == "BOptLow") {
+          BOpt = 5
+        } else if (OPTIMA == "Neutral") {
+          BOpt = 0
+        } else {
+          print("Invalid Input for the Optima. Would you like to try again?")
+        }
+} else {
+  print("I do not recognize that model type, did you spell something wrong?")
+}
 
-seeds <- read.csv("/home/s4471959/OutbackRuns/ADD/miniseeds.csv")
-combos <-read.csv("/home/s4471959/OutbackRuns/ADD/minicombo.csv")
+seeds <- read.csv("/home/s4471959/OutbackRuns/ODE/miniseeds.csv")
+combos <-read.csv("/home/s4471959/OutbackRuns/ODE/minicombo.csv")
 
 
-# ADD FILES ONLY (experimental) ####
-foreach(i=1:4) %:%
+
+# ODE FILES ####
+
+#test code only
+#transseeds <- read.csv("C:/Users/sknie/github/honours/4_Analysis/transseeds.csv")
+#transseeds <- transseeds[,1:2] #trim extra columns
+
+## FILE ONLY LOOP ##
+foreach(i=1: (length(combos))) %:%
   foreach(j= seeds$Seed) %do% {
-    #read in all files based on specifications above for all generations
-    myFiles <- lapply(Sys.glob(paste0("SLiM-output_ADD_", j, "_", i, "*.csv")), read.csv, header = FALSE)
+    myFiles <- lapply(Sys.glob(paste0("Val_", j, "_generation_", i, "*.txt")), read.table) #ODE
 
-    #Bigpopa, my hyuge shrimp, says hi (alot of the modifyers comes from ODE files, need separate loops again! )
-    BIGPOPA <- bind_rows(myFiles, .id = "File")
-    colnames(BIGPOPA) <- c("File", "ID", "GeneA1", "GeneA2", "GeneB1", "GeneB2", "AConc", "BGamma", "BConc", "Generation", "Seed") #column names
+    #Bigpopa, my hyuge shrimp, says hi
+    BIGPOPA <- bind_rows(myFiles, .id = "Generation")
+    colnames(BIGPOPA) <- BIGPOPA[1,] #column names
+    colnames(BIGPOPA)[1] <- "Generation" #fix one label
+    BIGPOPA <- subset(BIGPOPA, AAlpha!= "AAlpha") #remove the labels
     BIGPOPA <-   mutate_all(BIGPOPA, .funs = as.numeric) #turns characters into numerics
 
-    #Tetris, my beloved snail, says hi
+    #tetris, my beloved snail, says hi
     TETRIS <- BIGPOPA %>%
       group_by(BIGPOPA$Generation) %>%
-      summarise(GeneA1 = mean(GeneA1),
-                GeneA2 = mean(GeneA2),
-                GeneB1 = mean(GeneB1),
-                GeneB2 = mean(GeneB2),
+      summarise(AAlpha = mean(AAlpha),
+                ABeta = mean(ABeta),
+                BAlpha = mean(BAlpha),
+                BBeta = mean(BBeta),
                 AConc = mean(AConc),
-                BGamma = mean(BGamma),
-                BConc = mean(BConc))
-
+                BConc = mean(BConc)
+      )
     colnames(TETRIS)[1] <- "Generation"
     TETRIS$SEED <- j
     TETRIS$Index <- i
@@ -105,4 +129,6 @@ foreach(i=1:4) %:%
                 append = FALSE,
                 row.names = FALSE,
                 col.names = TRUE)
+
+    #mutation data stuff would go here
 }

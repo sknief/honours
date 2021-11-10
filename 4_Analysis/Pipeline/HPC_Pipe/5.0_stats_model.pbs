@@ -1,0 +1,11 @@
+#!/bin/bash -l
+#PBS -A UQ-SCI-BiolSci
+#PBS -q Special
+#PBS -N Stats_Model
+#PBS -l walltime=36:00:00
+#PBS -l select=1:ncpus=24:mem=120G
+
+
+module load R/4.1.0+SLiM
+
+R --file=/home/$USER/Analysis/5.1_stats_model_SHORT.R

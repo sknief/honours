@@ -13,7 +13,7 @@ library(gridExtra)
 
 ############### user input here!#########################
 MODELTYPE <- "ADD"
-OPTIMA <- "BOptMed"
+OPTIMA <- "BOptHigh"
 REP <- 22
 #########################################################
 
