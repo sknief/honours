@@ -14,12 +14,12 @@ library(ggplot2)
 
 
 ############### user input here!#########################
-JOBID <- 626487
+JOBID <- 626514
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ADD"
-OPTIMA <- "BOptHigh"
+OPTIMA <- "Neutral"
 S <- 2
-REP <- 5
+REP <- 6
 ########################################################
 
 ### Set WD ####

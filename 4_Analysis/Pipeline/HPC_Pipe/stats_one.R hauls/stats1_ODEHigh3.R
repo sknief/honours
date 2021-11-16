@@ -13,12 +13,12 @@ library(readr)
 library(gridExtra)
 
 ############### user input here!#########################
-JOBID <- 626845
+JOBID <- 634136
 NODE <- as.numeric(Sys.getenv('PBS_ARRAY_INDEX'))
 MODELTYPE <- "ODE"
-OPTIMA <- "BOptHigh"
+OPTIMA <- "BOptLow"
 S <- 2
-REP <- 2
+REP <- 4
 ########################################################
 
 ### Set WD ####
