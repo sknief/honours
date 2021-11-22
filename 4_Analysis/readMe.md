@@ -1,5 +1,8 @@
 # Step Four: Statistical Analysis #
 
+*Update 22/11/21*: Dear Examiners, in my theis I talk about Nodes X and Y, not A and B as this made it easier to read (and avoids confusion with the alphas and betas), but in the interest of not changing anything in this repository after submission, I will leave the remainder of the readMe as is.
+
+
 I have created two infographics about my statisitical pipeline, which are in the pipeline folder above, as well as the bottom of this read me :)
 
 ## File Inventory ##
@@ -16,7 +19,7 @@ Possible solutions for this:
 1. Correct for this when doing the individual model run analyses in R
 2. Find/Write a script to rename? (Might be a bit too much extra work though)
 
-HMMMM. TBD.
+HMMMM. TBD. (Update 22/11/21: I ran with Solution number 1, hence the many steps in the pipeline)
 
 Regardless, all files needed to conduct analysis on one simulation run is in one folder, and the mega files can be saved to overarching folders I reckon.
 

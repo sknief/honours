@@ -1,5 +1,7 @@
 # The Negative Autoregulation Motif #
 
+*Update 22/11/21*: Dear Examiners, in my theis I talk about Nodes X and Y, not A and B as this made it easier to read (and avoids confusion with the alphas and betas), but in the interest of not changing anything in this repository after submission, I will leave the remainder of the readMe as is.
+
 ## Overview ###
 
 The negative autoregulation motif (NAR) is the simplest motif structure that exists within Pygmalion. It consists of only one node, node A, that is connected to one node of the following motif, node B. Whilst this motif is characterized by only one node, the succeeding node is included in this model as to demonstrate the effect of changes in node A and how these cascade through succeeding nodes. Node A is activated by a signal, here shown as signal X.
