@@ -1,3 +1,7 @@
+[![forthebadge](https://forthebadge.com/images/badges/built-with-resentment.svg)](https://forthebadge.com) 
+<br>
+ ![Slim](https://img.shields.io/badge/Made%20with-SLiM-br?style=for-the-badge&logo=appveyor) ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
+
 # Fantastic Networks and how to evolve them
 ## Understanding polygenic adaptation in the age of gene regulatory networks
 
