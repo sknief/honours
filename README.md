@@ -1,4 +1,5 @@
-[![forthebadge](https://forthebadge.com/images/badges/built-with-resentment.svg)](https://forthebadge.com) 
+[![forthebadge](https://img.shields.io/badge/Made_with-Resentment-orange?style=for-the-badge&labelColor=red
+)](https://forthebadge.com) 
 <br>
  ![Slim](https://img.shields.io/badge/Made%20with-SLiM-br?style=for-the-badge&logo=appveyor) ![R](https://img.shields.io/badge/r-%23276DC3.svg?style=for-the-badge&logo=r&logoColor=white)
 
